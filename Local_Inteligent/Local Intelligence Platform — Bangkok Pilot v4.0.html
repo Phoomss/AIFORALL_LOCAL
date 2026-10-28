@@ -1,0 +1,2123 @@
+<!doctype html>
+<html lang="th">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Local Intelligence Platform — Bangkok Pilot v4.0</title>
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: #f6f8fb;
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    "Segoe UI",
+                    Roboto,
+                    sans-serif;
+                color: #1e293b;
+                line-height: 1.5;
+                font-size: 14px;
+            }
+            .mono {
+                font-family:
+                    ui-monospace, "Cascadia Code", "Fira Code", monospace;
+            }
+
+            /* HEADER */
+            .hdr {
+                background: #102a43;
+                color: #fff;
+                padding: 18px max(20px, calc((100vw - 1180px) / 2));
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .logo {
+                background: linear-gradient(135deg, #2dd4bf, #38bdf8);
+                border-radius: 12px;
+                padding: 7px 10px;
+                font-size: 18px;
+                box-shadow: 0 4px 12px rgba(45, 212, 191, 0.18);
+            }
+            .hdr h1 {
+                font-size: 20px;
+                font-weight: 750;
+                letter-spacing: -0.02em;
+            }
+            .hdr .sub {
+                font-size: 11px;
+                color: #cbd5e1;
+                font-weight: 400;
+                margin-left: 6px;
+            }
+            .demo-chip {
+                margin-left: auto;
+                background: rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                border-radius: 999px;
+                padding: 5px 10px;
+                color: #e0f2fe;
+                font-size: 11px;
+                font-weight: 600;
+            }
+
+            /* SCENARIO BAR */
+            .sc-bar {
+                background: #102a43;
+                padding: 0 max(20px, calc((100vw - 1180px) / 2)) 18px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .sc-lbl {
+                color: #cbd5e1;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .sc-btns {
+                display: flex;
+                background: rgba(15, 23, 42, 0.35);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            .sc-btn {
+                min-height: 38px;
+                padding: 8px 14px;
+                font-size: 12px;
+                cursor: pointer;
+                color: #dbeafe;
+                border: none;
+                background: transparent;
+                transition: all 0.2s;
+                user-select: none;
+                white-space: nowrap;
+            }
+            .sc-btn:hover {
+                background: rgba(255, 255, 255, 0.08);
+                color: #fff;
+            }
+            .sc-btn.active {
+                background: #fff;
+                color: #0f3d5c;
+                font-weight: 700;
+            }
+            .wx-strip {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-left: auto;
+            }
+            .wx-tag {
+                background: #1e293b;
+                color: #94a3b8;
+                font-size: 10px;
+                padding: 3px 8px;
+                border-radius: 4px;
+            }
+            .wx-tag.warn {
+                background: #78350f;
+                color: #fbbf24;
+            }
+
+            /* STATS BAR */
+            .stats {
+                max-width: 1180px;
+                margin: 18px auto 0;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+                background: transparent;
+                padding: 0 20px;
+            }
+            .stat {
+                background: #fff;
+                padding: 16px;
+                text-align: left;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+            }
+            .stat .sv {
+                font-size: 22px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+            }
+            .stat .sl {
+                font-size: 9px;
+                color: #64748b;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-top: 2px;
+            }
+            .sv-r {
+                color: #ef4444;
+            }
+            .sv-o {
+                color: #f97316;
+            }
+            .sv-g {
+                color: #22c55e;
+            }
+            .sv-b {
+                color: #0ea5e9;
+            }
+
+            /* TAB NAV */
+            .tabs {
+                max-width: 1140px;
+                margin: 18px auto 0;
+                display: flex;
+                gap: 6px;
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 6px;
+                overflow-x: auto;
+            }
+            .tab-btn {
+                min-height: 40px;
+                flex: 1;
+                padding: 9px 16px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                color: #64748b;
+                border: none;
+                background: transparent;
+                border-radius: 8px;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+            .tab-btn:hover {
+                background: #f1f5f9;
+                color: #334155;
+            }
+            .tab-btn.active {
+                background: #e0f2fe;
+                color: #0369a1;
+                font-weight: 700;
+            }
+
+            /* PANELS */
+            .panel {
+                display: none;
+                max-width: 1180px;
+                margin: 0 auto;
+                padding: 20px;
+                padding-bottom: 90px;
+            }
+            .panel.active {
+                display: block;
+            }
+
+            /* NORMAL CARD */
+            .norm-card {
+                background: #fff;
+                border-radius: 12px;
+                padding: 36px 24px;
+                text-align: center;
+                border: 1px solid #e2e8f0;
+            }
+            .norm-card .ni {
+                font-size: 40px;
+                margin-bottom: 10px;
+            }
+            .norm-card h3 {
+                font-size: 16px;
+                color: #1e293b;
+                margin-bottom: 6px;
+            }
+            .norm-card p {
+                color: #64748b;
+                font-size: 13px;
+                max-width: 500px;
+                margin: 0 auto;
+                line-height: 1.7;
+            }
+
+            /* SECTION TITLE */
+            .sec-t {
+                font-size: 13px;
+                font-weight: 600;
+                color: #475569;
+                margin-bottom: 12px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .badge {
+                background: #0ea5e9;
+                color: #fff;
+                font-size: 10px;
+                padding: 2px 8px;
+                border-radius: 10px;
+                font-weight: 600;
+            }
+
+            /* CARD */
+            .card {
+                background: #fff;
+                border-radius: 14px;
+                border: 1px solid #e2e8f0;
+                overflow: hidden;
+                margin-bottom: 16px;
+                box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+            }
+            .card-hd {
+                padding: 14px 16px 10px;
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .s-ico {
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                flex-shrink: 0;
+            }
+            .s-nfo {
+                flex: 1;
+                min-width: 180px;
+            }
+            .s-nm {
+                font-size: 14px;
+                font-weight: 600;
+            }
+            .s-en {
+                font-size: 10px;
+                color: #94a3b8;
+            }
+            .s-addr {
+                font-size: 10px;
+                color: #64748b;
+                margin-top: 2px;
+            }
+
+            /* RISK BADGES */
+            .rb {
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 700;
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                flex-shrink: 0;
+                white-space: nowrap;
+            }
+            .rb-c {
+                background: #fef2f2;
+                color: #dc2626;
+                border: 1px solid #fecaca;
+            }
+            .rb-h {
+                background: #fff7ed;
+                color: #ea580c;
+                border: 1px solid #fed7aa;
+            }
+            .rb-m {
+                background: #fefce8;
+                color: #a16207;
+                border: 1px solid #fef08a;
+            }
+            .rb-l {
+                background: #f0fdf4;
+                color: #15803d;
+                border: 1px solid #bbf7d0;
+            }
+
+            /* METRICS ROW */
+            .met-row {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1px;
+                background: #f1f5f9;
+                border-top: 1px solid #e2e8f0;
+            }
+            .met {
+                background: #fff;
+                padding: 10px 14px;
+                text-align: center;
+            }
+            .met .mv {
+                font-size: 15px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+            }
+            .met .ml {
+                font-size: 8px;
+                color: #64748b;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+                margin-top: 1px;
+            }
+
+            /* FLOOD ZONE */
+            .fz {
+                font-size: 10px;
+                color: #64748b;
+                background: #f8fafc;
+                padding: 6px 14px;
+                border-top: 1px solid #e2e8f0;
+                line-height: 1.7;
+            }
+
+            /* SME SELECTOR */
+            .sme-sel {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 14px;
+                flex-wrap: wrap;
+            }
+            .sme-btn {
+                min-height: 40px;
+                padding: 8px 12px;
+                border-radius: 9px;
+                font-size: 12px;
+                cursor: pointer;
+                border: 1px solid #e2e8f0;
+                background: #fff;
+                color: #475569;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .sme-btn:hover {
+                border-color: #0ea5e9;
+                color: #0ea5e9;
+            }
+            .sme-btn.active {
+                background: #0ea5e9;
+                color: #fff;
+                border-color: #0ea5e9;
+                font-weight: 600;
+            }
+
+            /* ACTION CHECKLIST */
+            .act-list {
+                list-style: none;
+                padding: 8px 16px 14px;
+            }
+            .act-i {
+                display: flex;
+                gap: 8px;
+                padding: 8px 0;
+                border-bottom: 1px solid #f1f5f9;
+                align-items: flex-start;
+                font-size: 12px;
+            }
+            .act-i:last-child {
+                border: none;
+            }
+            .act-cb {
+                width: 18px;
+                height: 18px;
+                accent-color: #22c55e;
+                flex-shrink: 0;
+                cursor: pointer;
+                margin-top: 1px;
+            }
+            .act-p {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 9px;
+                font-weight: 700;
+                color: #fff;
+                flex-shrink: 0;
+            }
+            .ap1 {
+                background: #ef4444;
+            }
+            .ap2 {
+                background: #f97316;
+            }
+            .ap3 {
+                background: #eab308;
+            }
+            .ap4 {
+                background: #64748b;
+            }
+            .act-t {
+                flex: 1;
+                color: #334155;
+            }
+            .act-cat {
+                font-size: 8px;
+                background: #f1f5f9;
+                color: #64748b;
+                padding: 1px 6px;
+                border-radius: 3px;
+                white-space: nowrap;
+            }
+            .act-dl {
+                color: #94a3b8;
+                font-size: 9px;
+                font-family: ui-monospace, monospace;
+                white-space: nowrap;
+            }
+
+            /* PROGRESS BAR */
+            .prog-wrap {
+                padding: 8px 16px 14px;
+            }
+            .prog-lbl {
+                font-size: 11px;
+                color: #475569;
+                font-weight: 600;
+                margin-bottom: 4px;
+                display: flex;
+                justify-content: space-between;
+            }
+            .prog-bar {
+                height: 10px;
+                background: #e2e8f0;
+                border-radius: 5px;
+                overflow: hidden;
+            }
+            .prog-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #22c55e, #16a34a);
+                border-radius: 5px;
+                width: 0;
+                transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .prog-msg {
+                text-align: center;
+                padding: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #15803d;
+                display: none;
+            }
+            .prog-msg.show {
+                display: block;
+            }
+
+            /* ROUTE */
+            .od-bar {
+                background: #fff;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                padding: 14px 16px;
+                margin-bottom: 14px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                font-size: 12px;
+                flex-wrap: wrap;
+            }
+            .od-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+            .od-o {
+                background: #0ea5e9;
+            }
+            .od-d {
+                background: #f97316;
+            }
+            .od-pt {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .od-arr {
+                color: #cbd5e1;
+                font-size: 18px;
+            }
+            .wx-bd {
+                margin-left: auto;
+                background: #dbeafe;
+                color: #1d4ed8;
+                font-size: 10px;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-weight: 600;
+            }
+
+            .rt-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 14px;
+            }
+            .rt-card {
+                background: #fff;
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            .rt-card.rec {
+                border: 2px solid #22c55e;
+            }
+            .rt-card.rsk {
+                border: 2px solid #ef4444;
+            }
+            .rt-hd {
+                padding: 14px 16px 10px;
+            }
+            .rt-lbl {
+                font-size: 13px;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+            .rt-sub {
+                font-size: 11px;
+                color: #64748b;
+                margin-top: 3px;
+            }
+            .rtag {
+                font-size: 9px;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-weight: 600;
+                color: #fff;
+            }
+            .rtag-g {
+                background: #22c55e;
+            }
+            .rtag-r {
+                background: #ef4444;
+            }
+            .rt-stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                margin-top: 10px;
+            }
+            .rs {
+                text-align: center;
+                background: #f8fafc;
+                border-radius: 6px;
+                padding: 8px 4px;
+            }
+            .rs .rv {
+                font-size: 17px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+            }
+            .rs .rl {
+                font-size: 8px;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+
+            .seg-list {
+                padding: 4px 16px 14px;
+            }
+            .seg {
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 7px 0;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 11px;
+            }
+            .seg:last-child {
+                border: none;
+            }
+            .seg-dot {
+                width: 9px;
+                height: 9px;
+                border-radius: 50%;
+                margin-top: 3px;
+                flex-shrink: 0;
+            }
+            .s-clr {
+                background: #22c55e;
+            }
+            .s-fld {
+                background: #ef4444;
+            }
+            .s-prt {
+                background: #f97316;
+            }
+            .seg-rd {
+                font-weight: 600;
+                color: #334155;
+            }
+            .seg-nt {
+                color: #64748b;
+                margin-top: 1px;
+            }
+            .seg-km {
+                color: #94a3b8;
+                font-size: 9px;
+                font-family: ui-monospace, monospace;
+                white-space: nowrap;
+                margin-left: auto;
+                flex-shrink: 0;
+            }
+
+            .ai-box {
+                background: linear-gradient(135deg, #f0f9ff, #eff6ff);
+                border: 1px solid #bae6fd;
+                border-radius: 12px;
+                padding: 16px;
+                margin-top: 14px;
+            }
+            .ai-box summary {
+                font-size: 13px;
+                font-weight: 700;
+                color: #0369a1;
+                cursor: pointer;
+                list-style: none;
+                user-select: none;
+            }
+            .ai-box summary::before {
+                content: "▸ ";
+            }
+            .ai-box[open] summary::before {
+                content: "▾ ";
+            }
+            .ai-txt {
+                font-size: 12px;
+                color: #334155;
+                line-height: 1.7;
+                margin-top: 10px;
+            }
+            .ai-trade {
+                margin-top: 10px;
+                background: #fff;
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-size: 12px;
+                font-weight: 600;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            /* LOCALFLOW */
+            .itin-hdr {
+                background: #fff;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                padding: 14px 16px;
+                margin-bottom: 14px;
+            }
+            .ctags {
+                display: flex;
+                gap: 6px;
+                flex-wrap: wrap;
+                margin-top: 8px;
+            }
+            .ctag {
+                background: #f1f5f9;
+                color: #475569;
+                font-size: 10px;
+                padding: 3px 8px;
+                border-radius: 6px;
+            }
+            .scores-g {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+                margin-top: 10px;
+            }
+            .sc-i {
+                text-align: center;
+                background: #f8fafc;
+                padding: 8px;
+                border-radius: 8px;
+            }
+            .sc-i .scv {
+                font-size: 16px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+                color: #0ea5e9;
+            }
+            .sc-i .scl {
+                font-size: 8px;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+
+            .budget-area {
+                background: #fff;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                padding: 14px 16px;
+                margin-bottom: 14px;
+            }
+            .bud-lbl {
+                font-size: 12px;
+                font-weight: 600;
+                color: #334155;
+                margin-bottom: 4px;
+            }
+            .bud-val {
+                font-size: 22px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+                color: #0ea5e9;
+            }
+            .bud-slider {
+                width: 100%;
+                margin: 8px 0;
+                accent-color: #0ea5e9;
+                cursor: pointer;
+            }
+            .bud-rng {
+                display: flex;
+                justify-content: space-between;
+                font-size: 9px;
+                color: #94a3b8;
+            }
+            .bud-info {
+                font-size: 11px;
+                color: #64748b;
+                margin-top: 4px;
+            }
+
+            /* TIMELINE */
+            .tl {
+                position: relative;
+                padding-left: 28px;
+                margin-top: 4px;
+            }
+            .tl::before {
+                content: "";
+                position: absolute;
+                left: 11px;
+                top: 20px;
+                bottom: 20px;
+                width: 2px;
+                background: #e2e8f0;
+            }
+            .tl-stop {
+                position: relative;
+                padding-bottom: 12px;
+                transition:
+                    opacity 0.3s,
+                    max-height 0.3s;
+            }
+            .tl-stop:last-child {
+                padding-bottom: 0;
+            }
+            .tl-stop.hidden {
+                opacity: 0.2;
+                pointer-events: none;
+            }
+            .tl-dot {
+                position: absolute;
+                left: -28px;
+                top: 6px;
+                width: 22px;
+                height: 22px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 9px;
+                font-weight: 700;
+                color: #fff;
+                z-index: 1;
+            }
+            .tl-card {
+                background: #fff;
+                border-radius: 10px;
+                border: 1px solid #e2e8f0;
+                overflow: hidden;
+            }
+            .tl-hd {
+                padding: 10px 14px;
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .tl-time {
+                font-family: ui-monospace, monospace;
+                font-size: 11px;
+                font-weight: 600;
+                color: #0ea5e9;
+                background: #f0f9ff;
+                padding: 2px 8px;
+                border-radius: 4px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            .tl-nm {
+                font-size: 13px;
+                font-weight: 600;
+                color: #1e293b;
+            }
+            .tl-en {
+                font-size: 10px;
+                color: #94a3b8;
+                font-weight: 400;
+            }
+            .tl-cat {
+                font-size: 9px;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-weight: 500;
+            }
+            .tl-met {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1px;
+                background: #f1f5f9;
+                border-top: 1px solid #e2e8f0;
+            }
+            .tm {
+                background: #fff;
+                padding: 6px 8px;
+                text-align: center;
+            }
+            .tm .tv {
+                font-size: 12px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+            }
+            .tm .tl2 {
+                font-size: 7px;
+                color: #94a3b8;
+                text-transform: uppercase;
+            }
+            .tl-ben {
+                padding: 6px 14px;
+                background: #fffbeb;
+                border-top: 1px solid #fef3c7;
+                font-size: 10px;
+                color: #92400e;
+            }
+            .tl-transit {
+                padding: 4px 0 4px 8px;
+                font-size: 10px;
+                color: #64748b;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin: 4px 0;
+            }
+            .tr-mode {
+                background: #f1f5f9;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-weight: 600;
+                color: #475569;
+                font-size: 9px;
+            }
+
+            .trip-sum {
+                background: #fff;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+                padding: 16px;
+                margin-top: 14px;
+            }
+            .trip-sum h4 {
+                font-size: 12px;
+                font-weight: 700;
+                color: #334155;
+                margin-bottom: 10px;
+            }
+            .sum-g {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            .si {
+                text-align: center;
+            }
+            .si .sv2 {
+                font-size: 18px;
+                font-weight: 700;
+                font-family: ui-monospace, monospace;
+            }
+            .si .sl2 {
+                font-size: 8px;
+                color: #64748b;
+                text-transform: uppercase;
+            }
+
+            .narr-box {
+                background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+                border: 1px solid #bbf7d0;
+                border-radius: 12px;
+                padding: 14px 16px;
+                margin-top: 12px;
+            }
+            .narr-box .nt {
+                font-size: 11px;
+                font-weight: 700;
+                color: #15803d;
+                margin-bottom: 4px;
+            }
+            .narr-box .np {
+                font-size: 12px;
+                color: #334155;
+                line-height: 1.8;
+            }
+
+            /* MODAL */
+            .modal-bg {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 100;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                backdrop-filter: blur(4px);
+            }
+            .modal-bg.open {
+                display: flex;
+            }
+            .modal {
+                background: #fff;
+                border-radius: 16px;
+                max-width: 720px;
+                width: 100%;
+                max-height: 85vh;
+                overflow-y: auto;
+                padding: 0;
+            }
+            .modal-hd {
+                padding: 14px 18px;
+                border-bottom: 1px solid #e2e8f0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: sticky;
+                top: 0;
+                background: #fff;
+                border-radius: 16px 16px 0 0;
+                z-index: 1;
+            }
+            .modal-hd h2 {
+                font-size: 15px;
+                font-weight: 700;
+            }
+            .modal-x {
+                cursor: pointer;
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+                background: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                transition: all 0.2s;
+            }
+            .modal-x:hover {
+                background: #f1f5f9;
+            }
+            .modal-body {
+                padding: 18px;
+            }
+            .mt-nav {
+                display: flex;
+                gap: 0;
+                border-bottom: 1px solid #e2e8f0;
+                margin-bottom: 14px;
+            }
+            .mt-btn {
+                padding: 8px 14px;
+                font-size: 12px;
+                cursor: pointer;
+                color: #64748b;
+                border: none;
+                background: transparent;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -1px;
+            }
+            .mt-btn.active {
+                color: #0ea5e9;
+                border-bottom-color: #0ea5e9;
+                font-weight: 600;
+            }
+            .mt-panel {
+                display: none;
+            }
+            .mt-panel.active {
+                display: block;
+            }
+
+            .arch-tier {
+                border: 2px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            .arch-tier.t1 {
+                border-color: #0ea5e9;
+                background: #f0f9ff;
+            }
+            .arch-tier.t2 {
+                border-color: #8b5cf6;
+                background: #f5f3ff;
+            }
+            .arch-tier.t3 {
+                border-color: #22c55e;
+                background: #f0fdf4;
+            }
+            .tier-lbl {
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 6px;
+            }
+            .t1 .tier-lbl {
+                color: #0369a1;
+            }
+            .t2 .tier-lbl {
+                color: #6d28d9;
+            }
+            .t3 .tier-lbl {
+                color: #15803d;
+            }
+            .tier-boxes {
+                display: flex;
+                gap: 5px;
+                flex-wrap: wrap;
+            }
+            .tier-box {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                padding: 4px 9px;
+                font-size: 10px;
+                font-weight: 500;
+            }
+            .arch-arr {
+                text-align: center;
+                color: #94a3b8;
+                font-size: 16px;
+                margin: 4px 0;
+            }
+            .pipe-flow {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                flex-wrap: wrap;
+            }
+            .pipe-step {
+                background: #fff;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                padding: 4px 9px;
+                font-size: 10px;
+                font-weight: 600;
+                color: #6d28d9;
+            }
+            .pipe-a {
+                color: #94a3b8;
+                font-size: 11px;
+            }
+
+            table.aws {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 11px;
+                margin-top: 12px;
+            }
+            table.aws th {
+                text-align: left;
+                color: #64748b;
+                font-weight: 500;
+                padding: 6px 10px;
+                border-bottom: 1px solid #ddd;
+                font-size: 10px;
+            }
+            table.aws td {
+                padding: 6px 10px;
+                color: #1e293b;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            table.crit {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 11px;
+                margin-bottom: 16px;
+            }
+            table.crit th {
+                text-align: left;
+                color: #64748b;
+                font-weight: 500;
+                padding: 6px 10px;
+                border-bottom: 1px solid #ddd;
+                font-size: 10px;
+            }
+            table.crit td {
+                padding: 6px 10px;
+                color: #1e293b;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            .ck {
+                color: #22c55e;
+                font-weight: 700;
+            }
+
+            /* FAB */
+            .fab {
+                position: fixed;
+                bottom: 18px;
+                right: 18px;
+                z-index: 90;
+            }
+            .fab button {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background: #0369a1;
+                color: #fff;
+                padding: 11px 15px;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                border: none;
+                box-shadow: 0 6px 16px rgba(3, 105, 161, 0.28);
+                transition: all 0.2s;
+            }
+            .fab button:hover {
+                background: #1e293b;
+                transform: translateY(-2px);
+            }
+
+            .app-footer {
+                text-align: center;
+                padding: 20px;
+                font-size: 10px;
+                color: #94a3b8;
+            }
+            .demo-note {
+                max-width: 1140px;
+                margin: 12px auto 0;
+                padding: 10px 14px;
+                border: 1px solid #bae6fd;
+                border-radius: 10px;
+                background: #f0f9ff;
+                color: #075985;
+                font-size: 11px;
+                line-height: 1.6;
+            }
+            .demo-note strong {
+                font-weight: 700;
+            }
+            .modal-intro {
+                font-size: 12px;
+                color: #475569;
+                line-height: 1.7;
+                margin-bottom: 14px;
+            }
+            .modal-section {
+                margin: 16px 0 8px;
+                font-size: 13px;
+                font-weight: 700;
+                color: #334155;
+            }
+            .info-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+            .info-card {
+                border: 1px solid #e2e8f0;
+                border-radius: 9px;
+                padding: 10px;
+                background: #fff;
+            }
+            .info-card b {
+                display: block;
+                font-size: 12px;
+                color: #0f172a;
+                margin-bottom: 3px;
+            }
+            .info-card span {
+                font-size: 10px;
+                color: #64748b;
+                line-height: 1.5;
+            }
+            .guard-list {
+                display: grid;
+                gap: 7px;
+            }
+            .guard {
+                border-left: 3px solid #0ea5e9;
+                background: #f8fafc;
+                padding: 8px 10px;
+                font-size: 11px;
+                color: #334155;
+            }
+            .guard b {
+                color: #0369a1;
+            }
+
+            @media (max-width: 768px) {
+                .stats {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .rt-grid {
+                    grid-template-columns: 1fr;
+                }
+                .scores-g,
+                .sum-g {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .tl-met {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .od-bar {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .wx-bd {
+                    margin-left: 0;
+                }
+                .tabs {
+                    overflow-x: auto;
+                }
+                .modal {
+                    max-width: 95vw;
+                }
+                .demo-note {
+                    margin: 10px 14px 0;
+                }
+                .info-grid {
+                    grid-template-columns: 1fr;
+                }
+                .hdr {
+                    padding: 16px 14px 10px;
+                }
+                .hdr h1 {
+                    font-size: 17px;
+                }
+                .demo-chip {
+                    margin-left: 0;
+                }
+                .sc-bar {
+                    padding: 0 14px 14px;
+                    align-items: flex-start;
+                }
+                .stats {
+                    margin-top: 12px;
+                    padding: 0 14px;
+                    gap: 8px;
+                }
+                .stat {
+                    padding: 12px;
+                }
+                .tabs {
+                    margin: 14px;
+                    gap: 4px;
+                }
+                .tab-btn {
+                    flex: 0 0 auto;
+                    padding: 8px 12px;
+                }
+                .panel {
+                    padding: 14px;
+                }
+            }
+            @media (prefers-reduced-motion: no-preference) {
+                .card,
+                .rt-card,
+                .tl-stop,
+                .ai-box,
+                .trip-sum,
+                .narr-box,
+                .norm-card {
+                    animation: fadeUp 0.4s ease-out both;
+                }
+                @keyframes fadeUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(8px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: none;
+                    }
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- HEADER -->
+        <header class="hdr">
+            <span class="logo">🌏</span>
+            <h1>
+                Local Intelligence Platform
+                <span class="sub">Bangkok Pilot v4.0 — Track 5 • 6 • 2</span>
+            </h1>
+            <span class="demo-chip">ข้อมูลสาธิต · Bangkok Pilot</span>
+        </header>
+
+        <!-- SCENARIO BAR -->
+        <div class="sc-bar">
+            <span class="sc-lbl">เลือกสถานการณ์</span>
+            <div class="sc-btns">
+                <button
+                    class="sc-btn"
+                    data-sc="normal"
+                    aria-label="Normal scenario"
+                >
+                    ☀️ วันปกติ Normal
+                </button>
+                <button
+                    class="sc-btn active"
+                    data-sc="flood"
+                    aria-label="Flood scenario"
+                >
+                    🌧️ น้ำท่วมเมือง Flood
+                </button>
+            </div>
+            <div class="wx-strip">
+                <span class="wx-tag">🌡 28°C</span>
+                <span class="wx-tag">💧 85 mm</span>
+                <span class="wx-tag">💨 96% RH</span>
+                <span class="wx-tag warn">⚠️ TMD ORANGE</span>
+                <span class="wx-tag">🚰 72%</span>
+            </div>
+        </div>
+
+        <!-- KPI STATS -->
+        <div class="stats" id="kpi-bar"></div>
+
+        <aside class="demo-note" aria-label="Demo data notice">
+            <strong>ℹ️ ข้อจำกัดของ Prototype:</strong> ข้อมูลร้านค้า เหตุการณ์
+            เส้นทาง และคะแนนทั้งหมดเป็นข้อมูลสังเคราะห์เพื่อการสาธิต
+            ไม่ใช่ข้อมูลเรียลไทม์หรือคำแนะนำฉุกเฉิน
+            โปรดตรวจสอบข้อมูลจากหน่วยงานทางการก่อนตัดสินใจจริง
+        </aside>
+
+        <!-- TABS -->
+        <nav class="tabs" role="tablist" id="tab-nav"></nav>
+
+        <!-- PANELS -->
+        <main>
+            <section class="panel" id="panel-shield" role="tabpanel"></section>
+            <section class="panel" id="panel-route" role="tabpanel"></section>
+            <section class="panel" id="panel-flow" role="tabpanel"></section>
+        </main>
+
+        <!-- FAB -->
+        <div class="fab">
+            <button
+                onclick="toggleModal()"
+                aria-label="Pilot information modal"
+            >
+                📐 ข้อมูล Pilot & ระบบ
+            </button>
+        </div>
+
+        <!-- MODAL -->
+        <div
+            class="modal-bg"
+            id="modal-bg"
+            onclick="if (event.target === this) toggleModal();"
+        >
+            <div class="modal">
+                <div class="modal-hd">
+                    <h2>🏛️ ข้อมูลระบบและแผน Bangkok Pilot</h2>
+                    <button
+                        class="modal-x"
+                        onclick="toggleModal()"
+                        aria-label="Close"
+                    >
+                        ✕
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
+
+        <footer class="app-footer">
+            Local Intelligence Platform v4.0 — Bangkok Pilot © 2026 | Track 5 •
+            6 • 2<br />Decision support prototype · Synthetic demonstration data
+            · ไม่ใช่ระบบแจ้งเหตุฉุกเฉิน
+        </footer>
+
+        <script>
+            // ═══════════════════════════════════════════════════════════════
+            // COMPLETE BANGKOK DATASET
+            // ═══════════════════════════════════════════════════════════════
+            const D = {
+                kpi: {
+                    flood: [
+                        { v: "88", l: "Max Flood Risk", c: "sv-r" },
+                        { v: "3", l: "SME Alerts Active", c: "sv-o" },
+                        { v: "฿55,000", l: "Inventory at Risk", c: "sv-b" },
+                        { v: "94%", l: "SafeRoute Confidence", c: "sv-g" },
+                    ],
+                    normal: [
+                        { v: "5", l: "Flood Risk Score", c: "sv-g" },
+                        { v: "0", l: "Active Alerts", c: "sv-g" },
+                        { v: "+฿980", l: "SME Revenue Opportunity", c: "sv-b" },
+                        { v: "Clear ✓", l: "All Routes Status", c: "sv-g" },
+                    ],
+                },
+                smes: [
+                    {
+                        id: "SME-BKK-KS-0112",
+                        icon: "☕",
+                        bg: "#fff7ed",
+                        nm: "ร้านกาแฟลุงอ้วน ริมคลองสาน",
+                        en: "Lung Uan Riverside Coffee — Khlong San",
+                        addr: "📍 23/4 ซ.เจริญนคร 17 เขตคลองสาน · ชั้นล่าง · มีสั่งออนไลน์",
+                        risk: 78,
+                        rl: "HIGH",
+                        rc: "rb-h",
+                        rlbl: "🟠 HIGH 78/100",
+                        depth: "20 ซม.",
+                        inv: "฿12,000",
+                        rev: "฿8,500",
+                        dc: "#f97316",
+                        ic: "#ea580c",
+                        fz: "📍 ริมคลองสาน — พื้นที่ลุ่มต่ำติดแม่น้ำเจ้าพระยา · ถนนเจริญนคร: PARTIALLY FLOODED · ทางเลี่ยง: ถนนกรุงธนบุรี ซอย 4 CLEAR · BTS กรุงธนบุรี: NORMAL",
+                        acts: [
+                            {
+                                p: 1,
+                                cat: "INVENTORY",
+                                dl: "12:00",
+                                t: "ย้ายถุงเมล็ดกาแฟและแป้งอบขนมขึ้นชั้นวางสูงเหนือระดับ 30 ซม. ก่อนเที่ยง",
+                            },
+                            {
+                                p: 2,
+                                cat: "LOGISTICS",
+                                dl: "08:00",
+                                t: "แจ้งซัพพลายเออร์นมสด/ผลไม้ให้จัดส่งก่อน 10:00 น. เปลี่ยนเส้นทางถนนกรุงธนบุรี",
+                            },
+                            {
+                                p: 3,
+                                cat: "CUSTOMER",
+                                dl: "09:00",
+                                t: "โพสต์ LINE OA + Facebook แจ้งเปิดถึง 13:00 น. เปิดรับ Grab/LINE Man ตลอดวัน",
+                            },
+                            {
+                                p: 4,
+                                cat: "INFRA",
+                                dl: "11:00",
+                                t: "วางกระสอบทราย 2 ชั้นที่ประตูหน้าร้าน เก็บโต๊ะริมคลองเข้าด้านใน ยกปลั๊กไฟชั้นล่าง",
+                            },
+                        ],
+                    },
+                    {
+                        id: "SME-BKK-PP-0287",
+                        icon: "💊",
+                        bg: "#fef2f2",
+                        nm: "ร้านขายยาจีนเจริญโอสถ เยาวราช",
+                        en: "Charoen Osot Chinese Pharmacy — Pom Prap",
+                        addr: "📍 156 ถนนเยาวราช เขตป้อมปราบฯ · ชั้นล่าง · ไม่มีสั่งออนไลน์",
+                        risk: 88,
+                        rl: "CRITICAL",
+                        rc: "rb-c",
+                        rlbl: "🔴 CRITICAL 88/100",
+                        depth: "28 ซม.",
+                        inv: "฿35,000",
+                        rev: "฿15,000",
+                        dc: "#ef4444",
+                        ic: "#dc2626",
+                        fz: "⚠️ ถนนเยาวราช — จุดน้ำท่วมซ้ำซากเมื่อฝนเกิน 60 มม. · ถนนเยาวราช: FLOODED · ทางเลี่ยง: ถนนมังกร PARTIALLY FLOODED · MRT วัดมังกร: NORMAL",
+                        acts: [
+                            {
+                                p: 1,
+                                cat: "INVENTORY",
+                                dl: "10:00",
+                                t: "ย้ายสมุนไพรลิ้นชักล่าง 2 แถว + รังนกแห้งขึ้นชั้น 3 หรือห้องชั้นลอย ก่อน 10:00 น.",
+                            },
+                            {
+                                p: 2,
+                                cat: "CUSTOMER",
+                                dl: "08:30",
+                                t: "โทรแจ้งลูกค้า VIP 10 รายให้เลื่อนรับยาเป็นพรุ่งนี้ หรือจัดส่งทาง Lalamove",
+                            },
+                            {
+                                p: 3,
+                                cat: "INVENTORY",
+                                dl: "11:00",
+                                t: "คลุมพลาสติกกันน้ำลิ้นชักสมุนไพรแถวล่างที่เหลือ + ปิดผนึกซิปล็อก 2 ชั้น",
+                            },
+                            {
+                                p: 4,
+                                cat: "INFRA",
+                                dl: "12:00",
+                                t: "วางกระสอบทราย + แผ่นกั้นน้ำที่ประตู ปิดร้าน 13:00-20:00 ติดป้ายแจ้งหน้าร้าน",
+                            },
+                        ],
+                    },
+                    {
+                        id: "SME-BKK-HK-0445",
+                        icon: "🍗",
+                        bg: "#fefce8",
+                        nm: "ร้านข้าวมันไก่ประตูน้ำ สาขาห้วยขวาง",
+                        en: "Pratunam Chicken Rice — Huai Khwang",
+                        addr: "📍 89/2 ถนนประชาราษฎร์บำเพ็ญ เขตห้วยขวาง · ชั้นล่าง · มีสั่งออนไลน์",
+                        risk: 52,
+                        rl: "MODERATE",
+                        rc: "rb-m",
+                        rlbl: "🟡 MODERATE 52/100",
+                        depth: "8 ซม.",
+                        inv: "฿8,000",
+                        rev: "฿5,200",
+                        dc: "#eab308",
+                        ic: "#a16207",
+                        fz: "📍 ถนนประชาราษฎร์บำเพ็ญ — ท่อระบายน้ำเก่า ระบายช้า · ถนนหลัก: SLOW DRAINING · ทางเลี่ยง: ถนนรัชดาภิเษก CLEAR · MRT ห้วยขวาง: NORMAL",
+                        acts: [
+                            {
+                                p: 1,
+                                cat: "INVENTORY",
+                                dl: "11:00",
+                                t: "ยกกระสอบข้าวและถังซอสวางบนพาเลทไม้สูง 15 ซม. ก่อน 11:00 น.",
+                            },
+                            {
+                                p: 2,
+                                cat: "LOGISTICS",
+                                dl: "07:30",
+                                t: "โทรตลาดไก่สดให้ส่งก่อน 09:00 น. ผ่านถนนรัชดาภิเษกแทนเส้นทางปกติ",
+                            },
+                            {
+                                p: 3,
+                                cat: "CUSTOMER",
+                                dl: "10:00",
+                                t: "เปิดโปรโมชั่น 'สั่ง Grab ลด 15%' ช่วงบ่ายชดเชยลูกค้าหน้าร้านที่ลดลง",
+                            },
+                            {
+                                p: 4,
+                                cat: "INFRA",
+                                dl: "10:30",
+                                t: "ตรวจท่อระบายน้ำหน้าร้านไม่อุดตัน + เตรียมไม้กวาดและถังตักน้ำ",
+                            },
+                        ],
+                    },
+                ],
+                routes: [
+                    {
+                        id: "A",
+                        lbl: "เส้นทาง A",
+                        rec: true,
+                        tag: "✓ แนะนำ",
+                        tc: "rtag-g",
+                        cc: "rec",
+                        desc: "ผ่านสาทร-เจริญกรุง เลี่ยงจุดน้ำท่วมทั้งหมด + ใช้ BTS",
+                        min: 38,
+                        km: 12.5,
+                        risk: 15,
+                        rlvl: "LOW",
+                        segs: [
+                            {
+                                rd: "ถนนสุขุมวิท → BTS ศาลาแดง",
+                                nt: "ใช้ BTS ข้ามจุดรถติด สภาพปกติ",
+                                rng: "0-3 km",
+                                r: 5,
+                                s: "CLEAR",
+                            },
+                            {
+                                rd: "ถนนสาทร → สี่แยกบางรัก",
+                                nt: "ระบายน้ำดี น้ำขังเล็กน้อยที่ทางแยก",
+                                rng: "3-7 km",
+                                r: 12,
+                                s: "CLEAR",
+                            },
+                            {
+                                rd: "ถนนเจริญกรุง (บางรัก-ตลาดน้อย)",
+                                nt: "ถนนเก่าแต่ระดับสูง ฝนปรอยไม่ท่วม",
+                                rng: "7-10 km",
+                                r: 18,
+                                s: "CLEAR",
+                            },
+                            {
+                                rd: "ซอยเจริญกรุง 22-24 → ตลาดน้อย",
+                                nt: "ซอยแคบแต่ระบายน้ำได้ ทัศนวิสัยจำกัด",
+                                rng: "10-12.5 km",
+                                r: 20,
+                                s: "CLEAR",
+                            },
+                        ],
+                    },
+                    {
+                        id: "B",
+                        lbl: "เส้นทาง B",
+                        rec: false,
+                        tag: "⚠️ เสี่ยงสูง",
+                        tc: "rtag-r",
+                        cc: "rsk",
+                        desc: "ผ่านพระราม 4 - เยาวราช เร็วกว่าแต่น้ำท่วม 3 จุดต่อเนื่อง",
+                        min: 30,
+                        km: 9.8,
+                        risk: 85,
+                        rlvl: "HIGH",
+                        segs: [
+                            {
+                                rd: "ถนนพระราม 4 (อโศก-หัวลำโพง)",
+                                nt: "⚠️ น้ำท่วมขัง 10-15 ซม. ใต้ทางด่วน รายงาน 12 ครั้ง",
+                                rng: "0-3.5 km",
+                                r: 65,
+                                s: "PARTIAL",
+                            },
+                            {
+                                rd: "ถนนเจริญกรุง (หัวลำโพง)",
+                                nt: "⚠️ น้ำท่วม 15-20 ซม. ท่อระบายอุดตัน",
+                                rng: "3.5-6 km",
+                                r: 78,
+                                s: "FLOODED",
+                            },
+                            {
+                                rd: "ถนนเยาวราช",
+                                nt: "⚠️ น้ำท่วมรุนแรง 20-30 ซม. มอเตอร์ไซค์ล้ม 2 คัน รายงาน 18 ครั้ง",
+                                rng: "6-8.5 km",
+                                r: 92,
+                                s: "FLOODED",
+                            },
+                            {
+                                rd: "ถนนทรงวาด → ตลาดน้อย",
+                                nt: "น้ำท่วม 5-10 ซม. ลดลงเรื่อยๆ",
+                                rng: "8.5-9.8 km",
+                                r: 55,
+                                s: "PARTIAL",
+                            },
+                        ],
+                    },
+                ],
+                aiReason:
+                    "เส้นทาง B สั้นกว่า 2.7 กม. และเร็วกว่า 8 นาที แต่มีน้ำท่วมรุนแรง 3 จุดต่อเนื่อง โดยเฉพาะถนนเยาวราชที่ท่วม 20-30 ซม. มีมอเตอร์ไซค์ล้ม 2 คัน และมีรายงานจากชุมชน 18 ครั้งใน 3 ชั่วโมง ระบบจึงแนะนำเส้นทาง A อ้อมผ่านสาทร-เจริญกรุง (บางรัก) โดยใช้ BTS ข้ามจุดรถติดช่วงแรก เพิ่มเวลาเพียง 8 นาทีแต่ลดคะแนนความเสี่ยงจาก 85 เหลือ 15 — คุ้มค่าอย่างยิ่งเมื่อเทียบกับการติดค้างกลางน้ำท่วมหรือเกิดอุบัติเหตุ",
+                stops: [
+                    {
+                        o: 1,
+                        ts: "09:00",
+                        te: "10:30",
+                        nm: "ชุมชนตลาดน้อย — ชมงาน Street Art ชิโน-โปรตุกีส",
+                        en: "Talat Noi — Sino-Portuguese Street Art",
+                        cat: "HERITAGE_WALK",
+                        icon: "🎨",
+                        clr: "#8b5cf6",
+                        cost: 0,
+                        crowd: 0.15,
+                        fr: 8,
+                        sme: "ชุมชนตลาดน้อย",
+                        hl: "เดินชม Street Art 20+ จุดในตรอกซอยเก่าแก่ สถาปัตยกรรม 200 ปี",
+                        tr: {
+                            mode: "WALK",
+                            icon: "🚶",
+                            min: 8,
+                            cost: 0,
+                            desc: "เดินผ่านซอยตลาดน้อย",
+                        },
+                    },
+                    {
+                        o: 2,
+                        ts: "10:38",
+                        te: "11:30",
+                        nm: "ร้านกาแฟโบราณ บ้านอากง — สูตร 70 ปี",
+                        en: "Baan Akong Heritage Coffee — 70yr Recipe",
+                        cat: "LOCAL_CAFE",
+                        icon: "☕",
+                        clr: "#f97316",
+                        cost: 120,
+                        crowd: 0.2,
+                        fr: 10,
+                        sme: "ครอบครัวอากง รุ่นที่ 3",
+                        hl: "กาแฟถุงผ้าโบราณ โอเลี้ยง + ขนมปังปิ้งสังขยา สูตรตั้งแต่ พ.ศ. 2499",
+                        tr: {
+                            mode: "FERRY",
+                            icon: "⛴️",
+                            min: 20,
+                            cost: 30,
+                            desc: "เรือข้ามฟากท่าตลาดน้อย → ท่าคลองสาน",
+                        },
+                    },
+                    {
+                        o: 3,
+                        ts: "11:50",
+                        te: "13:00",
+                        nm: "ตลาดสดคลองสาน — ข้าวแกงป้าแจ๋ว + ขนมไทย",
+                        en: "Khlong San Market — Pa Jaew Curry Rice",
+                        cat: "LOCAL_MARKET",
+                        icon: "🍛",
+                        clr: "#22c55e",
+                        cost: 180,
+                        crowd: 0.3,
+                        fr: 12,
+                        sme: "แม่ค้าตลาดสด 5 แผง",
+                        hl: "ข้าวแกง 5 อย่าง 50 บาท + ขนมชั้น ทองหยิบ ฝอยทอง",
+                        tr: {
+                            mode: "WALK",
+                            icon: "🚶",
+                            min: 10,
+                            cost: 0,
+                            desc: "เดินเลาะริมคลองสาน",
+                        },
+                    },
+                    {
+                        o: 4,
+                        ts: "13:10",
+                        te: "14:30",
+                        nm: "ร้านกาแฟลุงอ้วน — Latte Art Workshop",
+                        en: "Lung Uan Coffee — Latte Art Workshop",
+                        cat: "WORKSHOP_CAFE",
+                        icon: "🎨",
+                        clr: "#ec4899",
+                        cost: 350,
+                        crowd: 0.1,
+                        fr: 15,
+                        sme: "ลุงอ้วน บาริสต้าชุมชนคลองสาน",
+                        hl: "เรียน Latte Art 1 ชม. + เครื่องดื่ม 2 แก้ว ชั้นเรียนเล็ก 6 คน",
+                        tr: {
+                            mode: "BTS",
+                            icon: "🚆",
+                            min: 25,
+                            cost: 44,
+                            desc: "BTS กรุงธนบุรี → BTS สะพานตากสิน",
+                        },
+                    },
+                    {
+                        o: 5,
+                        ts: "14:55",
+                        te: "16:30",
+                        nm: "ชุมชนกุฎีจีน — ขนมฝรั่งโบราณ 200 ปี",
+                        en: "Kudi Chin — 200yr Portuguese Pastry",
+                        cat: "HERITAGE_WORKSHOP",
+                        icon: "🏛️",
+                        clr: "#0ea5e9",
+                        cost: 250,
+                        crowd: 0.12,
+                        fr: 10,
+                        sme: "กลุ่มแม่บ้านกุฎีจีน + วัดซางตาครู้ส",
+                        hl: "ทำขนมฝรั่งกุฎีจีนสูตร 200 ปี + เดินชมโบสถ์ซางตาครู้ส",
+                        tr: {
+                            mode: "FERRY",
+                            icon: "⛴️",
+                            min: 18,
+                            cost: 10,
+                            desc: "เรือข้ามฟากท่ากุฎีจีน → ท่ายอดพิมาน",
+                        },
+                    },
+                    {
+                        o: 6,
+                        ts: "16:48",
+                        te: "18:00",
+                        nm: "Yodpiman River Walk — ชมพระอาทิตย์ตก",
+                        en: "Yodpiman River Walk — Chao Phraya Sunset",
+                        cat: "SCENIC",
+                        icon: "🌅",
+                        clr: "#0ea5e9",
+                        cost: 80,
+                        crowd: 0.25,
+                        fr: 8,
+                        sme: "ร้านไอศกรีมมะพร้าว + โซดาคราฟท์",
+                        hl: "เดินเล่นริมแม่น้ำ ไอศกรีมมะพร้าว + โซดามะนาวคราฟท์",
+                        tr: {
+                            mode: "MRT",
+                            icon: "🚇",
+                            min: 22,
+                            cost: 42,
+                            desc: "MRT สนามไชย → MRT สุขุมวิท (กลับอโศก)",
+                        },
+                    },
+                ],
+                scores: {
+                    satisfaction: 0.93,
+                    sme_distribution: 0.95,
+                    safety: 0.91,
+                    budget: 0.89,
+                    crowd: 0.92,
+                    heritage: 0.96,
+                    composite: 0.927,
+                },
+                narrative:
+                    "ทริป Eco & Heritage 2 คน งบ 1,500 บาท เริ่มเช้าชม Street Art ตลาดน้อย จิบกาแฟถุงผ้า 70 ปีร้านอากง ข้ามแม่น้ำด้วยเรือไปกินข้าวแกงป้าแจ๋วตลาดคลองสาน ทำ Latte Art กับลุงอ้วน สัมผัสประวัติศาสตร์ 200 ปีที่กุฎีจีน ปิดท้ายชมพระอาทิตย์ตก Yodpiman — ใช้งบ 1,106 บาท เหลือ 394 กระจายรายได้ SME 8 แห่ง รวม 980 บาท",
+                arch: {
+                    t1: [
+                        "Weather API (TMD)",
+                        "Traffic & Routing",
+                        "Flood/Disaster (GISTDA)",
+                        "Tourism DB (TAT)",
+                        "SME Profiles (DBD)",
+                        "Community Reports",
+                    ],
+                    t2: [
+                        "Predict — Spatial Risk",
+                        "Analyze — Context Fusion",
+                        "Recommend — Multi-Objective",
+                        "Explain — Thai NL (LLM+RAG)",
+                    ],
+                    t3: [
+                        "🏪 Business Copilot (LocalShield AI)",
+                        "🚗 Mobility Copilot (SafeRoute AI)",
+                        "🗺️ Tourism Copilot (LocalFlow AI)",
+                    ],
+                    aws: [
+                        ["Weather/Event Ingestion", "EventBridge + Lambda"],
+                        ["Routing & Geospatial", "Amazon Location Service"],
+                        ["SME/Tourism DB", "Amazon DynamoDB"],
+                        ["ML Risk Prediction", "Amazon SageMaker"],
+                        [
+                            "LLM + RAG Reasoning",
+                            "Bedrock + OpenSearch Serverless",
+                        ],
+                        ["API Layer", "API Gateway + Lambda"],
+                        ["Frontend Hosting", "CloudFront + S3"],
+                        ["Real-time Updates", "AWS AppSync (WebSocket)"],
+                    ],
+                },
+            };
+
+            // ═══════════════════════════════════════════════════════════════
+            // STATE
+            // ═══════════════════════════════════════════════════════════════
+            const S = {
+                sc: "flood",
+                tab: "shield",
+                sme: 1,
+                budget: 1500,
+                checks: [
+                    [false, false, false, false],
+                    [false, false, false, false],
+                    [false, false, false, false],
+                ],
+                modal: false,
+                mtab: "arch",
+            };
+
+            // ═══════════════════════════════════════════════════════════════
+            // RENDER FUNCTIONS
+            // ═══════════════════════════════════════════════════════════════
+
+            function renderKPI() {
+                const items = S.sc === "flood" ? D.kpi.flood : D.kpi.normal;
+                document.getElementById("kpi-bar").innerHTML = items
+                    .map(
+                        (k) =>
+                            `<div class="stat"><div class="sv ${k.c} mono">${k.v}</div><div class="sl">${k.l}</div></div>`,
+                    )
+                    .join("");
+            }
+
+            function renderTabs() {
+                const tabs = [
+                    { id: "shield", l: "🏪 LocalShield AI" },
+                    { id: "route", l: "🚗 SafeRoute AI" },
+                    { id: "flow", l: "🗺️ LocalFlow AI" },
+                ];
+                document.getElementById("tab-nav").innerHTML = tabs
+                    .map(
+                        (t) =>
+                            `<button class="tab-btn${S.tab === t.id ? " active" : ""}" data-tab="${t.id}" role="tab">${t.l}</button>`,
+                    )
+                    .join("");
+                document
+                    .querySelectorAll(".panel")
+                    .forEach((p) => p.classList.remove("active"));
+                document
+                    .getElementById("panel-" + S.tab)
+                    .classList.add("active");
+            }
+
+            function renderShield() {
+                const el = document.getElementById("panel-shield");
+                if (S.sc === "normal") {
+                    el.innerHTML = `<div class="norm-card"><div class="ni">☀️</div><h3>ระบบปกติ — ไม่มีการแจ้งเตือน</h3><p>สภาพอากาศดี ไม่มีความเสี่ยงน้ำท่วม ร้านค้า SME ทั้ง 3 แห่งเปิดให้บริการตามปกติ<br>☕ ลุงอ้วน คลองสาน · 💊 เจริญโอสถ เยาวราช · 🍗 ข้าวมันไก่ ห้วยขวาง<br><em>All systems normal — no active weather alerts.</em></p></div>`;
+                    return;
+                }
+                const sm = D.smes[S.sme];
+                const chk = S.checks[S.sme];
+                const done = chk.filter(Boolean).length;
+                const pct = Math.round((done / 4) * 100);
+                let h = `<div class="sec-t">🚨 การแจ้งเตือนร้านค้า SME <span class="badge">3 ALERTS</span></div>`;
+                h += `<div class="sme-sel">${D.smes.map((s, i) => `<button class="sme-btn${S.sme === i ? " active" : ""}" data-sme="${i}">${s.icon} ${s.nm.split(" ")[0]}${s.nm.split(" ")[1] || ""} <span class="rb ${s.rc}" style="font-size:9px;padding:2px 6px">${s.rl} ${s.risk}</span></button>`).join("")}</div>`;
+                h += `<div class="card"><div class="card-hd"><div class="s-ico" style="background:${sm.bg}">${sm.icon}</div><div class="s-nfo"><div class="s-nm">${sm.nm}</div><div class="s-en">${sm.en} · ${sm.id}</div><div class="s-addr">${sm.addr}</div></div><span class="rb ${sm.rc}">${sm.rlbl}</span></div>`;
+                h += `<div class="met-row"><div class="met"><div class="mv mono" style="color:${sm.dc}">${sm.depth}</div><div class="ml">ระดับน้ำคาดการณ์</div></div><div class="met"><div class="mv mono" style="color:${sm.ic}">${sm.inv}</div><div class="ml">สินค้าเสี่ยงเสียหาย</div></div><div class="met"><div class="mv mono" style="color:${sm.ic}">${sm.rev}</div><div class="ml">รายได้ที่อาจสูญเสีย</div></div></div>`;
+                h += `<div class="fz">${sm.fz}</div>`;
+                h += `<details open><summary style="padding:8px 16px;font-size:12px;font-weight:600;color:${sm.ic};cursor:pointer;user-select:none">${sm.rl === "CRITICAL" ? "🚨" : "📋"} ดู 4 แผนปฏิบัติการ — Store Readiness</summary><ul class="act-list">`;
+                sm.acts.forEach((a, i) => {
+                    h += `<li class="act-i"><input type="checkbox" class="act-cb" data-ai="${i}" ${chk[i] ? "checked" : ""} aria-label="Action ${i + 1}"><span class="act-p ap${a.p}">${a.p}</span><span class="act-t">${a.t}</span><span class="act-cat">${a.cat}</span><span class="act-dl">⏰ ${a.dl}</span></li>`;
+                });
+                h += `</ul></details>`;
+                h += `<div class="prog-wrap"><div class="prog-lbl"><span>ความพร้อมของร้าน:</span><span class="mono">${pct}% (${done}/4)</span></div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>`;
+                if (done === 4)
+                    h += `<div class="prog-msg show">✅ ร้านพร้อมรับมือน้ำท่วม!</div>`;
+                h += `</div>`;
+                el.innerHTML = h;
+            }
+
+            function renderRoute() {
+                const el = document.getElementById("panel-route");
+                if (S.sc === "normal") {
+                    el.innerHTML = `<div class="norm-card"><div class="ni">🛣️</div><h3>เส้นทางปกติ — ถนนทุกเส้นสภาพดี</h3><p>ไม่มีน้ำท่วมขัง ไม่มีรายงานอุบัติเหตุ ใช้เส้นทาง Google Maps ปกติได้<br>อโศก → ตลาดน้อย ใช้เวลา 25 นาทีผ่านพระราม 4<br><em>All routes clear — standard navigation available.</em></p></div>`;
+                    return;
+                }
+                let h = `<div class="sec-t">🚗 เปรียบเทียบเส้นทาง SafeRoute AI <span class="badge">RISK-ADJUSTED</span></div>`;
+                h += `<div class="od-bar"><div class="od-pt"><div class="od-dot od-o"></div><div><strong>แยกอโศก</strong><br><span style="font-size:10px;color:#94a3b8">BTS Asok / MRT Sukhumvit</span></div></div><span class="od-arr">→</span><div class="od-pt"><div class="od-dot od-d"></div><div><strong>ชุมชนตลาดน้อย</strong><br><span style="font-size:10px;color:#94a3b8">Talat Noi Heritage District</span></div></div><span class="wx-bd">🌧️ ฝนหนัก 42 mm/hr · ทัศนวิสัย 2.0 km</span></div>`;
+                h += `<div class="rt-grid">`;
+                D.routes.forEach((r) => {
+                    const rc = r.risk <= 30 ? "sv-g" : "sv-r";
+                    h += `<div class="rt-card ${r.cc}"><div class="rt-hd"><div class="rt-lbl">${r.lbl} <span class="rtag ${r.tc}">${r.tag}</span></div><div class="rt-sub">${r.desc}</div><div class="rt-stats"><div class="rs"><div class="rv mono">${r.min}</div><div class="rl">นาที</div></div><div class="rs"><div class="rv mono">${r.km}</div><div class="rl">กม.</div></div><div class="rs"><div class="rv ${rc} mono">${r.risk}</div><div class="rl">Flood Risk</div></div></div></div>`;
+                    h += `<div class="seg-list">`;
+                    r.segs.forEach((s) => {
+                        const dc =
+                            s.s === "CLEAR"
+                                ? "s-clr"
+                                : s.s === "FLOODED"
+                                  ? "s-fld"
+                                  : "s-prt";
+                        h += `<div class="seg"><div class="seg-dot ${dc}"></div><div><div class="seg-rd">${s.rd}</div><div class="seg-nt">${s.nt}</div></div><div class="seg-km">${s.rng} · R${s.r}</div></div>`;
+                    });
+                    h += `</div></div>`;
+                });
+                h += `</div>`;
+                h += `<details class="ai-box" open><summary>🤖 AI Reasoning — SafeRoute คิดอย่างไร?</summary><div class="ai-txt">${D.aiReason}</div><div class="ai-trade"><span style="color:#22c55e">✓ +8 นาที</span><span style="color:#cbd5e1">|</span><span style="color:#ef4444">ลดความเสี่ยง −70 คะแนน (85 → 15)</span><span style="color:#cbd5e1">|</span><span style="color:#64748b;font-weight:400;font-size:11px">Confidence: 94%</span></div></details>`;
+                el.innerHTML = h;
+            }
+
+            function renderFlow() {
+                const el = document.getElementById("panel-flow");
+                if (S.sc === "flood") {
+                    el.innerHTML = `<div class="norm-card"><div class="ni">🌧️</div><h3>สภาพอากาศไม่เอื้อ — แนะนำเลื่อนทริป</h3><p>ฝนตกหนัก 85 มม. TMD เตือนระดับ ORANGE เส้นทางท่องเที่ยวบางจุดอาจมีน้ำท่วมขัง<br>แนะนำวางแผนใหม่เมื่อสภาพอากาศดีขึ้น หรือสลับไปดู LocalShield สำหรับแผนรับมือ<br><em>Weather advisory — consider rescheduling or check LocalShield for action plans.</em></p></div>`;
+                    return;
+                }
+                const stops = D.stops.filter(
+                    (stop, index) => index < 5 || S.budget >= 1500,
+                );
+                const spent = stops.reduce(
+                    (total, stop) => total + stop.cost + stop.tr.cost,
+                    0,
+                );
+                let h = `<div class="sec-t">🗺️ แผนทริปชุมชน LocalFlow AI <span class="badge">MULTI-OBJECTIVE</span></div>`;
+                h += `<div class="itin-hdr"><strong>Eco & Heritage — Bangkok 1 Day</strong><div class="ctags"><span class="ctag">👥 2 คน</span><span class="ctag">🕘 09:00–18:00</span><span class="ctag">🏪 กระจายรายได้ SME</span></div><div class="scores-g">${Object.entries(
+                    D.scores,
+                )
+                    .map(
+                        ([key, value]) =>
+                            `<div class="sc-i"><div class="scv">${Math.round(value * 100)}%</div><div class="scl">${key.replace("_", " ")}</div></div>`,
+                    )
+                    .join("")}</div></div>`;
+                h += `<div class="budget-area"><div class="bud-lbl">งบประมาณต่อทริป</div><div class="bud-val">฿${S.budget.toLocaleString()}</div><input class="bud-slider" type="range" min="800" max="2000" step="100" value="${S.budget}" aria-label="Trip budget"><div class="bud-rng"><span>฿800</span><span>฿2,000</span></div><div class="bud-info">แผนปัจจุบันใช้ประมาณ ฿${spent.toLocaleString()} · ${stops.length} จุดแวะ</div></div>`;
+                h += `<div class="tl">${stops.map((stop) => `<div class="tl-stop"><div class="tl-dot" style="background:${stop.clr}">${stop.o}</div><div class="tl-card"><div class="tl-hd"><div class="tl-time">${stop.ts}–${stop.te}</div><div><div class="tl-nm">${stop.icon} ${stop.nm}</div><div class="tl-en">${stop.en}</div></div><span class="tl-cat" style="background:${stop.clr}20;color:${stop.clr}">${stop.cat}</span></div><div class="tl-met"><div class="tm"><div class="tv">฿${stop.cost}</div><div class="tl2">Activity</div></div><div class="tm"><div class="tv">${Math.round(stop.crowd * 100)}%</div><div class="tl2">Crowd</div></div><div class="tm"><div class="tv">${stop.fr}</div><div class="tl2">Local reach</div></div><div class="tm"><div class="tv">${stop.tr.icon} ${stop.tr.min}m</div><div class="tl2">${stop.tr.mode}</div></div></div><div class="tl-ben">🏪 รายได้สู่: ${stop.sme} · ${stop.hl}</div></div><div class="tl-transit"><span class="tr-mode">${stop.tr.icon} ${stop.tr.mode}</span>${stop.tr.desc}${stop.tr.cost ? ` · ฿${stop.tr.cost}` : ""}</div></div>`).join("")}</div>`;
+                h += `<div class="trip-sum"><h4>สรุปผลลัพธ์ LocalFlow</h4><div class="sum-g"><div class="si"><div class="sv2 sv-b">฿${spent.toLocaleString()}</div><div class="sl2">ใช้จ่าย</div></div><div class="si"><div class="sv2 sv-g">฿${Math.max(0, S.budget - spent).toLocaleString()}</div><div class="sl2">คงเหลือ</div></div><div class="si"><div class="sv2 sv-b">${stops.length}</div><div class="sl2">สถานที่</div></div><div class="si"><div class="sv2 sv-g">${D.scores.composite}</div><div class="sl2">Composite</div></div></div></div>`;
+                h += `<div class="narr-box"><div class="nt">🤖 AI Itinerary Reasoning</div><div class="np">${D.narrative}</div></div>`;
+                el.innerHTML = h;
+            }
+
+            function toggleModal() {
+                S.modal = !S.modal;
+                document
+                    .getElementById("modal-bg")
+                    .classList.toggle("open", S.modal);
+                if (S.modal) renderModal();
+            }
+
+            function renderModal() {
+                const body = document.getElementById("modal-body");
+                const nav = `<div class="mt-nav" role="tablist">
+    <button class="mt-btn${S.mtab === "arch" ? " active" : ""}" data-mtab="arch">Architecture</button>
+    <button class="mt-btn${S.mtab === "pilot" ? " active" : ""}" data-mtab="pilot">12-Week Pilot</button>
+    <button class="mt-btn${S.mtab === "measure" ? " active" : ""}" data-mtab="measure">KPI & Safety</button>
+  </div>`;
+                const arch = `<div class="modal-intro">โครงสร้างนี้แสดงแบบเป้าหมายสำหรับ Production Deployment; Prototype ปัจจุบันทำงานแบบ Offline ด้วยข้อมูลสังเคราะห์</div>
+    <div class="arch-tier t1"><div class="tier-lbl">Tier 1 — Data Sources</div><div class="tier-boxes">${D.arch.t1.map((item) => `<span class="tier-box">${item}</span>`).join("")}</div></div>
+    <div class="arch-arr">↓</div><div class="arch-tier t2"><div class="tier-lbl">Tier 2 — Intelligence: Predict → Analyze → Recommend → Explain</div><div class="tier-boxes">${D.arch.t2.map((item) => `<span class="tier-box">${item}</span>`).join("")}</div></div>
+    <div class="arch-arr">↓</div><div class="arch-tier t3"><div class="tier-lbl">Tier 3 — Copilot Experiences</div><div class="tier-boxes">${D.arch.t3.map((item) => `<span class="tier-box">${item}</span>`).join("")}</div></div>
+    <h3 class="modal-section">AWS mapping สำหรับ Production</h3><table class="aws"><thead><tr><th>ความสามารถ</th><th>บริการที่เสนอ</th></tr></thead><tbody>${D.arch.aws.map((r) => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</tbody></table>`;
+                const pilot = `<div class="modal-intro">เป้าหมาย Pilot คือพิสูจน์ว่า “ข้อมูลที่ทันเวลา + คำแนะนำที่ทำตามได้” ช่วยผู้ใช้ตัดสินใจดีขึ้น ไม่ใช่การอ้างผลกระทบระดับเมืองตั้งแต่วันแรก</div>
+    <div class="info-grid">
+      <div class="info-card"><b>สัปดาห์ 1–2</b><span>คัดเลือกพื้นที่ ทำ Data Inventory สัมภาษณ์ SME และกำหนดเกณฑ์ความเสี่ยงร่วมกัน</span></div>
+      <div class="info-card"><b>สัปดาห์ 3–4</b><span>เชื่อมข้อมูล Sandbox สร้าง SME Profile และ Action Template อย่างน้อย 5 ประเภทธุรกิจ</span></div>
+      <div class="info-card"><b>สัปดาห์ 5–6</b><span>จำลองเหตุการณ์ ทดสอบ UAT และตรวจความเข้าใจข้อความภาษาไทย</span></div>
+      <div class="info-card"><b>สัปดาห์ 7–10</b><span>เปิดใช้แบบจำกัดกลุ่ม เก็บ telemetry และ feedback รายสัปดาห์</span></div>
+      <div class="info-card"><b>สัปดาห์ 11–12</b><span>ประเมินผล ทบทวนความเสี่ยง และตัดสินใจขยาย ปรับ หรือหยุด</span></div>
+      <div class="info-card"><b>เกณฑ์ขยายผล</b><span>ผ่านความปลอดภัย มีข้อมูลคุณค่าแก่ผู้ใช้ และมีแผน fallback ของข้อมูลสำคัญ</span></div>
+    </div>
+    <h3 class="modal-section">Scope ของ Prototype นี้</h3>
+    <div class="guard-list"><div class="guard"><b>แสดงได้แล้ว:</b> 3 Copilots, Scenario Switcher, แผนรับมือ 3 SME, เส้นทางเปรียบเทียบ และแผนทริปตามงบ</div><div class="guard"><b>จะพิสูจน์ใน Pilot:</b> API จริง การแจ้งเตือน การยืนยันตัวตน แผงควบคุมเจ้าหน้าที่ และ feedback loop</div><div class="guard"><b>นอกขอบเขต:</b> การสั่งปิดถนน/อพยพอัตโนมัติ การรับประกันความปลอดภัย และการใช้ข้อมูลส่วนบุคคลเพื่อโฆษณา</div></div>`;
+                const measure = `<div class="modal-intro">การวัดผลแยก “ผู้ใช้เปิดและทำตาม” ออกจาก “ผลกระทบที่พิสูจน์ได้” เพื่อหลีกเลี่ยงการกล่าวเกินจริง</div>
+    <table class="crit"><thead><tr><th>ตัวชี้วัด Pilot</th><th>เป้าหมาย/วิธีวัด</th></tr></thead><tbody>
+      <tr><td>Alert open rate</td><td>≥ 60% ของการแจ้งเตือนที่ส่งสำเร็จ</td></tr>
+      <tr><td>Action completion</td><td>≥ 50% ของร้านที่ได้รับ Alert ทำอย่างน้อย 1 Action</td></tr>
+      <tr><td>Timeliness</td><td>median &lt; 10 นาที จากข้อมูลเข้าสู่การแจ้งเตือนที่พร้อมใช้</td></tr>
+      <tr><td>Recommendation relevance</td><td>≥ 75% ของ feedback ระบุว่าคำแนะนำเกี่ยวข้อง</td></tr>
+      <tr><td>Safety incidents</td><td>0 เหตุร้ายแรง; ทบทวนทุก incident และระงับกฎที่เกี่ยวข้อง</td></tr>
+    </tbody></table>
+    <h3 class="modal-section">Decision Guardrails</h3><div class="guard-list">
+      <div class="guard"><b>Confidence ต่ำ:</b> ระบุว่าข้อมูลไม่เพียงพอ และชี้ไปยังแหล่งทางการ แทนการฟันธง</div>
+      <div class="guard"><b>ถนนปิด/น้ำท่วมรุนแรง:</b> ไม่เสนอเป็นเส้นทางแนะนำ</div>
+      <div class="guard"><b>Community report ใหม่:</b> แสดงเป็นสัญญาณเบื้องต้นจนกว่าจะยืนยันจากหลายแหล่ง</div>
+      <div class="guard"><b>เหตุฉุกเฉิน:</b> ใช้ช่องทางหน่วยงานฉุกเฉินและข้อมูลทางการ ระบบนี้ไม่ใช่บริการฉุกเฉิน</div>
+      <div class="guard"><b>ข้อมูลส่วนบุคคล:</b> เก็บเท่าที่จำเป็น แยกสิทธิ์เข้าถึง และรองรับการถอนความยินยอม</div>
+    </div>`;
+                body.innerHTML =
+                    nav +
+                    (S.mtab === "arch"
+                        ? arch
+                        : S.mtab === "pilot"
+                          ? pilot
+                          : measure);
+            }
+
+            function render() {
+                renderKPI();
+                renderTabs();
+                renderShield();
+                renderRoute();
+                renderFlow();
+            }
+            document.addEventListener("click", (event) => {
+                const scenario = event.target.closest("[data-sc]");
+                const tab = event.target.closest("[data-tab]");
+                const sme = event.target.closest("[data-sme]");
+                const mtab = event.target.closest("[data-mtab]");
+                if (scenario) {
+                    S.sc = scenario.dataset.sc;
+                    render();
+                }
+                if (tab) {
+                    S.tab = tab.dataset.tab;
+                    render();
+                }
+                if (sme) {
+                    S.sme = Number(sme.dataset.sme);
+                    renderShield();
+                }
+                if (mtab) {
+                    S.mtab = mtab.dataset.mtab;
+                    renderModal();
+                }
+            });
+            document.addEventListener("change", (event) => {
+                if (event.target.matches(".act-cb")) {
+                    S.checks[S.sme][Number(event.target.dataset.ai)] =
+                        event.target.checked;
+                    renderShield();
+                }
+                if (event.target.matches(".bud-slider")) {
+                    S.budget = Number(event.target.value);
+                    renderFlow();
+                }
+            });
+            render();
+        </script>
+    </body>
+</html>

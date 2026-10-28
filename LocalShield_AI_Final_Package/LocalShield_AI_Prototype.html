@@ -1,0 +1,3242 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LocalShield AI — Interactive Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --primary-border: #bfdbfe;
+            --emerald: #10b981;
+            --emerald-hover: #059669;
+            --emerald-light: #ecfdf5;
+            --emerald-border: #a7f3d0;
+            --amber: #f59e0b;
+            --amber-hover: #d97706;
+            --amber-light: #fffbeb;
+            --amber-border: #fde68a;
+            --rose: #ef4444;
+            --rose-hover: #dc2626;
+            --rose-light: #fef2f2;
+            --rose-border: #fecaca;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-200: #e2e8f0;
+            --slate-100: #f1f5f9;
+            --slate-50: #f8fafc;
+            --sidebar-bg: #0b1329;
+            --card-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+            --card-shadow-hover: 0 12px 28px -4px rgba(15, 23, 42, 0.09), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--slate-50);
+            color: var(--slate-800);
+            font-family: 'Prompt', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        /* App Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 1fr);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, #0b1329 0%, #0d1b38 100%);
+            color: #d7e4ee;
+            padding: 24px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 8px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2563eb, #10b981);
+            border-radius: var(--radius-md);
+            display: grid;
+            place-items: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+
+        .brand-text h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand-text span {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        .brand-tag {
+            font-size: 10px;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0 12px 8px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .nav-item {
+            border: 0;
+            background: none;
+            text-align: left;
+            color: #94a3b8;
+            padding: 11px 14px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+            font-size: 13.5px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            position: relative;
+        }
+
+        .nav-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item svg {
+            width: 19px;
+            height: 19px;
+            stroke-width: 2;
+            transition: transform 0.18s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #f1f5f9;
+        }
+
+        .nav-item.active {
+            background: #2563eb;
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+
+        .nav-badge {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-item.active .nav-badge {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .sidebar-bottom {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .env-badge {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            font-size: 11px;
+            color: #34d399;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .sim-note {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.45;
+            padding: 0 4px;
+        }
+
+        /* Main Workspace */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            min-height: 100vh;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 72px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .topbar-title h1 {
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--slate-900);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar-title p {
+            font-size: 12px;
+            color: var(--slate-500);
+            margin-top: 1px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Action Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.2;
+        }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-success {
+            background: var(--emerald);
+            color: #ffffff;
+            border-color: var(--emerald);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+        }
+
+        .btn-success:hover {
+            background: var(--emerald-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-danger {
+            background: var(--rose-light);
+            color: var(--rose-hover);
+            border-color: var(--rose-border);
+        }
+
+        .btn-danger:hover {
+            background: var(--rose);
+            color: #ffffff;
+            border-color: var(--rose);
+        }
+
+        .btn-outline {
+            background: #ffffff;
+            color: var(--slate-700);
+            border-color: var(--slate-300);
+        }
+
+        .btn-outline:hover {
+            background: var(--slate-100);
+            border-color: var(--slate-400);
+            color: var(--slate-900);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .btn-sm svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Guided Stepper Flow Bar */
+        .guided-flow-bar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--slate-200);
+            padding: 10px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            overflow-x: auto;
+        }
+
+        .flow-stepper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 2px 0;
+            scrollbar-width: none;
+            flex: 1;
+        }
+
+        .flow-stepper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 13px;
+            border-radius: var(--radius-full);
+            background: var(--slate-100);
+            border: 1px solid var(--slate-200);
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .flow-step-num {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--slate-300);
+            color: var(--slate-700);
+            display: grid;
+            place-items: center;
+            font-size: 10.5px;
+            font-weight: 700;
+        }
+
+        .flow-step:hover {
+            background: var(--slate-200);
+            color: var(--slate-900);
+        }
+
+        .flow-step.active {
+            background: var(--primary-light);
+            border-color: var(--primary-border);
+            color: var(--primary);
+        }
+
+        .flow-step.active .flow-step-num {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .flow-step.completed {
+            background: var(--emerald-light);
+            border-color: var(--emerald-border);
+            color: var(--emerald-hover);
+        }
+
+        .flow-step.completed .flow-step-num {
+            background: var(--emerald);
+            color: #ffffff;
+        }
+
+        .flow-step.danger-state {
+            background: var(--rose-light);
+            border-color: var(--rose-border);
+            color: var(--rose-hover);
+        }
+
+        .flow-step.danger-state .flow-step-num {
+            background: var(--rose);
+            color: #ffffff;
+        }
+
+        .flow-step.pulse-next {
+            animation: pulse-step 2s infinite;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            color: #1d4ed8;
+            background: #eff6ff;
+        }
+
+        .flow-step.pulse-next .flow-step-num {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        @keyframes pulse-step {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        .flow-arrow {
+            color: var(--slate-400);
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .flow-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Demo Floating Overlay Banner */
+        .demo-floating-banner {
+            position: fixed;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            color: #ffffff;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: var(--radius-full);
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+            z-index: 150;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .demo-spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Content Area */
+        .page-content {
+            padding: 28px 32px 60px;
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Disclaimer Banner */
+        .disclaimer-banner {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            font-size: 12.5px;
+            color: #92400e;
+        }
+
+        .disclaimer-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .disclaimer-left svg {
+            width: 20px;
+            height: 20px;
+            color: #d97706;
+            flex-shrink: 0;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .metric-icon-wrap {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+        }
+
+        .metric-icon-blue { background: #eff6ff; color: #2563eb; }
+        .metric-icon-emerald { background: #ecfdf5; color: #10b981; }
+        .metric-icon-amber { background: #fffbeb; color: #d97706; }
+        .metric-icon-purple { background: #f5f3ff; color: #8b5cf6; }
+
+        .metric-icon-wrap svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
+        }
+
+        .metric-info {
+            flex: 1;
+        }
+
+        .metric-label {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: var(--slate-500);
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--slate-900);
+            line-height: 1.25;
+            margin: 4px 0 2px;
+            font-family: 'Inter', 'Prompt', sans-serif;
+        }
+
+        .metric-sub {
+            font-size: 11.5px;
+            color: var(--slate-400);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Layout Grid */
+        .layout-2col {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(360px, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .layout-equal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Panels */
+        .panel {
+            background: #ffffff;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: #ffffff;
+        }
+
+        .panel-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .panel-header span {
+            font-size: 12px;
+            color: var(--slate-500);
+        }
+
+        .panel-body {
+            padding: 22px;
+            flex: 1;
+        }
+
+        .panel-footer {
+            padding: 14px 22px;
+            border-top: 1px solid var(--slate-200);
+            background: var(--slate-50);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        /* Tactical GIS Map Styling */
+        .map-container {
+            position: relative;
+            height: 420px;
+            background: #f8fafc;
+            overflow: hidden;
+            border-radius: 0;
+            user-select: none;
+        }
+
+        .map-container > svg.gis-map-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .map-overlay-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: var(--radius-full);
+            padding: 6px 14px;
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--slate-800);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .map-overlay-badge svg {
+            width: 15px !important;
+            height: 15px !important;
+            min-width: 15px !important;
+            min-height: 15px !important;
+            max-width: 15px !important;
+            max-height: 15px !important;
+            flex-shrink: 0 !important;
+            color: var(--primary);
+            display: inline-block !important;
+        }
+
+        .map-interactive-hint {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            border-radius: var(--radius-full);
+            padding: 6px 16px;
+            font-size: 11.5px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 5;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+        }
+
+        .map-interactive-hint svg {
+            width: 15px !important;
+            height: 15px !important;
+            min-width: 15px !important;
+            min-height: 15px !important;
+            max-width: 15px !important;
+            max-height: 15px !important;
+            flex-shrink: 0 !important;
+            color: #38bdf8;
+            display: inline-block !important;
+        }
+
+        .map-legend-bar {
+            background: #ffffff;
+            border-top: 1px solid var(--slate-200);
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 11.5px;
+        }
+
+        .legend-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--slate-600);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-line {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .legend-line.line-hazard {
+            background: repeating-linear-gradient(90deg, #ef4444, #ef4444 4px, #ffffff 4px, #ffffff 7px) !important;
+        }
+
+        .map-node {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .map-node:hover {
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+        }
+
+        .map-road-clickable {
+            cursor: pointer;
+        }
+
+        .map-road-clickable:hover line {
+            filter: brightness(1.2);
+        }
+
+        @keyframes route-pulse {
+            to {
+                stroke-dashoffset: -28;
+            }
+        }
+
+        .animated-route-line {
+            animation: route-pulse 1.2s linear infinite;
+        }
+
+        /* AI Insights Card */
+        .ai-insight-box {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fd 100%);
+            border: 1px solid #c7ddfc;
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .ai-insight-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: #2563eb;
+        }
+
+        .ai-insight-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .ai-insight-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-insight-title svg {
+            width: 18px;
+            height: 18px;
+            color: #2563eb;
+        }
+
+        .ai-insight-text {
+            color: #2e4d75;
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        .ai-insight-points {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .ai-point-card {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid #dbeafe;
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 12px;
+        }
+
+        .ai-point-card strong {
+            display: block;
+            color: #1e3a8a;
+            margin-bottom: 3px;
+        }
+
+        .ai-point-card span {
+            color: #475569;
+        }
+
+        /* Tags & Badges */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            white-space: nowrap;
+        }
+
+        .tag-emerald { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .tag-rose { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .tag-amber { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .tag-blue { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .tag-slate { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+
+        /* Request Cards */
+        .request-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .request-item {
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            background: #ffffff;
+            transition: all 0.18s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .request-item:hover {
+            border-color: var(--slate-300);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .req-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .req-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--slate-900);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .req-location {
+            font-size: 12px;
+            color: var(--slate-500);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .req-pill-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .req-pill {
+            background: var(--slate-100);
+            border-radius: var(--radius-sm);
+            padding: 4px 9px;
+            font-size: 12px;
+            color: var(--slate-700);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Table Design */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--slate-200);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .custom-table th {
+            background: #f8fafc;
+            color: var(--slate-600);
+            font-weight: 600;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--slate-200);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .custom-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--slate-200);
+            color: var(--slate-800);
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .custom-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Stock Bars */
+        .stock-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stock-bar-wrap {
+            width: 60px;
+            height: 6px;
+            background: var(--slate-200);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .stock-bar-fill {
+            height: 100%;
+            background: var(--emerald);
+            border-radius: var(--radius-full);
+        }
+
+        /* Route Cards */
+        .route-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .route-card {
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .route-card:hover {
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+            border-color: var(--slate-300);
+        }
+
+        .route-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .route-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .route-shop {
+            font-size: 13px;
+            color: var(--slate-600);
+            margin-top: 3px;
+        }
+
+        .route-path-box {
+            background: var(--slate-50);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 12.5px;
+        }
+
+        .route-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .route-km {
+            font-weight: 700;
+            color: var(--slate-700);
+        }
+
+        /* Steps */
+        .pillar-steps {
+            display: grid;
+            gap: 14px;
+        }
+
+        .pillar-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px;
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            background: #ffffff;
+            transition: transform 0.18s ease;
+        }
+
+        .pillar-step:hover {
+            transform: translateX(4px);
+        }
+
+        .pillar-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .num-blue { background: #eff6ff; color: #2563eb; }
+        .num-emerald { background: #ecfdf5; color: #10b981; }
+        .num-purple { background: #f5f3ff; color: #8b5cf6; }
+
+        .pillar-content strong {
+            font-size: 14px;
+            color: var(--slate-900);
+            display: block;
+        }
+
+        .pillar-content p {
+            font-size: 12.5px;
+            color: var(--slate-500);
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            height: 10px;
+            background: var(--slate-200);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: var(--radius-full);
+            transition: width 0.4s ease;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.35);
+            font-size: 13.5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 100;
+            transform: translateY(120%);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 420px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Modals */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            display: grid;
+            place-items: center;
+            z-index: 100;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-window {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3);
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-backdrop.active .modal-window {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--slate-400);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-close-btn:hover {
+            color: var(--slate-700);
+            background: var(--slate-100);
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--slate-700);
+        }
+
+        .form-control {
+            border: 1px solid var(--slate-300);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 13.5px;
+            color: var(--slate-800);
+            background: #ffffff;
+            outline: none;
+            transition: border-color 0.18s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .quick-preset-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .preset-chip {
+            background: var(--slate-100);
+            border: 1px solid var(--slate-200);
+            border-radius: var(--radius-full);
+            padding: 5px 11px;
+            font-size: 11.5px;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .preset-chip:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-border);
+            color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            background: var(--slate-50);
+            border-top: 1px solid var(--slate-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Filter Tab Bar */
+        .tab-pill-group {
+            display: flex;
+            background: var(--slate-100);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            gap: 4px;
+        }
+
+        .tab-pill {
+            border: 0;
+            background: none;
+            padding: 6px 14px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--slate-600);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab-pill.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+        }
+
+        .search-input-wrap {
+            position: relative;
+            min-width: 260px;
+        }
+
+        .search-input-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            color: var(--slate-400);
+        }
+
+        .search-input-wrap input {
+            padding-left: 36px;
+            width: 100%;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .layout-2col {
+                grid-template-columns: 1fr;
+            }
+            .layout-equal {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: relative;
+                height: auto;
+                padding: 16px;
+            }
+            .nav {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            .nav-item {
+                flex-shrink: 0;
+            }
+            .topbar {
+                padding: 0 16px;
+            }
+            .guided-flow-bar {
+                padding: 12px 16px;
+            }
+            .page-content {
+                padding: 20px 16px 40px;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h2>LocalShield <span>AI</span></h2>
+                    <div class="brand-tag">Resilience & Logistics</div>
+                </div>
+            </div>
+
+            <div class="nav-section-title">เมนูควบคุมหลัก</div>
+            <nav class="nav" id="sidebarNav"></nav>
+            <nav id="nav" style="display:none;"></nav>
+
+            <div class="sidebar-bottom">
+                <div class="env-badge">
+                    <span class="pulse-dot"></span>
+                    <div>
+                        <strong>SIMULATION ACTIVE</strong>
+                        <div style="font-size:10px; color:#94a3b8;">ระบบอัลกอริทึมจำลองพร้อมใช้งาน</div>
+                    </div>
+                </div>
+                <div class="sim-note">
+                    ข้อมูลร้านค้า คำร้อง และโครงข่ายถนนเป็นแบบจำลองเพื่อการสาธิต ไม่ใช่ข้อมูลภัยพิบัติจริง
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Header Topbar -->
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h1 id="pageTitle">ภาพรวมสถานการณ์ในชุมชน</h1>
+                    <p id="pageSubtitle">ศูนย์บัญชาการกระจายสิ่งจำเป็นและบรรเทาภัยพิบัติระดับท้องถิ่น</p>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn btn-outline btn-sm" id="btnHelpGuide">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        วิธีใช้งาน / สาธิต
+                    </button>
+                    <button class="btn btn-outline btn-sm" id="resetAll">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        รีเซ็ตสถานการณ์
+                    </button>
+                    <button class="btn btn-primary btn-sm" id="createRequest">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        ＋ สร้างคำร้อง
+                    </button>
+                </div>
+            </header>
+
+            <!-- Interactive Guided Flow Bar (Easy-to-use Workflow Stepper) -->
+            <div class="guided-flow-bar">
+                <div class="flow-stepper" id="flowStepper"></div>
+                <div class="flow-actions">
+                    <button class="btn btn-primary btn-sm" id="btnAutoDemo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        ▶ เล่นตัวอย่างสาธิตอัตโนมัติ
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Dynamic Body -->
+            <div class="page-content">
+                <div class="disclaimer-banner">
+                    <div class="disclaimer-left">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span><b>PROTOTYPE SIMULATION MODE:</b> ข้อมูลร้านค้า คำร้อง ถนน และผลลัพธ์เป็นข้อมูลจำลองเพื่อสาธิตเท่านั้น ไม่ใช่แผนความปลอดภัยหรือเส้นทางกู้ภัยจริง</span>
+                    </div>
+                    <span class="tag tag-amber">Synthetic Demo Data</span>
+                </div>
+
+                <div id="dynamicView"></div>
+                <div id="view" style="display:none;"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toastBox">
+        <svg id="toastIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="toastMessage">แจ้งเตือน</span>
+    </div>
+    <div id="toast" style="display:none;"></div>
+
+    <!-- Create Request Modal -->
+    <div class="modal-backdrop" id="modal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3>＋ เพิ่มคำร้องขอสิ่งจำเป็นของชุมชน</h3>
+                <button class="modal-close-btn" id="modalCloseBtn">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>เทมเพลตด่วน (คลิกเลือกค่าทันที)</label>
+                    <div class="quick-preset-chips">
+                        <span class="preset-chip" onclick="applyPreset('ชุมชนบ้านเหนือ', 'น้ำดื่ม', 50, 'เร่งด่วน')">💧 น้ำดื่ม 50 แพ็ค (บ้านเหนือ)</span>
+                        <span class="preset-chip" onclick="applyPreset('โรงเรียนวัดใหม่', 'อาหารแห้ง', 80, 'ปกติ')">🥫 อาหารแห้ง 80 ชุด (ร.ร.วัดใหม่)</span>
+                        <span class="preset-chip" onclick="applyPreset('ชุมชนกลาง', 'ยาสามัญ', 20, 'เร่งด่วน')">💊 ยาสามัญ 20 ชุด (ชุมชนกลาง)</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newArea">พื้นที่ชุมชนที่ต้องการความช่วยเหลือ</label>
+                    <select id="newArea" class="form-control">
+                        <option value="ชุมชนบ้านเหนือ">ชุมชนบ้านเหนือ (จุด D - พื้นที่เสี่ยงสูง)</option>
+                        <option value="โรงเรียนวัดใหม่">โรงเรียนวัดใหม่ (จุด C - ศูนย์พักพิง)</option>
+                        <option value="ชุมชนกลาง">ชุมชนกลาง (จุด B - จุดศูนย์กลาง)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newItem">ประเภทสินค้าจำเป็น</label>
+                    <select id="newItem" class="form-control">
+                        <option value="น้ำดื่ม">น้ำดื่ม</option>
+                        <option value="อาหารแห้ง">อาหารแห้ง</option>
+                        <option value="อาหารสด">อาหารสด</option>
+                        <option value="ยาสามัญ">ยาสามัญ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newQty">จำนวนหน่วยที่ต้องการ (1 - 999)</label>
+                    <input type="number" id="newQty" class="form-control" min="1" max="999" value="30">
+                </div>
+                <div class="form-group">
+                    <label for="reqPrioritySelect">ระดับความเร่งด่วน</label>
+                    <select id="reqPrioritySelect" class="form-control">
+                        <option value="ปกติ">ปกติ (Standard Priority)</option>
+                        <option value="เร่งด่วน">เร่งด่วน (High Priority)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions modal-footer">
+                <button class="btn btn-outline" id="cancelRequest">ยกเลิก</button>
+                <button class="btn btn-primary" id="saveRequest">บันทึกคำร้อง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Node Info Modal -->
+    <div class="modal-backdrop" id="nodeInfoModal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h3 id="nodeInfoTitle">ข้อมูลจุดพิกัดในแผนที่</h3>
+                <button class="modal-close-btn" onclick="closeNodeModal()">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body" id="nodeInfoBody"></div>
+            <div class="modal-footer" id="nodeInfoFooter">
+                <button class="btn btn-primary" onclick="closeNodeModal()">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help & Guide Modal -->
+    <div class="modal-backdrop" id="helpModal">
+        <div class="modal-window" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>💡 คู่มือการทดสอบระบบ LocalShield AI</h3>
+                <button class="modal-close-btn" onclick="closeHelpModal()">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:13.5px; color:#475569; line-height: 1.6;">
+                    ระบบ LocalShield AI ถูกออกแบบมาเพื่อตอบโจทย์ 3 เสาหลัก:
+                    <br><b>1. Community Resilience</b> — ชุมชนส่งคำร้องขอสิ่งจำเป็นได้โปร่งใส
+                    <br><b>2. Adaptive Mobility</b> — เมื่อถนนสายหลักถูกน้ำท่วมตัดขาด ระบบจะคำนวณเส้นทางเลี่ยงอัตโนมัติ
+                    <br><b>3. Local SME Continuity</b> — จัดซื้อสิ่งของช่วยเหลือจากร้านค้าท้องถิ่น ช่วยให้เศรษฐกิจชุมชนหมุนเวียน
+                </div>
+                <div style="margin-top: 14px; display:flex; flex-direction: column; gap: 10px;">
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+                        <strong>ขั้นตอนการทดสอบที่แนะนำ:</strong>
+                        <ol style="padding-left: 20px; margin-top: 6px; font-size: 13px; color:#334155; line-height: 1.6;">
+                            <li>คลิกปุ่ม <b>"▶ เล่นตัวอย่างสาธิตอัตโนมัติ"</b> ที่แถบด้านบนเพื่อดูการทำงานครบวงจรใน 10 วินาที</li>
+                            <li>หรือทดลองจำลองด้วยตนเอง:
+                                <ul>
+                                    <li>กด <b>"จำลองปิดถนน B–D"</b> บนแผนที่</li>
+                                    <li>ไปที่หน้า <b>"แผนจัดสรรและเส้นทาง"</b> แล้วกด <b>"✦ คำนวณแผนใหม่"</b></li>
+                                    <li>สังเกตเส้นทางจัดสรรที่เปลี่ยนจากร้านชุมชนสุขใจ (B→D 1.2 กม.) เป็นร้านค้าใกล้บ้าน (C→D 2.6 กม.) เพื่อเลี่ยงน้ำท่วม</li>
+                                    <li>กด <b>"✓ ตรวจสอบและอนุมัติแผน"</b> แล้วไปที่ <b>"ติดตามภารกิจ"</b> เพื่อยืนยันการส่งมอบ</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeHelpModal()">เข้าใจแล้ว เริ่มใช้งาน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Prototype Script -->
+    <script>
+        const clone = (o) => (typeof structuredClone !== "undefined" ? structuredClone(o) : JSON.parse(JSON.stringify(o)));
+
+        // --- 1. Data Store ---
+        const shops = [
+            { id: "S01", name: "ร้านวังใหม่มาร์ท", at: "A", dist: "1.2 กม.", freshness: "FRESH", observedAt: "10:10", source: "SME self-report (SIMULATED)", stock: { "น้ำดื่ม": 120, "อาหารแห้ง": 200, "อาหารสด": 150, "ยาสามัญ": 60 } },
+            { id: "S02", name: "ร้านชุมชนสุขใจ", at: "B", dist: "2.5 กม.", freshness: "FRESH", observedAt: "10:05", source: "SME self-report (SIMULATED)", stock: { "น้ำดื่ม": 80, "อาหารแห้ง": 160, "อาหารสด": 60, "ยาสามัญ": 100 } },
+            { id: "S03", name: "ร้านค้าใกล้บ้าน", at: "C", dist: "3.1 กม.", freshness: "FRESH", observedAt: "10:18", source: "SME self-report (SIMULATED)", stock: { "น้ำดื่ม": 75, "อาหารแห้ง": 120, "อาหารสด": 40, "ยาสามัญ": 50 } },
+            { id: "S04", name: "สหกรณ์การเกษตร", at: "E", dist: "4.0 กม.", freshness: "FRESH", observedAt: "10:12", source: "SME self-report (SIMULATED)", stock: { "น้ำดื่ม": 100, "อาหารแห้ง": 200, "อาหารสด": 120, "ยาสามัญ": 70 } },
+            { id: "S05", name: "ตลาดชุมชนกลาง", at: "E", dist: "2.7 กม.", freshness: "STALE", observedAt: "03:20", source: "SME self-report (SIMULATED)", stock: { "น้ำดื่ม": 150, "อาหารแห้ง": 90, "อาหารสด": 85, "ยาสามัญ": 30 } }
+        ];
+
+        const extras = Array.from({ length: 10 }, (_, i) => ({
+            id: "S" + String(i + 6).padStart(2, "0"),
+            name: ["ร้านสะดวกซื้อชุมชน", "ร้านอรุณพาณิชย์", "ร้านทรัพย์เจริญ", "มินิมาร์ทประชาร่วม"][i % 4] + " " + (i + 1),
+            at: ["A", "B", "C", "E"][i % 4],
+            dist: (1.4 + i * 0.3).toFixed(1) + " กม.",
+            freshness: "FRESH",
+            observedAt: "10:" + String(20 + i).padStart(2, "0"),
+            source: "SME self-report (SIMULATED)",
+            stock: {
+                "น้ำดื่ม": 20 + i * 9,
+                "อาหารแห้ง": 30 + i * 7,
+                "อาหารสด": 10 + i * 4,
+                "ยาสามัญ": 10 + i * 3
+            }
+        }));
+        shops.push(...extras);
+
+        const initialRequests = [
+            { id: "REQ-001", area: "ชุมชนบ้านเหนือ", at: "D", item: "น้ำดื่ม", qty: 50, priority: "เร่งด่วน", status: "รอจัดสรร" },
+            { id: "REQ-002", area: "โรงเรียนวัดใหม่", at: "C", item: "อาหารแห้ง", qty: 100, priority: "ปกติ", status: "รอจัดสรร" },
+            { id: "REQ-003", area: "ชุมชนกลาง", at: "B", item: "น้ำดื่ม", qty: 30, priority: "ปกติ", status: "รอจัดสรร" },
+            { id: "REQ-004", area: "ชุมชนบ้านเหนือ", at: "D", item: "ยาสามัญ", qty: 10, priority: "เร่งด่วน", status: "รอจัดสรร" }
+        ];
+
+        const edges = [
+            ["A", "B", 1.7],
+            ["A", "C", 2.8],
+            ["B", "C", 1.6],
+            ["B", "D", 1.2],
+            ["C", "D", 2.6],
+            ["C", "E", 2.1],
+            ["E", "D", 2.8],
+            ["A", "E", 4.6]
+        ];
+
+        const loc = {
+            A: [150, 160],
+            B: [323, 95],
+            C: [375, 270],
+            D: [600, 180],
+            E: [565, 320]
+        };
+
+        const labels = {
+            A: "ร้านวังใหม่มาร์ท (Hub คลัง)",
+            B: "ชุมชนกลาง",
+            C: "โรงเรียนวัดใหม่ (ศูนย์พักพิง)",
+            D: "ชุมชนบ้านเหนือ (พื้นที่ประสบภัย)",
+            E: "ตลาดชุมชนกลาง (SME Market)"
+        };
+
+        const navItems = [
+            { id: "overview", label: "ภาพรวมสถานการณ์", icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>` },
+            { id: "requests", label: "จัดการคำร้องขอ", icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>` },
+            { id: "business", label: "ร้านค้าและสต็อก SME", icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></svg>` },
+            { id: "routing", label: "แผนจัดสรรและเส้นทาง", icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>` },
+            { id: "delivery", label: "ติดตามภารกิจจัดส่ง", icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect width="16" height="13" x="1" y="5" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>` },
+            { id: "analytics", label: "วิเคราะห์ผลกระทบ", icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>` }
+        ];
+
+        // --- 2. Application State ---
+        let state = {
+            page: "overview",
+            closed: false,
+            requests: clone(initialRequests),
+            plans: [],
+            approved: false,
+            delivered: [],
+            planVersion: 0,
+            exceptions: [],
+            audit: [],
+            search: "",
+            filter: "all"
+        };
+
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => document.querySelectorAll(s);
+        const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+        // --- 3. Notification Toast ---
+        let toastTimeout;
+        function toast(message, type = "success") {
+            const el = $("#toastBox");
+            const textEl = $("#toastMessage");
+            const iconEl = $("#toastIcon");
+            if (!el || !textEl || !iconEl) return;
+            textEl.textContent = message;
+
+            if (type === "danger") {
+                iconEl.setAttribute("stroke", "#ef4444");
+                iconEl.innerHTML = `<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>`;
+            } else if (type === "warning") {
+                iconEl.setAttribute("stroke", "#f59e0b");
+                iconEl.innerHTML = `<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>`;
+            } else {
+                iconEl.setAttribute("stroke", "#10b981");
+                iconEl.innerHTML = `<polyline points="20 6 9 17 4 12"/>`;
+            }
+
+            el.classList.add("show");
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => el.classList.remove("show"), 3400);
+        }
+
+        // --- 4. Shortest Path (Dijkstra) ---
+        function shortest(from, to, closed = state.closed) {
+            let d = { A: Infinity, B: Infinity, C: Infinity, D: Infinity, E: Infinity };
+            let prev = {};
+            let unused = new Set(Object.keys(d));
+            d[from] = 0;
+
+            while (unused.size) {
+                const u = [...unused].sort((a, b) => d[a] - d[b])[0];
+                if (d[u] === Infinity) break;
+                unused.delete(u);
+                if (u === to) break;
+
+                for (const [a, b, w] of edges) {
+                    if (closed && ((a === "B" && b === "D") || (a === "D" && b === "B"))) continue;
+                    let v = a === u ? b : b === u ? a : null;
+                    if (v && unused.has(v) && d[u] + w < d[v]) {
+                        d[v] = d[u] + w;
+                        prev[v] = u;
+                    }
+                }
+            }
+
+            if (!isFinite(d[to])) return null;
+            let path = [to];
+            while (path[0] !== from) path.unshift(prev[path[0]]);
+            return { km: d[to], path };
+        }
+
+        // --- 5. Allocation & Route Calculation Engine ---
+        function calculate() {
+            const stock = Object.fromEntries(shops.map((s) => [s.id, { ...s.stock }]));
+            const plans = [];
+            const exceptions = [];
+
+            for (const req of state.requests.filter((r) => r.status !== "ส่งมอบแล้ว")) {
+                const alternatives = shops
+                    .map((s) => ({
+                        s,
+                        route: shortest(s.at, req.at),
+                        available: stock[s.id][req.item] || 0
+                    }))
+                    .filter((o) => o.s.freshness === "FRESH" && o.route && o.available >= req.qty)
+                    .sort((a, b) => a.route.km - b.route.km || a.s.id.localeCompare(b.s.id));
+
+                if (alternatives.length) {
+                    const b = alternatives[0];
+                    stock[b.s.id][req.item] -= req.qty;
+                    plans.push({
+                        id: req.id,
+                        area: req.area,
+                        item: req.item,
+                        qty: req.qty,
+                        shop: b.s.name,
+                        shopId: b.s.id,
+                        route: b.route.path,
+                        km: b.route.km,
+                        status: "เสนอแผน",
+                        at: req.at,
+                        evidence: {
+                            inventory: `${b.s.source} · อัปเดต ${b.s.observedAt} · ${b.s.freshness}`,
+                            road: state.closed ? "Road report SIMULATED · B–D CLOSED · 10:20" : "Road report SIMULATED · ไม่มี edge ปิด · 10:20"
+                        },
+                        uncertainty: "เป็นข้อมูลจำลอง; ระบบไม่รับรองความปลอดภัยของเส้นทาง ต้องตรวจสอบภาคสนามก่อนส่ง"
+                    });
+                } else {
+                    const hasStockOnlyStale = shops.some((s) => (stock[s.id][req.item] || 0) >= req.qty && s.freshness !== "FRESH");
+                    const reason = hasStockOnlyStale ? "STOCK_STALE" : "NO_STOCK_OR_ROUTE";
+                    plans.push({
+                        id: req.id,
+                        area: req.area,
+                        item: req.item,
+                        qty: req.qty,
+                        shop: "ไม่พบร้านที่มีสต็อกเพียงพอ",
+                        shopId: null,
+                        route: [],
+                        km: null,
+                        status: "รอทรัพยากร",
+                        at: req.at,
+                        reason
+                    });
+                    exceptions.push({ id: req.id, area: req.area, reason, action: hasStockOnlyStale ? "ยืนยันสต็อกจากร้านค้าก่อนจัดสรร" : "ตรวจสต็อก/ข้อจำกัดถนนและประสานผู้รับผิดชอบ" });
+                }
+            }
+
+            state.plans = plans;
+            state.approved = false;
+            state.delivered = [];
+            state.exceptions = exceptions;
+            state.planVersion += 1;
+            state.audit.push({ action: "GENERATE_PLAN", detail: `สร้างแผนร่างรุ่น ${state.planVersion} (${plans.filter(p => p.shopId).length} assignments, ${exceptions.length} exceptions)` });
+            toast(`สร้างแผนร่างรุ่น ${state.planVersion} — ตรวจ evidence และ exception ก่อนอนุมัติ`, exceptions.length ? "warning" : "success");
+            render();
+        }
+
+        // --- 6. Tactical GIS Map Component ---
+        function mapSVG() {
+            const waterPaths = `
+                <path d="M -30 90 Q 140 20 240 85 T 480 80 T 800 30" stroke="#7dd3fc" stroke-width="44" fill="none" opacity="0.45" stroke-linecap="round"/>
+                <path d="M -20 370 Q 180 310 280 350 T 730 380" stroke="#93c5fd" stroke-width="36" fill="none" opacity="0.4" stroke-linecap="round"/>
+            `;
+
+            let floodHazardZone = "";
+            if (state.closed) {
+                floodHazardZone = `
+                    <g class="hazard-group">
+                        <ellipse cx="460" cy="135" rx="95" ry="52" fill="rgba(239, 68, 68, 0.16)" stroke="rgba(239, 68, 68, 0.6)" stroke-width="2" stroke-dasharray="6 4"/>
+                        <rect x="360" y="146" width="200" height="22" rx="11" fill="rgba(254, 226, 226, 0.95)" stroke="#f87171" stroke-width="1"/>
+                        <text x="460" y="161" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">⚠️ บริเวณน้ำท่วมตัดขาด (วิกฤต)</text>
+                    </g>
+                `;
+            }
+
+            const roadLines = edges.map(([a, b, dist]) => {
+                const isBD = (a === "B" && b === "D") || (a === "D" && b === "B");
+                const blocked = state.closed && isBD;
+                const p1 = loc[a];
+                const p2 = loc[b];
+                const midX = (p1[0] + p2[0]) / 2;
+                const midY = (p1[1] + p2[1]) / 2;
+
+                return `
+                    <g class="${isBD ? 'map-road-clickable' : ''}" onclick="${isBD ? 'toggleRoadBD()' : ''}" style="${isBD ? 'cursor:pointer;' : ''}">
+                        <line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" 
+                            stroke="${blocked ? '#ef4444' : '#cbd5e1'}" 
+                            stroke-width="${blocked ? 10 : 8}" 
+                            stroke-linecap="round"/>
+                        <line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" 
+                            stroke="#ffffff" 
+                            stroke-width="${blocked ? 3 : 2}" 
+                            stroke-dasharray="${blocked ? '6 6' : ''}" 
+                            stroke-linecap="round"/>
+                        <g transform="translate(${midX}, ${midY})">
+                            <rect x="${blocked ? -34 : -24}" y="-10" width="${blocked ? 68 : 48}" height="20" rx="6" 
+                                fill="${blocked ? '#fee2e2' : '#ffffff'}" 
+                                stroke="${blocked ? '#ef4444' : '#cbd5e1'}" 
+                                stroke-width="1.2"
+                                filter="drop-shadow(0 2px 4px rgba(0,0,0,0.06))"/>
+                            <text x="0" y="4" font-size="10.5" font-weight="700" 
+                                fill="${blocked ? '#b91c1c' : '#475569'}" 
+                                text-anchor="middle">${blocked ? '⛔ 1.2 กม.' : dist + ' กม.'}</text>
+                        </g>
+                    </g>
+                `;
+            }).join("");
+
+            let approvedRouteHighlights = "";
+            let animatedVehicles = "";
+            if (state.approved && state.plans.length) {
+                const activePlans = state.plans.filter((p) => p.route && p.route.length >= 2);
+                approvedRouteHighlights = activePlans.map((p) => {
+                    return p.route.map((node, i) => {
+                        if (i === 0) return "";
+                        const prevNode = p.route[i - 1];
+                        return `<line x1="${loc[prevNode][0]}" y1="${loc[prevNode][1]}" x2="${loc[node][0]}" y2="${loc[node][1]}" 
+                            stroke="#10b981" stroke-width="6" stroke-linecap="round" opacity="0.95" stroke-dasharray="8 6" class="animated-route-line"/>`;
+                    }).join("");
+                }).join("");
+
+                animatedVehicles = `
+                    <g transform="translate(${loc.D[0] - 16}, ${loc.D[1] - 44})" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.2))">
+                        <rect width="32" height="22" rx="6" fill="#0f172a" opacity="0.95"/>
+                        <text x="16" y="15" font-size="12" text-anchor="middle" fill="#ffffff">🚚</text>
+                    </g>
+                `;
+            }
+
+            const nodeElements = Object.entries(loc).map(([k, [x, y]]) => {
+                const isAffected = k === "D";
+                const isShopHub = k === "A" || k === "E";
+                const bgColor = isAffected ? "#ef4444" : isShopHub ? "#10b981" : "#2563eb";
+                const labelText = labels[k];
+
+                return `
+                    <g class="map-node" onclick="openNodeModal('${k}')" style="cursor:pointer;">
+                        <circle cx="${x}" cy="${y}" r="22" fill="${bgColor}" opacity="0.16"/>
+                        <circle cx="${x}" cy="${y}" r="15" fill="${bgColor}" stroke="#ffffff" stroke-width="3" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.18))"/>
+                        <text x="${x}" y="${y + 4.5}" font-size="11" font-weight="700" text-anchor="middle" fill="#ffffff">${k}</text>
+                        <g transform="translate(${x}, ${y + 20})">
+                            <rect x="-65" y="0" width="130" height="22" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.06))"/>
+                            <text x="0" y="15" font-size="10.5" font-weight="600" fill="#1e293b" text-anchor="middle">${labelText}</text>
+                        </g>
+                    </g>
+                `;
+            }).join("");
+
+            return `
+                <div class="map-container">
+                    <svg class="gis-map-canvas" viewBox="0 0 760 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="แผนที่จำลองเครือข่ายบรรเทาภัย">
+                        <defs>
+                            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#e2e8f0" stroke-width="0.8"/>
+                            </pattern>
+                        </defs>
+                        <rect width="760" height="420" fill="#f8fafc"/>
+                        <rect width="760" height="420" fill="url(#grid)" opacity="0.6"/>
+                        ${waterPaths}
+                        ${floodHazardZone}
+                        <g id="mapRoads">${roadLines}</g>
+                        <g id="mapApprovedRoutes">${approvedRouteHighlights}</g>
+                        <g id="mapNodes">${nodeElements}</g>
+                        ${animatedVehicles}
+                    </svg>
+
+                    <div class="map-overlay-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                        <span>โครงข่ายจำลอง 5 จุด (Schematic GIS)</span>
+                    </div>
+
+                    <div class="map-interactive-hint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <span>💡 คลิกที่หมุด A-E เพื่อดูข้อมูล | คลิกเส้นถนน B–D เพื่อสลับจำลองน้ำท่วม</span>
+                    </div>
+                </div>
+
+                <div class="map-legend-bar">
+                    <div class="legend-chip"><span class="legend-dot" style="background:#10b981;"></span> ร้านค้า SME / คลังเสบียง (A, E)</div>
+                    <div class="legend-chip"><span class="legend-dot" style="background:#2563eb;"></span> ชุมชน / ศูนย์พักพิง (B, C)</div>
+                    <div class="legend-chip"><span class="legend-dot" style="background:#ef4444;"></span> พื้นที่ประสบภัยเสี่ยงสูง (D)</div>
+                    <div class="legend-chip"><span class="legend-line" style="background:#cbd5e1;"></span> เส้นทางสัญจรปกติ</div>
+                    <div class="legend-chip"><span class="legend-line line-hazard" style="background:#ef4444;"></span> ถนนปิดน้ำท่วม (B–D)</div>
+                    <div class="legend-chip"><span class="legend-line" style="background:#10b981;"></span> เส้นทาง AI อนุมัติ</div>
+                </div>
+            `;
+        }
+
+        // --- 7. Metric Cards Generator ---
+        function renderMetrics() {
+            const pending = state.requests.filter((r) => r.status !== "ส่งมอบแล้ว").length;
+            const assigned = state.plans.filter((p) => p.shopId).length;
+            const deliveredCount = state.delivered.length;
+            const fulfillmentRate = state.requests.length ? Math.round((deliveredCount / state.requests.length) * 100) : 0;
+
+            return `
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon-wrap metric-icon-blue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">คำร้องขอสิ่งจำเป็น</div>
+                            <div class="metric-value">${state.requests.length} <span style="font-size:14px; font-weight:500; color:#64748b;">รายการ</span></div>
+                            <div class="metric-sub"><span style="color:#d97706; font-weight:600;">● ${pending}</span> รอดำเนินการ</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon-wrap metric-icon-emerald">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">ร้านค้า SME ในเครือข่าย</div>
+                            <div class="metric-value">${shops.length} <span style="font-size:14px; font-weight:500; color:#64748b;">แห่ง</span></div>
+                            <div class="metric-sub">พร้อมส่งมอบสินค้าในพื้นที่</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon-wrap metric-icon-amber">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">ถนน B–D (จุดเสี่ยง)</div>
+                            <div class="metric-value" style="color: ${state.closed ? '#ef4444' : '#10b981'};">
+                                ${state.closed ? "ปิดสัญจร" : "เปิดสัญจร"}
+                            </div>
+                            <div class="metric-sub">${state.closed ? "น้ำท่วมสูง ต้องเลี่ยงเส้นทาง" : "สัญจรได้ตามปกติ"}</div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon-wrap metric-icon-purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="metric-info">
+                            <div class="metric-label">จัดสรรสำเร็จแล้ว</div>
+                            <div class="metric-value">${state.approved ? assigned : 0} <span style="font-size:14px; font-weight:500; color:#64748b;">/ ${state.requests.length}</span></div>
+                            <div class="metric-sub">${state.approved ? `ส่งมอบแล้ว ${deliveredCount} รายการ (${fulfillmentRate}%)` : "รอคำนวณและอนุมัติแผน"}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 8. AI Insights Explainer Component ---
+        function renderAIInsights() {
+            const isClosed = state.closed;
+            const hasPlans = state.plans.length > 0;
+
+            let title = "🤖 LocalShield AI Routing & Dispatch Insights";
+            let desc = "";
+            let point1 = { title: "การตรวจจับเส้นทาง", text: isClosed ? "ถนน B–D ถูกตัดขาดจากน้ำท่วม" : "ถนน B–D เปิดสัญจรตามปกติ" };
+            let point2 = { title: "การคัดเลือกร้านค้า", text: isClosed ? "เปลี่ยนไปสั่งจาก 'ร้านค้าใกล้บ้าน' (จุด C)" : "สั่งจาก 'ร้านชุมชนสุขใจ' (จุด B)" };
+            let point3 = { title: "ระยะทางที่ดีที่สุด", text: isClosed ? "เส้นทางเลี่ยง C → D (2.6 กม.)" : "เส้นทางตรง B → D (1.2 กม.)" };
+
+            if (!hasPlans) {
+                desc = isClosed 
+                    ? `⚠️ <b>บันทึกข้อจำกัดถนน B–D (1.2 กม.) = CLOSED (SIMULATED):</b> planning engine จะตัด edge นี้ออกและคำนวณตัวเลือกใหม่ โปรดตรวจ evidence ก่อนอนุมัติ`
+                    : `ℹ️ <b>สภาวะปกติ:</b> โครงข่ายถนนทุกเส้นทางเปิดใช้งานได้เต็มประสิทธิภาพ กดปุ่ม <b>"✦ คำนวณแผนใหม่"</b> เพื่อสร้างเส้นทางจัดส่งที่สั้นและเร็วที่สุด`;
+            } else {
+                if (isClosed) {
+                    desc = `✅ <b>AI ปรับเปลี่ยนแหล่งจัดส่งและเส้นทางอัตโนมัติสำเร็จ:</b> เมื่อถนน B–D ถูกปิด ระบบ Dynamic Dijkstra + Stock Matching ได้ประเมินเปลี่ยนจุดจัดซื้อไปยัง <b>ร้านค้าใกล้บ้าน (จุด C)</b> ซึ่งมีสต็อกพร้อม และใช้เส้นทาง <b>C → D รวมระยะทาง 2.6 กม.</b> ช่วยให้ชุมชนบ้านเหนือได้รับเสบียงจำเป็นอย่างต่อเนื่องแม้เส้นทางสายหลักถูกตัดขาด`;
+                } else {
+                    desc = `✅ <b>AI คำนวณเส้นทางปกติสำเร็จ:</b> จัดสรรเสบียงให้ชุมชนบ้านเหนือจาก <b>ร้านชุมชนสุขใจ (จุด B)</b> ผ่านถนน <b>B → D รวมระยะทางเพียง 1.2 กม.</b> ซึ่งเป็นเส้นทางที่สั้นและรวดเร็วที่สุด`;
+                }
+            }
+
+            return `
+                <div class="ai-insight-box">
+                    <div class="ai-insight-header">
+                        <div class="ai-insight-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                            ${title}
+                        </div>
+                        <span class="tag ${isClosed ? 'tag-rose' : 'tag-emerald'}">${isClosed ? 'Crisis Dynamic Detour' : 'Optimal Path Active'}</span>
+                    </div>
+                    <div class="ai-insight-text">${desc}</div>
+                    <div class="ai-insight-points">
+                        <div class="ai-point-card">
+                            <strong>1. ${point1.title}</strong>
+                            <span>${point1.text}</span>
+                        </div>
+                        <div class="ai-point-card">
+                            <strong>2. ${point2.title}</strong>
+                            <span>${point2.text}</span>
+                        </div>
+                        <div class="ai-point-card">
+                            <strong>3. ${point3.title}</strong>
+                            <span>${point3.text}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 9. Request Cards Generator ---
+        function renderRequestCards(limit = 99) {
+            let data = state.requests.filter((r) => state.filter === "all" || r.status === state.filter).slice(0, limit);
+
+            if (!data.length) {
+                return `<div style="text-align:center; padding: 40px; color:#94a3b8;">ไม่พบรายการคำร้องตามเงื่อนไข</div>`;
+            }
+
+            return `
+                <div class="request-list">
+                    ${data.map((r) => {
+                        const statusClass = r.status === "ส่งมอบแล้ว" ? "tag-emerald" : r.status === "อนุมัติแล้ว" ? "tag-blue" : r.priority === "เร่งด่วน" ? "tag-rose" : "tag-amber";
+                        const itemEmoji = { "น้ำดื่ม": "💧", "อาหารแห้ง": "🥫", "อาหารสด": "🥗", "ยาสามัญ": "💊" }[r.item] || "📦";
+
+                        return `
+                            <div class="request-item">
+                                <div class="req-head">
+                                    <div>
+                                        <div class="req-title">
+                                            <span>${esc(r.id)}</span>
+                                            <span style="color:#64748b; font-weight:400;">·</span>
+                                            <span>${esc(r.area)}</span>
+                                        </div>
+                                        <div class="req-location">📍 พิกัดจุดรับสินค้า: จุด ${r.at}</div>
+                                    </div>
+                                    <span class="tag ${statusClass}">
+                                        ${r.status === "รอจัดสรร" ? (r.priority === "เร่งด่วน" ? "🔴 เร่งด่วน" : "🟡 รอจัดสรร") : r.status}
+                                    </span>
+                                </div>
+                                <div class="req-pill-group">
+                                    <span class="req-pill">${itemEmoji} <b>${esc(r.item)}</b> ${r.qty} หน่วย</span>
+                                    <span class="req-pill">ความเร่งด่วน: ${esc(r.priority)}</span>
+                                    <span class="req-pill">สถานะ: ${esc(r.status)}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join("")}
+                </div>
+            `;
+        }
+
+        // --- 10. Route Plan Cards Generator ---
+        function renderExceptions() {
+            if (!state.plans.length) return "";
+            if (!state.exceptions.length) {
+                return `<div style="margin-top:14px; padding:11px 12px; border:1px solid #a7f3d0; border-radius:8px; background:#ecfdf5; color:#065f46; font-size:12px;">✓ ไม่มี exception จากกฎสต็อก/เส้นทางในข้อมูลจำลองนี้</div>`;
+            }
+            return `<div style="margin-top:14px; padding:12px; border:1px solid #fde68a; border-radius:8px; background:#fffbeb;">
+                <div style="font-weight:700; color:#92400e; font-size:12.5px;">ต้องตรวจสอบก่อนอนุมัติ (${state.exceptions.length})</div>
+                ${state.exceptions.map((x) => `<div style="font-size:12px; color:#78350f; margin-top:6px;"><b>${esc(x.id)}</b> · ${esc(x.area)} · ${x.reason === "STOCK_STALE" ? "สต็อกที่พบมีข้อมูลเก่า" : "ไม่มีสต็อกหรือเส้นทางที่ผ่านเงื่อนไข"}<br><span style="color:#a16207;">การดำเนินการ: ${esc(x.action)}</span></div>`).join("")}
+            </div>`;
+        }
+
+        function renderAuditSummary() {
+            const latest = state.audit.slice(-3).reverse();
+            if (!latest.length) return "";
+            return `<div style="margin-top:14px; font-size:11.5px; color:#64748b; border-top:1px solid #e2e8f0; padding-top:10px;"><b style="color:#475569;">Audit trail (synthetic):</b>${latest.map((a) => `<div style="margin-top:3px;">• ${esc(a.action)} — ${esc(a.detail)}</div>`).join("")}</div>`;
+        }
+
+        function renderPlanCards() {
+            if (!state.plans.length) {
+                return `
+                    <div style="text-align:center; padding: 48px 24px; color:#64748b; background:#f8fafc; border-radius:12px; border:1px dashed #cbd5e1;">
+                        <svg viewBox="0 0 24 24" width="40" height="40" stroke="#94a3b8" fill="none" style="margin-bottom:12px;"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                        <div style="font-weight:600; font-size:15px; color:#334155;">ยังไม่มีแผนจัดสรรที่คำนวณ</div>
+                        <p style="font-size:12.5px; margin: 6px 0 16px;">กดปุ่ม "✦ คำนวณแผนใหม่" เพื่อให้อัลกอริทึมจับคู่คำร้องกับร้านค้าที่มีสต็อก</p>
+                        <button class="btn btn-primary btn-sm" onclick="calculate()">✦ คำนวณแผนจัดสรรทันที</button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="route-grid">
+                    ${state.plans.map((p) => {
+                        const isSuccess = !!p.shopId;
+                        const isDetour = state.closed && p.route.includes("C") && p.area.includes("บ้านเหนือ");
+                        return `
+                            <div class="route-card" style="border-left: 4px solid ${isSuccess ? (isDetour ? '#f59e0b' : '#10b981') : '#ef4444'};">
+                                <div class="route-card-top">
+                                    <div>
+                                        <div class="route-title" style="display:flex; align-items:center; gap:8px;">
+                                            <span>${esc(p.id)} · ${esc(p.area)}</span>
+                                            ${isDetour ? '<span class="tag tag-amber" style="font-size:10px; padding:2px 8px;">⚡ เลี่ยงน้ำท่วม</span>' : ''}
+                                        </div>
+                                        <div class="route-shop">🏪 ร้านที่จัดส่ง: <b>${esc(p.shop)}</b> · ${esc(p.item)} ${p.qty} หน่วย</div>
+                                    </div>
+                                    <span class="tag ${isSuccess ? 'tag-emerald' : 'tag-rose'}">
+                                        ${isSuccess ? '✓ มีสินค้า & เส้นทางพร้อม' : '✕ ไม่พบร้านที่เหมาะสม'}
+                                    </span>
+                                </div>
+                                <div class="route-path-box">
+                                    <div class="route-breadcrumb">
+                                        <span>🧭 เส้นทางเดินรถ:</span>
+                                        ${p.route.length ? p.route.join(" → ") : "ไม่มีเส้นทางเปิด"}
+                                    </div>
+                                    <div class="route-km">${p.km ? p.km.toFixed(1) + " กม." : "N/A"}</div>
+                                </div>
+                                ${isSuccess ? `<div style="margin-top:10px; padding:9px 10px; background:#f8fafc; border-radius:7px; font-size:11.5px; color:#475569; line-height:1.55;">
+                                    <b style="color:#334155;">Evidence:</b> ${esc(p.evidence.inventory)}<br>
+                                    <b style="color:#334155;">Road constraint:</b> ${esc(p.evidence.road)}<br>
+                                    <span style="color:#b45309;">⚠ ${esc(p.uncertainty)}</span>
+                                </div>` : `<div style="margin-top:10px; font-size:12px; color:#b91c1c;">Reason: ${p.reason === "STOCK_STALE" ? "พบสต็อกแต่เกิน freshness policy" : "ไม่พบตัวเลือกที่ผ่านสต็อกและ routing policy"}</div>`}
+                            </div>
+                        `;
+                    }).join("")}
+                </div>
+            `;
+        }
+
+        // --- 11. Page Renderer Router ---
+        function render() {
+            const currentNav = navItems.find((n) => n.id === state.page) || navItems[0];
+            const titleEl = $("#pageTitle");
+            if (titleEl) titleEl.textContent = currentNav.label;
+
+            const sidebarNav = $("#sidebarNav");
+            if (sidebarNav) {
+                sidebarNav.innerHTML = navItems.map((n) => `
+                    <button class="nav-item ${state.page === n.id ? 'active' : ''}" onclick="switchPage('${n.id}')">
+                        <div class="nav-item-left">
+                            ${n.icon}
+                            <span>${n.label}</span>
+                        </div>
+                        ${n.id === 'requests' ? `<span class="nav-badge">${state.requests.length}</span>` : ''}
+                        ${n.id === 'delivery' && state.approved ? `<span class="nav-badge">${state.requests.filter(r => r.status === 'อนุมัติแล้ว').length}</span>` : ''}
+                    </button>
+                `).join("");
+            }
+
+            renderFlowStepper();
+
+            let content = "";
+
+            if (state.page === "overview") {
+                content = `
+                    ${renderMetrics()}
+                    ${renderAIInsights()}
+                    <div class="layout-2col">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div class="panel-header-left">
+                                    <h3>สถานการณ์เครือข่ายถนนและพื้นที่จำลอง</h3>
+                                </div>
+                                <span class="tag ${state.closed ? 'tag-rose' : 'tag-emerald'}">
+                                    ${state.closed ? '⛔ พบการปิดถนน B–D' : '✓ ถนน B–D เปิดใช้งาน'}
+                                </span>
+                            </div>
+                            ${mapSVG()}
+                            <div class="panel-footer">
+                                <span style="font-size:12px; color:${state.closed ? '#ef4444' : '#64748b'}; font-weight:${state.closed ? '600' : '400'};">
+                                    ${state.closed ? '⛔ ถนน B–D ถูกน้ำท่วมตัดขาด' : '✓ ถนน B–D เปิดสัญจรปกติ'}
+                                </span>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    <button class="btn ${state.closed ? 'btn-success' : 'btn-danger'} btn-sm" onclick="toggleRoadBD()">
+                                        ${state.closed ? '✓ เปิดถนน B–D' : '⛔ จำลองปิดถนน B–D (น้ำท่วม)'}
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" onclick="calculate(); switchPage('routing');">
+                                        ✦ คำนวณแผน AI ทันที →
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3>รายการคำร้องขอล่าสุด</h3>
+                                <button class="btn btn-outline btn-sm" onclick="switchPage('requests')">ดูทั้งหมด →</button>
+                            </div>
+                            <div class="panel-body">
+                                ${renderRequestCards(4)}
+                            </div>
+                            <div class="panel-footer">
+                                <span style="font-size:12px; color:#64748b;">รอดำเนินการ ${state.requests.filter(r => r.status === 'รอจัดสรร').length} คำร้อง</span>
+                                <button class="btn btn-primary btn-sm" onclick="openRequestModal()">＋ เพิ่มคำร้อง</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layout-equal">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3>3 เสาหลักของ LocalShield AI</h3>
+                                <span>Core Solution Pillars</span>
+                            </div>
+                            <div class="panel-body pillar-steps">
+                                <div class="pillar-step">
+                                    <div class="pillar-num num-blue">1</div>
+                                    <div class="pillar-content">
+                                        <strong>Community Resilience (ความยืดหยุ่นของชุมชน)</strong>
+                                        <p>รับข้อมูลความต้องการสิ่งของจำเป็นและสถานะผู้ประสบภัยจากชุมชนโดยตรงอย่างโปร่งใส</p>
+                                    </div>
+                                </div>
+                                <div class="pillar-step">
+                                    <div class="pillar-num num-emerald">2</div>
+                                    <div class="pillar-content">
+                                        <strong>Adaptive Mobility (การปรับตัวของเส้นทางขนส่ง)</strong>
+                                        <p>เมื่อมีข้อจำกัดถนนที่บันทึกไว้ อัลกอริทึมจะตัด edge ที่ปิดออกจากกราฟและเสนอทางเลือกที่คำนวณได้</p>
+                                    </div>
+                                </div>
+                                <div class="pillar-step">
+                                    <div class="pillar-num num-purple">3</div>
+                                    <div class="pillar-content">
+                                        <strong>Local SME Continuity (ความต่อเนื่องของเศรษฐกิจชุมชน)</strong>
+                                        <p>จับคู่คำขอกับสต็อกที่ร้านค้าท้องถิ่นระบุว่าพร้อมจัดสรร และติดตามมูลค่าจัดซื้อจำลองอย่างโปร่งใส</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3>การเริ่มต้นสาธิต (Quick Interactive Walkthrough)</h3>
+                            </div>
+                            <div class="panel-body" style="display:flex; flex-direction:column; justify-content:space-between;">
+                                <p style="color:#475569; font-size:13.5px; line-height:1.6;">
+                                    ท่านสามารถทดลองปรับเปลี่ยนสถานการณ์ถนน ปิดถนน B–D เพื่อดูว่า AI จะปรับเปลี่ยนแหล่งสินค้าและเส้นทางจัดส่งอย่างไร
+                                </p>
+                                <div style="background:#f1f5f9; border-radius:12px; padding:16px; margin: 16px 0;">
+                                    <div style="font-weight:600; color:#1e293b; margin-bottom:6px;">ลำดับการทดสอบที่แนะนำ:</div>
+                                    <div style="font-size:12.5px; color:#475569; line-height:1.6;">
+                                        1. กด <b>"⛔ จำลองปิดถนน B-D"</b><br>
+                                        2. ไปหน้า <b>"แผนจัดสรรและเส้นทาง"</b> แล้วกด <b>"✦ คำนวณแผนใหม่"</b><br>
+                                        3. กด <b>"✓ ตรวจสอบและอนุมัติแผน"</b> แล้วไปหน้า <b>"ติดตามภารกิจ"</b> เพื่อยืนยันการส่งมอบ
+                                    </div>
+                                </div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                    <button class="btn btn-primary" onclick="switchPage('routing')">เข้าสู่โหมดจำลองเส้นทาง →</button>
+                                    <button class="btn btn-outline" onclick="runAutoDemo()">▶ รันเดโมอัตโนมัติ (10 วินาที)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.page === "requests") {
+                content = `
+                    ${renderMetrics()}
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="tab-pill-group">
+                                <button class="tab-pill ${state.filter === 'all' ? 'active' : ''}" onclick="setFilter('all')">ทั้งหมด (${state.requests.length})</button>
+                                <button class="tab-pill ${state.filter === 'รอจัดสรร' ? 'active' : ''}" onclick="setFilter('รอจัดสรร')">รอจัดสรร (${state.requests.filter(r => r.status === 'รอจัดสรร').length})</button>
+                                <button class="tab-pill ${state.filter === 'อนุมัติแล้ว' ? 'active' : ''}" onclick="setFilter('อนุมัติแล้ว')">อนุมัติแล้ว (${state.requests.filter(r => r.status === 'อนุมัติแล้ว').length})</button>
+                                <button class="tab-pill ${state.filter === 'ส่งมอบแล้ว' ? 'active' : ''}" onclick="setFilter('ส่งมอบแล้ว')">ส่งมอบแล้ว (${state.requests.filter(r => r.status === 'ส่งมอบแล้ว').length})</button>
+                            </div>
+                            <button class="btn btn-primary btn-sm" onclick="openRequestModal()">＋ เพิ่มคำร้องใหม่</button>
+                        </div>
+                        <div class="panel-body">
+                            ${renderRequestCards()}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.page === "business") {
+                const totalWater = shops.reduce((a, s) => a + s.stock["น้ำดื่ม"], 0);
+                const totalDry = shops.reduce((a, s) => a + s.stock["อาหารแห้ง"], 0);
+                const totalMeds = shops.reduce((a, s) => a + s.stock["ยาสามัญ"], 0);
+                const filteredShops = shops.filter((s) => s.name.includes(state.search) || s.at.includes(state.search));
+
+                content = `
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-label">ร้านค้า SME ทั้งหมด</div>
+                                <div class="metric-value">${shops.length} <span style="font-size:14px; font-weight:500; color:#64748b;">แห่ง</span></div>
+                                <div class="metric-sub">พื้นที่นำร่องจำลอง A, B, C, E</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-blue">💧</div>
+                            <div class="metric-info">
+                                <div class="metric-label">น้ำดื่มพร้อมส่งรวม</div>
+                                <div class="metric-value">${totalWater.toLocaleString()} <span style="font-size:14px; font-weight:500; color:#64748b;">แพ็ค</span></div>
+                                <div class="metric-sub">พร้อมสนับสนุนชุมชน</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-emerald">🥫</div>
+                            <div class="metric-info">
+                                <div class="metric-label">อาหารแห้งพร้อมส่งรวม</div>
+                                <div class="metric-value">${totalDry.toLocaleString()} <span style="font-size:14px; font-weight:500; color:#64748b;">ชุด</span></div>
+                                <div class="metric-sub">เสบียงยังชีพฉุกเฉิน</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-purple">💊</div>
+                            <div class="metric-info">
+                                <div class="metric-label">ยาสามัญประจำบ้านรวม</div>
+                                <div class="metric-value">${totalMeds.toLocaleString()} <span style="font-size:14px; font-weight:500; color:#64748b;">ชุด</span></div>
+                                <div class="metric-sub">เวชภัณฑ์เบื้องต้น</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>ทำเนียบร้านค้า SME และสินค้าคงคลังชุมชน</h3>
+                                <span>Local SME Stock Availability Directory</span>
+                            </div>
+                            <div class="search-input-wrap">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" id="searchShop" class="form-control" placeholder="ค้นหาชื่อร้านค้า หรือจุดพิกัด..." value="${esc(state.search)}" oninput="handleSearch(this.value)">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>ร้านค้า SME</th>
+                                        <th>พิกัดที่ตั้ง</th>
+                                        <th>น้ำดื่ม</th>
+                                        <th>อาหารแห้ง</th>
+                                        <th>อาหารสด</th>
+                                        <th>ยาสามัญ</th>
+                                        <th>หลักฐานสต็อก</th>
+                                        <th>สถานะข้อมูล</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${filteredShops.map((s) => `
+                                        <tr>
+                                            <td>
+                                                <div style="font-weight:700; color:#0f172a;">${esc(s.name)}</div>
+                                                <div style="font-size:11.5px; color:#64748b;">รหัส ${s.id} · ระยะทาง ${s.dist}</div>
+                                            </td>
+                                            <td><span class="tag tag-slate">จุด ${s.at}</span></td>
+                                            <td>
+                                                <div class="stock-indicator">
+                                                    <span style="font-weight:600;">${s.stock["น้ำดื่ม"]}</span>
+                                                    <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${Math.min(100, (s.stock["น้ำดื่ม"] / 150) * 100)}%;"></div></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="stock-indicator">
+                                                    <span style="font-weight:600;">${s.stock["อาหารแห้ง"]}</span>
+                                                    <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${Math.min(100, (s.stock["อาหารแห้ง"] / 200) * 100)}%;"></div></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="stock-indicator">
+                                                    <span style="font-weight:600;">${s.stock["อาหารสด"]}</span>
+                                                    <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${Math.min(100, (s.stock["อาหารสด"] / 150) * 100)}%;"></div></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="stock-indicator">
+                                                    <span style="font-weight:600;">${s.stock["ยาสามัญ"]}</span>
+                                                    <div class="stock-bar-wrap"><div class="stock-bar-fill" style="width:${Math.min(100, (s.stock["ยาสามัญ"] / 100) * 100)}%;"></div></div>
+                                                </div>
+                                            </td>
+                                            <td><div style="font-size:11px; color:#475569;">${esc(s.source)}<br>อัปเดต ${esc(s.observedAt)} (SIMULATED)</div></td>
+                                            <td><span class="tag ${s.freshness === 'FRESH' ? 'tag-emerald' : 'tag-amber'}">${s.freshness === 'FRESH' ? '● FRESH · ใช้จัดสรรได้' : '● STALE · ต้องยืนยัน'}</span></td>
+                                        </tr>
+                                    `).join("")}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.page === "routing") {
+                content = `
+                    ${renderMetrics()}
+                    ${renderAIInsights()}
+                    <div class="layout-2col">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3>Crisis Dynamic Routing Map</h3>
+                                    <span>แผนที่เส้นทางและสิ่งกีดขวางจำลอง</span>
+                                </div>
+                                <span class="tag ${state.closed ? 'tag-rose' : 'tag-emerald'}">
+                                    ${state.closed ? 'ถนน B–D ปิด (ตัดขาด)' : 'ถนน B–D เปิดสัญจร'}
+                                </span>
+                            </div>
+                            ${mapSVG()}
+                            <div class="panel-footer">
+                                <button class="btn ${state.closed ? 'btn-success' : 'btn-danger'}" onclick="toggleRoadBD()">
+                                    ${state.closed ? '✓ เปิดถนน B–D' : '⛔ จำลองปิดถนน B–D (น้ำท่วม)'}
+                                </button>
+                                <button class="btn btn-primary" onclick="calculate()">
+                                    ✦ คำนวณแผนใหม่ (AI Routing)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <div>
+                                    <h3>AI-Assisted Allocation Plan</h3>
+                                    <span>${state.plans.length} แผนจัดสรร</span>
+                                </div>
+                                <span class="tag ${state.approved ? 'tag-emerald' : 'tag-amber'}">
+                                    ${state.approved ? '✓ อนุมัติแล้ว' : 'รอตรวจสอบ'}
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                ${renderPlanCards()}
+                                ${renderExceptions()}
+                                ${renderAuditSummary()}
+                            </div>
+                            <div class="panel-footer">
+                                <button class="btn btn-success" style="width:100%; justify-content:center;" 
+                                    onclick="approvePlan()" 
+                                    ${!state.plans.some(p => p.shopId) || state.approved || state.exceptions.length ? 'disabled' : ''}>
+                                    ${state.approved ? '✓ แผนได้รับการอนุมัติเรียบร้อยแล้ว' : '✓ ตรวจสอบและอนุมัติแผนภารกิจนี้'}
+                                </button>
+                                ${state.exceptions.length && !state.approved ? '<div style="margin-top:8px; text-align:center; color:#b45309; font-size:11.5px;">การอนุมัติถูกระงับ: ต้องเคลียร์ exception หรือยืนยันข้อมูลภายนอกก่อน</div>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.page === "delivery") {
+                const assignedPlans = state.plans.filter((p) => p.shopId);
+                const deliveredCount = state.delivered.length;
+                const totalCount = assignedPlans.length;
+                const progressPct = totalCount ? Math.round((deliveredCount / totalCount) * 100) : 0;
+
+                content = `
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <h3>สถานะภารกิจจัดส่งสิ่งจำเป็น (Delivery Missions Tracker)</h3>
+                                <span>${state.approved ? 'ภารกิจได้รับอนุมัติพร้อมจัดส่ง' : 'ยังไม่มีแผนที่ได้รับอนุมัติ'}</span>
+                            </div>
+                            ${state.approved ? `
+                                <button class="btn btn-primary btn-sm" onclick="deliverAll()">
+                                    ⚡ ยืนยันส่งมอบทั้งหมด (Complete All)
+                                </button>
+                            ` : ''}
+                        </div>
+                        <div class="panel-body">
+                            ${!state.approved ? `
+                                <div style="text-align:center; padding: 48px 24px; color:#64748b;">
+                                    <svg viewBox="0 0 24 24" width="48" height="48" stroke="#94a3b8" fill="none" style="margin-bottom:12px;"><rect width="16" height="13" x="1" y="5" rx="2"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                    <div style="font-weight:700; font-size:16px; color:#1e293b;">ยังไม่มีภารกิจที่อนุมัติ</div>
+                                    <p style="font-size:13px; margin: 8px 0 20px;">กรุณาไปที่หน้า "แผนจัดสรรและเส้นทาง" เพื่อคำนวณและกดอนุมัติแผนก่อน</p>
+                                    <button class="btn btn-primary" onclick="switchPage('routing')">ไปหน้าแผนจัดสรรและเส้นทาง →</button>
+                                </div>
+                            ` : `
+                                <div style="margin-bottom:24px;">
+                                    <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:600; color:#334155;">
+                                        <span>ความคืบหน้าการส่งมอบสิ่งของช่วยเหลือ</span>
+                                        <span>${deliveredCount} / ${totalCount} ภารกิจ (${progressPct}%)</span>
+                                    </div>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-fill" style="width:${progressPct}%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="route-grid">
+                                    ${assignedPlans.map((p) => {
+                                        const isDelivered = state.delivered.includes(p.id);
+                                        return `
+                                            <div class="route-card" style="border-left: 4px solid ${isDelivered ? '#10b981' : '#2563eb'};">
+                                                <div class="route-card-top">
+                                                    <div>
+                                                        <div class="route-title">${esc(p.id)} · ${esc(p.area)}</div>
+                                                        <div class="route-shop">รับจาก: <b>${esc(p.shop)}</b> | ส่งมอบ: ${esc(p.item)} ${p.qty} หน่วย</div>
+                                                        <div style="font-size:12px; color:#64748b; margin-top:4px;">🧭 เส้นทางเดินรถ: ${p.route.join(" → ")} (${p.km.toFixed(1)} กม.)</div>
+                                                    </div>
+                                                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:8px;">
+                                                        <span class="tag ${isDelivered ? 'tag-emerald' : 'tag-blue'}">
+                                                            ${isDelivered ? '✓ ส่งมอบสำเร็จ' : '🚚 กำลังเดินทาง'}
+                                                        </span>
+                                                        <button class="btn btn-sm ${isDelivered ? 'btn-outline' : 'btn-success'}" 
+                                                            onclick="deliverRequest('${p.id}')" 
+                                                            ${isDelivered ? 'disabled' : ''}>
+                                                            ${isDelivered ? 'ส่งมอบแล้ว' : 'ยืนยันการส่งมอบ'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join("")}
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.page === "analytics") {
+                const delivered = state.delivered.length;
+                const total = state.requests.length;
+                const rate = total ? Math.round((delivered / total) * 100) : 0;
+                
+                const totalProcurementValue = state.plans
+                    .filter((p) => state.delivered.includes(p.id))
+                    .reduce((acc, p) => acc + p.qty * ({ "น้ำดื่ม": 12, "อาหารแห้ง": 28, "อาหารสด": 35, "ยาสามัญ": 45 }[p.item] || 0), 0);
+
+                content = `
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-emerald">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-label">ส่งมอบของช่วยเหลือสำเร็จ</div>
+                                <div class="metric-value">${delivered} <span style="font-size:14px; font-weight:500; color:#64748b;">/ ${total} คำร้อง</span></div>
+                                <div class="metric-sub">คิดเป็นอัตราความสำเร็จ ${rate}%</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-purple">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="18" x2="12" y2="6"/></svg>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-label">มูลค่าจัดซื้อในชุมชน (SME)</div>
+                                <div class="metric-value">฿${totalProcurementValue.toLocaleString()}</div>
+                                <div class="metric-sub">หมุนเวียนสู่ผู้ประกอบการท้องถิ่น (จำลอง)</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-label">Fulfillment Efficiency</div>
+                                <div class="metric-value">${rate}%</div>
+                                <div class="metric-sub">อัตราตอบสนองต่อผู้ประสบภัย</div>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon-wrap metric-icon-amber">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                            </div>
+                            <div class="metric-info">
+                                <div class="metric-label">สถานะเส้นทางวิกฤต</div>
+                                <div class="metric-value" style="font-size:18px; color:${state.closed ? '#ef4444' : '#10b981'};">
+                                    ${state.closed ? "เลี่ยงถนน B–D (จุด C 2.6 กม.)" : "สัญจรปกติ (จุด B 1.2 กม.)"}
+                                </div>
+                                <div class="metric-sub">ปรับตัวตามระดับน้ำท่วม</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layout-equal">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3>สรุปสถานะการกระจายสิ่งจำเป็น</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p style="font-size:13.5px; color:#475569; margin-bottom:14px;">
+                                    จัดส่งสำเร็จแล้ว <b>${delivered}</b> จากทั้งหมด <b>${total}</b> รายการคำร้อง
+                                </p>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" style="width:${rate}%;"></div>
+                                </div>
+                                <div style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
+                                    ${state.requests.map((r) => `
+                                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+                                            <div>
+                                                <strong>${r.id} · ${esc(r.area)}</strong>
+                                                <div style="font-size:12px; color:#64748b;">${r.item} ${r.qty} หน่วย</div>
+                                            </div>
+                                            <span class="tag ${r.status === 'ส่งมอบแล้ว' ? 'tag-emerald' : r.status === 'อนุมัติแล้ว' ? 'tag-blue' : 'tag-amber'}">
+                                                ${r.status}
+                                            </span>
+                                        </div>
+                                    `).join("")}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3>แบบจำลองความต่อเนื่อง 365 วัน (365-Day Framework)</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="pillar-steps">
+                                    <div class="pillar-step">
+                                        <div class="pillar-num num-blue">N</div>
+                                        <div class="pillar-content">
+                                            <strong>Normal State (ภาวะปกติ 300+ วัน)</strong>
+                                            <p>ใช้ระบบสำหรับการค้นหาสินค้าจำเป็นและกระจายสินค้าระหว่างร้านค้า SME ในชุมชน สร้างฐานข้อมูลสต็อกที่พร้อมใช้ทันทีเมื่อเกิดเหตุ</p>
+                                        </div>
+                                    </div>
+                                    <div class="pillar-step">
+                                        <div class="pillar-num num-emerald">C</div>
+                                        <div class="pillar-content">
+                                            <strong>Crisis State (ภาวะวิกฤตภัยพิบัติ)</strong>
+                                            <p>ใช้ deterministic shortest-path routing โดยตัด road edge ที่มีสถานะ CLOSED ออกจากกราฟ และแสดงข้อจำกัดที่ใช้คำนวณ</p>
+                                        </div>
+                                    </div>
+                                    <div class="pillar-step">
+                                        <div class="pillar-num num-purple">R</div>
+                                        <div class="pillar-content">
+                                            <strong>Recovery State (ภาวะฟื้นฟูหลังภัยพิบัติ)</strong>
+                                            <p>ติดตามเงินหมุนเวียนสู่ร้านค้าท้องถิ่น สนับสนุนการฟื้นตัวทางเศรษฐกิจของ SME และเติมสต็อกฉุกเฉิน</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const dynamicView = $("#dynamicView");
+            if (dynamicView) dynamicView.innerHTML = content;
+        }
+
+        // --- 12. Flow Stepper Bar Component ---
+        function renderFlowStepper() {
+            const hasRequests = state.requests.length > 0;
+            const isRoadClosed = state.closed;
+            const hasCalculated = state.plans.length > 0;
+            const isApproved = state.approved;
+            const assignedCount = state.plans.filter(p => p.shopId).length;
+            const isDelivered = state.delivered.length > 0 && (assignedCount === 0 || state.delivered.length === assignedCount);
+
+            // Determine recommended next step index (0 to 4)
+            let nextStepIdx = 0;
+            if (hasRequests) {
+                if (!isRoadClosed && !hasCalculated) nextStepIdx = 1;
+                else if (isRoadClosed && !hasCalculated) nextStepIdx = 2;
+                else if (hasCalculated && !isApproved) nextStepIdx = 3;
+                else if (isApproved && !isDelivered) nextStepIdx = 4;
+                else if (isDelivered) nextStepIdx = -1; // all complete
+            }
+
+            const steps = [
+                {
+                    num: "1",
+                    label: `คำร้องชุมชน (${state.requests.length})`,
+                    active: state.page === "requests",
+                    completed: hasRequests,
+                    pulse: nextStepIdx === 0,
+                    action: () => switchPage("requests")
+                },
+                {
+                    num: "2",
+                    label: isRoadClosed ? "ถนน B–D ปิดน้ำท่วม ⛔" : "จำลองปิดถนน B–D",
+                    active: isRoadClosed,
+                    completed: isRoadClosed,
+                    danger: isRoadClosed,
+                    pulse: nextStepIdx === 1,
+                    action: () => toggleRoadBD()
+                },
+                {
+                    num: "3",
+                    label: hasCalculated ? (isRoadClosed ? "AI เลี่ยงน้ำท่วมแล้ว ✓" : "AI วางแผนแล้ว ✓") : "คำนวณแผน AI ✦",
+                    active: state.page === "routing",
+                    completed: hasCalculated,
+                    pulse: nextStepIdx === 2,
+                    action: () => { switchPage("routing"); calculate(); }
+                },
+                {
+                    num: "4",
+                    label: isApproved ? "อนุมัติแผนแล้ว ✓" : "อนุมัติแผนภารกิจ",
+                    active: isApproved,
+                    completed: isApproved,
+                    pulse: nextStepIdx === 3,
+                    action: () => { switchPage("routing"); approvePlan(); }
+                },
+                {
+                    num: "5",
+                    label: isDelivered ? "ส่งมอบครบ 🚚" : "ยืนยันส่งมอบ",
+                    active: state.page === "delivery",
+                    completed: isDelivered,
+                    pulse: nextStepIdx === 4,
+                    action: () => { switchPage("delivery"); if (!isDelivered && isApproved) deliverAll(); }
+                }
+            ];
+
+            const flowStepper = $("#flowStepper");
+            if (flowStepper) {
+                flowStepper.innerHTML = steps.map((s, idx) => `
+                    <div class="flow-step ${s.completed ? 'completed' : ''} ${s.active ? 'active' : ''} ${s.danger ? 'danger-state' : ''} ${s.pulse ? 'pulse-next' : ''}" 
+                        onclick="stepsAction(${idx})" title="คลิกเพื่อไปยังขั้นตอนนี้">
+                        <span class="flow-step-num">${s.completed ? '✓' : s.num}</span>
+                        <span>${s.label}</span>
+                    </div>
+                    ${idx < steps.length - 1 ? '<span class="flow-arrow">➔</span>' : ''}
+                `).join("");
+            }
+
+            window.currentFlowSteps = steps;
+        }
+
+        function stepsAction(idx) {
+            if (window.currentFlowSteps && window.currentFlowSteps[idx]) {
+                window.currentFlowSteps[idx].action();
+            }
+        }
+
+        // --- 13. State Modification Handlers ---
+        function switchPage(pageId) {
+            state.page = pageId;
+            if (typeof window !== "undefined") {
+                if (window.location.hash !== "#" + pageId) {
+                    try {
+                        history.pushState(null, "", "#" + pageId);
+                    } catch (e) {
+                        window.location.hash = pageId;
+                    }
+                }
+                if (window.scrollTo) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+            render();
+        }
+
+        function setFilter(filter) {
+            state.filter = filter;
+            render();
+        }
+
+        function handleSearch(val) {
+            state.search = val;
+            render();
+            const input = $("#searchShop");
+            if (input) {
+                input.focus();
+                input.setSelectionRange(val.length, val.length);
+            }
+        }
+
+        function toggleRoadBD() {
+            state.closed = !state.closed;
+            state.plans = [];
+            state.approved = false;
+            state.delivered = [];
+            state.exceptions = [];
+            state.audit.push({ action: "ROAD_CONSTRAINT", detail: state.closed ? "บันทึก road edge B–D = CLOSED (SIMULATED)" : "บันทึก road edge B–D = OPEN (SIMULATED)" });
+            state.requests.forEach((r) => {
+                if (r.status !== "ส่งมอบแล้ว") r.status = "รอจัดสรร";
+            });
+
+            if (state.closed) {
+                toast("⛔ จำลองน้ำท่วมปิดถนน B–D แล้ว — กรุณากด '✦ คำนวณแผนใหม่' เพื่อหาทางเลี่ยง", "danger");
+            } else {
+                toast("✓ เปิดใช้งานถนน B–D ปกติแล้ว — ต้องคำนวณแผนใหม่", "success");
+            }
+            render();
+        }
+
+        function approvePlan() {
+            if (!state.plans.some((p) => p.shopId)) {
+                toast("กรุณากดคำนวณแผนก่อนอนุมัติ", "warning");
+                return;
+            }
+            if (state.exceptions.length) {
+                toast("ยังอนุมัติไม่ได้: โปรดตรวจสอบ exception และยืนยันข้อมูลที่ขาด", "warning");
+                return;
+            }
+            state.approved = true;
+            state.plans.filter((p) => p.shopId).forEach((p) => {
+                const req = state.requests.find((r) => r.id === p.id);
+                if (req) req.status = "อนุมัติแล้ว";
+            });
+            state.audit.push({ action: "APPROVE_PLAN", detail: `ผู้ประสานงานอนุมัติแผนรุ่น ${state.planVersion}` });
+            toast("✓ บันทึกการอนุมัติแผนจัดสรรเรียบร้อย พร้อมส่งมอบภารกิจ", "success");
+            render();
+        }
+
+        function deliverRequest(reqId) {
+            if (!state.approved) {
+                toast("ต้องอนุมัติแผนก่อนจึงบันทึกการส่งมอบได้", "warning");
+                return;
+            }
+            if (!state.delivered.includes(reqId)) {
+                state.delivered.push(reqId);
+                const req = state.requests.find((r) => r.id === reqId);
+                if (req) req.status = "ส่งมอบแล้ว";
+                state.audit.push({ action: "DELIVERED", detail: `บันทึกการส่งมอบ ${reqId} (SIMULATED)` });
+                toast(`✓ บันทึกการส่งมอบสำเร็จสำหรับคำร้อง ${reqId}`, "success");
+                render();
+            }
+        }
+
+        function deliverAll() {
+            if (!state.approved) return;
+            const assigned = state.plans.filter(p => p.shopId);
+            assigned.forEach(p => {
+                if (!state.delivered.includes(p.id)) {
+                    state.delivered.push(p.id);
+                    const req = state.requests.find(r => r.id === p.id);
+                    if (req) req.status = "ส่งมอบแล้ว";
+                }
+            });
+            state.audit.push({ action: "DELIVER_ALL", detail: "บันทึกการส่งมอบทุกภารกิจ (SIMULATED)" });
+            toast("✓ ยืนยันการส่งมอบเสบียงครบทุกภารกิจเรียบร้อย!", "success");
+            render();
+        }
+
+        function resetAllScenario() {
+            state = {
+                page: "overview",
+                closed: false,
+                requests: clone(initialRequests),
+                plans: [],
+                approved: false,
+                delivered: [],
+                planVersion: 0,
+                exceptions: [],
+                audit: [],
+                search: "",
+                filter: "all"
+            };
+            toast("↺ รีเซ็ตสถานการณ์จำลองกลับสู่ค่าเริ่มต้นเรียบร้อย", "success");
+            render();
+        }
+
+        // --- 14. Automated Demo Walkthrough Runner ---
+        let demoTimerIds = [];
+
+        function stopAutoDemo() {
+            demoTimerIds.forEach(id => clearTimeout(id));
+            demoTimerIds = [];
+            const banner = $("#demoControlBanner");
+            if (banner) banner.style.display = "none";
+        }
+
+        function showDemoBannerText(text) {
+            let banner = $("#demoControlBanner");
+            if (!banner) {
+                banner = document.createElement("div");
+                banner.id = "demoControlBanner";
+                banner.className = "demo-floating-banner";
+                document.body.appendChild(banner);
+            }
+            banner.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="demo-spinner"></span>
+                    <span>${text}</span>
+                </div>
+                <button class="btn btn-sm btn-outline" style="color:#ffffff; border-color:rgba(255,255,255,0.4); padding:3px 10px; font-size:11px;" onclick="stopAutoDemo()">⏹ หยุดสาธิต</button>
+            `;
+            banner.style.display = "flex";
+        }
+
+        function runAutoDemo() {
+            stopAutoDemo();
+            showDemoBannerText("🚀 กำลังเริ่มการสาธิตระบบ LocalShield AI (10 วินาที)");
+            resetAllScenario();
+
+            demoTimerIds.push(setTimeout(() => {
+                switchPage("routing");
+                calculate();
+                showDemoBannerText("ขั้นตอน 1/5: AI วางแผนเส้นทางปกติ (จัดซื้อร้าน B → ชุมชน D 1.2 กม.)");
+            }, 1200));
+
+            demoTimerIds.push(setTimeout(() => {
+                toggleRoadBD();
+                showDemoBannerText("ขั้นตอน 2/5: จำลองน้ำท่วมฉุกเฉิน! ถนน B–D ถูกตัดขาด");
+            }, 3600));
+
+            demoTimerIds.push(setTimeout(() => {
+                calculate();
+                showDemoBannerText("ขั้นตอน 3/5: AI Dynamic Rerouting คำนวณทางเลี่ยงอัตโนมัติ (ร้าน C → ชุมชน D 2.6 กม.)");
+            }, 6000));
+
+            demoTimerIds.push(setTimeout(() => {
+                approvePlan();
+                showDemoBannerText("ขั้นตอน 4/5: ผู้ประสานงานตรวจสอบและอนุมัติแผนภารกิจ");
+            }, 8200));
+
+            demoTimerIds.push(setTimeout(() => {
+                switchPage("delivery");
+                deliverAll();
+                showDemoBannerText("ขั้นตอน 5/5: จัดส่งสำเร็จทุกจุด! ชุมชนได้รับเสบียงจำเป็น");
+                demoTimerIds.push(setTimeout(() => {
+                    switchPage("analytics");
+                    demoTimerIds.push(setTimeout(() => stopAutoDemo(), 3000));
+                }, 2000));
+            }, 10400));
+        }
+
+        // --- 15. Modal Management ---
+        function openRequestModal() {
+            const m = $("#modal");
+            if (m) m.classList.add("active");
+        }
+
+        function closeRequestModal() {
+            const m = $("#modal");
+            if (m) m.classList.remove("active");
+        }
+
+        function applyPreset(area, item, qty, priority) {
+            const areaEl = $("#newArea");
+            const itemEl = $("#newItem");
+            const qtyEl = $("#newQty");
+            const priorityEl = $("#reqPrioritySelect");
+            if (areaEl) areaEl.value = area;
+            if (itemEl) itemEl.value = item;
+            if (qtyEl) qtyEl.value = qty;
+            if (priorityEl) priorityEl.value = priority;
+        }
+
+        function saveRequest() {
+            const qtyInput = $("#newQty");
+            const qty = qtyInput ? Number(qtyInput.value) : 30;
+            if (!Number.isInteger(qty) || qty < 1 || qty > 999) {
+                toast("กรุณาระบุจำนวนระหว่าง 1 ถึง 999 หน่วย", "warning");
+                return;
+            }
+
+            const areaEl = $("#newArea");
+            const itemEl = $("#newItem");
+            const priorityEl = $("#reqPrioritySelect");
+
+            const area = areaEl ? areaEl.value : "ชุมชนบ้านเหนือ";
+            const item = itemEl ? itemEl.value : "น้ำดื่ม";
+            const priority = priorityEl ? priorityEl.value : "ปกติ";
+            const at = area === "ชุมชนบ้านเหนือ" ? "D" : area === "โรงเรียนวัดใหม่" ? "C" : "B";
+
+            const nextNum = Math.max(...state.requests.map((r) => Number(r.id.split("-")[1]) || 0), 0) + 1;
+            const newReq = {
+                id: "REQ-" + String(nextNum).padStart(3, "0"),
+                area,
+                at,
+                item,
+                qty,
+                priority,
+                status: "รอจัดสรร"
+            };
+
+            state.requests.push(newReq);
+            state.plans = [];
+            state.approved = false;
+            state.delivered = [];
+            state.exceptions = [];
+            state.audit.push({ action: "CREATE_REQUEST", detail: `สร้างคำร้อง ${newReq.id} (SIMULATED)` });
+            state.requests.forEach((r) => {
+                if (r.status === "อนุมัติแล้ว") r.status = "รอจัดสรร";
+            });
+
+            closeRequestModal();
+            state.page = "requests";
+            render();
+            toast(`✓ เพิ่มคำร้อง ${newReq.id} เรียบร้อย — โปรดคำนวณแผนใหม่`, "success");
+        }
+
+        function openNodeModal(nodeKey) {
+            const title = `${labels[nodeKey]} (จุด ${nodeKey})`;
+            const titleEl = $("#nodeInfoTitle");
+            if (titleEl) titleEl.textContent = title;
+
+            let bodyHtml = "";
+            if (nodeKey === "A" || nodeKey === "E") {
+                const nodeShops = shops.filter(s => s.at === nodeKey);
+                bodyHtml = `
+                    <div style="font-size:13px; line-height:1.6; color:#334155;">
+                        <p><b>ประเภท:</b> แหล่งกระจายสินค้าและร้านค้าชุมชน (SME Supply Hub)</p>
+                        <p style="margin-top:6px;"><b>ร้านค้าในจุดนี้:</b> ${nodeShops.map(s => esc(s.name)).join(", ")}</p>
+                        <div style="background:#f1f5f9; border-radius:8px; padding:12px; margin-top:10px;">
+                            <strong>สต็อกรวมในจุดนี้:</strong>
+                            <ul style="margin-top:4px; padding-left:18px;">
+                                <li>น้ำดื่ม: ${nodeShops.reduce((a, s) => a + s.stock["น้ำดื่ม"], 0)} แพ็ค</li>
+                                <li>อาหารแห้ง: ${nodeShops.reduce((a, s) => a + s.stock["อาหารแห้ง"], 0)} ชุด</li>
+                                <li>อาหารสด: ${nodeShops.reduce((a, s) => a + s.stock["อาหารสด"], 0)} กก.</li>
+                                <li>ยาสามัญ: ${nodeShops.reduce((a, s) => a + s.stock["ยาสามัญ"], 0)} ชุด</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const reqs = state.requests.filter(r => r.at === nodeKey);
+                bodyHtml = `
+                    <div style="font-size:13px; line-height:1.6; color:#334155;">
+                        <p><b>ประเภท:</b> ชุมชน / ศูนย์พักพิงชั่วคราว (Shelter & Relief Point)</p>
+                        <p><b>สถานะข้อมูลพื้นที่:</b> ${nodeKey === 'D' ? '<span style="color:#ef4444; font-weight:600;">SIMULATED: พื้นที่ได้รับผลกระทบ</span>' : '<span style="color:#64748b; font-weight:600;">ไม่มีข้อจำกัดถนนจำลองที่บันทึกสำหรับจุดนี้</span>'}</p>
+                        <div style="background:#f1f5f9; border-radius:8px; padding:12px; margin-top:10px;">
+                            <strong>รายการคำร้องขอในจุดนี้:</strong>
+                            ${reqs.length ? `
+                                <ul style="margin-top:4px; padding-left:18px;">
+                                    ${reqs.map(r => `<li>${r.id}: <b>${r.item}</b> ${r.qty} หน่วย (${r.status})</li>`).join("")}
+                                </ul>
+                            ` : '<div style="color:#64748b; margin-top:4px;">ไม่มีคำร้องที่ค้างอยู่</div>'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const bodyEl = $("#nodeInfoBody");
+            if (bodyEl) bodyEl.innerHTML = bodyHtml;
+
+            const footerEl = $("#nodeInfoFooter");
+            if (footerEl) {
+                if (nodeKey === "D") {
+                    footerEl.innerHTML = `
+                        <button class="btn btn-outline btn-sm" onclick="closeNodeModal()">ปิด</button>
+                        <button class="btn btn-primary btn-sm" onclick="closeNodeModal(); applyPreset('ชุมชนบ้านเหนือ', 'น้ำดื่ม', 50, 'เร่งด่วน'); openRequestModal();">＋ เพิ่มคำร้องจุด D</button>
+                        <button class="btn btn-success btn-sm" onclick="closeNodeModal(); switchPage('routing'); calculate();">✦ วางแผนจัดส่งมาจุดนี้</button>
+                    `;
+                } else if (nodeKey === "A" || nodeKey === "E") {
+                    footerEl.innerHTML = `
+                        <button class="btn btn-outline btn-sm" onclick="closeNodeModal()">ปิด</button>
+                        <button class="btn btn-primary btn-sm" onclick="closeNodeModal(); switchPage('business'); handleSearch('จุด ${nodeKey}');">🏪 ดูร้านค้าในจุด ${nodeKey}</button>
+                    `;
+                } else if (nodeKey === "B") {
+                    footerEl.innerHTML = `
+                        <button class="btn btn-outline btn-sm" onclick="closeNodeModal()">ปิด</button>
+                        <button class="btn ${state.closed ? 'btn-success' : 'btn-danger'} btn-sm" onclick="toggleRoadBD(); closeNodeModal();">
+                            ${state.closed ? '✓ เปิดถนน B–D' : '⛔ จำลองปิดถนน B–D'}
+                        </button>
+                    `;
+                } else if (nodeKey === "C") {
+                    footerEl.innerHTML = `
+                        <button class="btn btn-outline btn-sm" onclick="closeNodeModal()">ปิด</button>
+                        <button class="btn btn-primary btn-sm" onclick="closeNodeModal(); applyPreset('โรงเรียนวัดใหม่', 'อาหารแห้ง', 80, 'ปกติ'); openRequestModal();">＋ เพิ่มคำร้องจุด C</button>
+                    `;
+                } else {
+                    footerEl.innerHTML = `<button class="btn btn-primary btn-sm" onclick="closeNodeModal()">ปิดหน้าต่าง</button>`;
+                }
+            }
+
+            const nodeModal = $("#nodeInfoModal");
+            if (nodeModal) nodeModal.classList.add("active");
+        }
+
+        function closeNodeModal() {
+            const m = $("#nodeInfoModal");
+            if (m) m.classList.remove("active");
+        }
+
+        function openHelpModal() {
+            const m = $("#helpModal");
+            if (m) m.classList.add("active");
+        }
+
+        function closeHelpModal() {
+            const m = $("#helpModal");
+            if (m) m.classList.remove("active");
+        }
+
+        // --- 16. Event Bindings ---
+        const resetBtn = $("#resetAll");
+        if (resetBtn) resetBtn.addEventListener("click", resetAllScenario);
+
+        const createBtn = $("#createRequest");
+        if (createBtn) createBtn.addEventListener("click", openRequestModal);
+
+        const helpBtn = $("#btnHelpGuide");
+        if (helpBtn) helpBtn.addEventListener("click", openHelpModal);
+
+        const autoDemoBtn = $("#btnAutoDemo");
+        if (autoDemoBtn) autoDemoBtn.addEventListener("click", runAutoDemo);
+
+        const closeBtn = $("#modalCloseBtn");
+        if (closeBtn) closeBtn.addEventListener("click", closeRequestModal);
+
+        const cancelBtn = $("#cancelRequest");
+        if (cancelBtn) cancelBtn.addEventListener("click", closeRequestModal);
+
+        const saveBtn = $("#saveRequest");
+        if (saveBtn) saveBtn.addEventListener("click", saveRequest);
+
+        $$(".modal-backdrop").forEach((mb) => {
+            mb.addEventListener("click", (e) => {
+                if (e.target === mb) mb.classList.remove("active");
+            });
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                $$(".modal-backdrop").forEach(mb => mb.classList.remove("active"));
+            }
+        });
+
+        // Initialize App & Hash Routing
+        if (typeof window !== "undefined") {
+            const validPages = ["overview", "requests", "business", "routing", "delivery", "analytics"];
+            if (window.location.hash) {
+                const initHash = window.location.hash.split("?")[0].replace("#", "");
+                if (validPages.includes(initHash)) {
+                    state.page = initHash;
+                }
+            }
+            window.addEventListener("popstate", () => {
+                const currentHash = window.location.hash.split("?")[0].replace("#", "") || "overview";
+                if (validPages.includes(currentHash) && state.page !== currentHash) {
+                    state.page = currentHash;
+                    render();
+                }
+            });
+
+            // Quick State Tester via URL Params (?demo=flood / ?demo=approved / ?demo=delivered)
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const demoState = urlParams.get("demo");
+                if (demoState === "calculated") {
+                    calculate();
+                } else if (demoState === "flood") {
+                    state.closed = true;
+                    calculate();
+                } else if (demoState === "approved") {
+                    state.closed = true;
+                    calculate();
+                    approvePlan();
+                } else if (demoState === "delivered") {
+                    state.closed = true;
+                    calculate();
+                    approvePlan();
+                    deliverAll();
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+        render();
+    </script>
+</body>
+</html>

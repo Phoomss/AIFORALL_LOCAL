@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="th">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>LocalShield AI — Final Hackathon Pitch</title>
+        <style>
+            :root {
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    "Noto Sans Thai",
+                    sans-serif;
+                color: #eaf6f3;
+                background: #061c25;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+            .slide {
+                display: none;
+                width: 100vw;
+                height: 100dvh;
+                overflow: auto;
+                background: radial-gradient(
+                    circle at 88% 5%,
+                    #174c52 0%,
+                    #061c25 57%
+                );
+            }
+            .slide.active {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .slide-inner {
+                width: min(1180px, 92vw);
+                padding: 50px 0 105px;
+            }
+            .eyebrow {
+                font-size: 0.86rem;
+                color: #60e3bd;
+                letter-spacing: 0.17em;
+                font-weight: 800;
+                margin-bottom: 21px;
+            }
+            h1 {
+                font-size: clamp(2.35rem, 5.2vw, 5.4rem);
+                letter-spacing: -0.045em;
+                line-height: 1.12;
+                max-width: 1020px;
+                margin: 0 0 32px;
+            }
+            h1 em {
+                font-style: normal;
+                color: #62e5c1;
+            }
+            .lead {
+                font-size: clamp(1.2rem, 2.15vw, 1.85rem);
+                line-height: 1.6;
+                max-width: 990px;
+                color: #d6eae8;
+            }
+            .heroquote {
+                border-left: 5px solid #60e3bd;
+                padding: 25px 30px;
+                margin-top: 46px;
+                font-size: clamp(1.4rem, 2.8vw, 2.6rem);
+                line-height: 1.5;
+                background: #ffffff0b;
+                border-radius: 0 18px 18px 0;
+            }
+            .triples {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 20px;
+                margin-top: 42px;
+            }
+            .triples article {
+                border: 1px solid #426972;
+                background: #ffffff0e;
+                border-radius: 20px;
+                padding: 32px;
+                min-height: 245px;
+            }
+            .triples b {
+                font-size: 1.2rem;
+                color: #71e7c5;
+            }
+            .triples b.num {
+                font-size: 3.7rem;
+            }
+            .triples h3 {
+                font-size: 1.4rem;
+                margin: 18px 0 10px;
+            }
+            .triples p {
+                line-height: 1.7;
+                color: #cae0df;
+                font-size: 1rem;
+            }
+            .under {
+                color: #b8d0d0;
+                font-size: 0.86rem;
+                margin-top: 25px;
+            }
+            .sequence {
+                display: flex;
+                align-items: center;
+                gap: 13px;
+                flex-wrap: wrap;
+                margin: 38px 0;
+            }
+            .sequence span {
+                background: #123e44;
+                border: 1px solid #417c78;
+                border-radius: 14px;
+                padding: 18px;
+                font-weight: 800;
+                font-size: 1.15rem;
+            }
+            .sequence i {
+                font-style: normal;
+                color: #69dfc3;
+            }
+            .steps {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 17px;
+                margin-top: 50px;
+            }
+            .steps > div {
+                padding: 26px 20px;
+                background: #ffffff0c;
+                border: 1px solid #42646b;
+                border-radius: 16px;
+                min-height: 200px;
+            }
+            .steps span {
+                display: block;
+                color: #60e3bd;
+                font-size: 1.7rem;
+                font-weight: 900;
+            }
+            .steps strong {
+                display: block;
+                margin: 18px 0;
+                font-size: 1.25rem;
+            }
+            .steps small {
+                display: block;
+                color: #bcd0d0;
+                line-height: 1.55;
+                font-size: 0.95rem;
+            }
+            .arch {
+                max-width: 800px;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                gap: 6px;
+                margin: auto;
+            }
+            .arch > div {
+                background: #123740;
+                border: 1px solid #3b7171;
+                padding: 14px 25px;
+                text-align: center;
+                border-radius: 12px;
+                width: 100%;
+                font-size: 1.13rem;
+                font-weight: 750;
+            }
+            .arch .accent {
+                background: #176456;
+            }
+            .arch small {
+                display: block;
+                font-weight: 400;
+                color: #d1dedb;
+                margin-top: 5px;
+                font-size: 0.75rem;
+            }
+            .arch span {
+                color: #62e5c1;
+                font-size: 1.2rem;
+            }
+            .footline {
+                margin-top: 32px;
+                padding: 18px;
+                background: #173d43;
+                border-radius: 12px;
+            }
+            .demo .slide-inner {
+                width: min(1460px, 95vw);
+                height: 100%;
+                padding: 22px 0 105px;
+            }
+            .demo h1 {
+                font-size: clamp(1.4rem, 2.6vw, 2.6rem);
+                margin-bottom: 10px;
+            }
+            .demo .eyebrow {
+                margin-bottom: 7px;
+            }
+            .demo_intro {
+                font-size: 0.92rem;
+                margin: 5px 0 10px;
+                color: #cadfda;
+            }
+            .embedded {
+                height: calc(100dvh - 230px);
+                min-height: 300px;
+                background: white;
+                border-radius: 14px;
+                overflow: hidden;
+                border: 2px solid #39766e;
+            }
+            .embedded iframe {
+                width: 100%;
+                height: 100%;
+                border: 0;
+            }
+            .demo .under {
+                margin-top: 7px;
+            }
+            .navigation {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 13px 4%;
+                background: #041920f2;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                border-top: 1px solid #36605f;
+                z-index: 5;
+            }
+            .navigation button {
+                background: #1f5b56;
+                color: white;
+                border: 1px solid #508a7d;
+                border-radius: 10px;
+                padding: 10px 18px;
+                cursor: pointer;
+                font: inherit;
+                font-weight: 700;
+            }
+            .navigation button:disabled {
+                opacity: 0.35;
+                cursor: default;
+            }
+            .navigation button:focus-visible {
+                outline: 3px solid #f2c569;
+            }
+            .center {
+                text-align: center;
+                color: #d2e5e1;
+                font-size: 0.87rem;
+            }
+            .progress {
+                width: 120px;
+                height: 5px;
+                background: #365255;
+                border-radius: 20px;
+                margin: 5px auto;
+            }
+            .progress div {
+                height: 100%;
+                background: #61e3bc;
+                border-radius: 20px;
+                width: 0%;
+            }
+            @media (max-width: 760px) {
+                .slide-inner {
+                    padding: 40px 0 110px;
+                }
+                .triples {
+                    grid-template-columns: 1fr;
+                    margin-top: 15px;
+                }
+                .triples article {
+                    min-height: 0;
+                    padding: 15px;
+                }
+                .triples h3 {
+                    font-size: 1.07rem;
+                    margin: 6px 0;
+                }
+                .triples p {
+                    font-size: 0.86rem;
+                }
+                .steps {
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    margin-top: 10px;
+                }
+                .steps > div {
+                    min-height: 0;
+                    padding: 12px;
+                }
+                .steps strong {
+                    font-size: 0.95rem;
+                    margin: 6px 0;
+                }
+                .steps small {
+                    font-size: 0.75rem;
+                }
+                .sequence span {
+                    padding: 10px;
+                    font-size: 0.83rem;
+                }
+                .embedded {
+                    height: calc(100dvh - 225px);
+                }
+                .navigation button {
+                    padding: 9px 11px;
+                }
+                .center {
+                    font-size: 0.75rem;
+                }
+            }
+            @media (prefers-reduced-motion: no-preference) {
+                .slide.active .slide-inner {
+                    animation: enter 0.25s ease;
+                }
+                @keyframes enter {
+                    from {
+                        opacity: 0.5;
+                        transform: translateY(8px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            }
+            .teamgrid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 14px;
+                margin-top: 28px;
+            }
+            .teamgrid article {
+                border: 1px solid #426972;
+                background: #ffffff0e;
+                border-radius: 16px;
+                padding: 20px;
+                min-height: 140px;
+            }
+            .teamgrid b {
+                font-size: 0.85rem;
+                color: #71e7c5;
+            }
+            .teamgrid h3 {
+                font-size: 1.18rem;
+                margin: 10px 0 7px;
+            }
+            .teamgrid p {
+                line-height: 1.55;
+                color: #cae0df;
+                font-size: 0.9rem;
+            }
+            @media (max-width: 760px) {
+                .teamgrid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+                .teamgrid article {
+                    padding: 15px;
+                }
+            }
+            @media (max-width: 460px) {
+                .teamgrid {
+                    grid-template-columns: 1fr;
+                }
+                .teamgrid article {
+                    min-height: auto;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <main id="presentation">
+            <section
+                class="slide h"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 1 of 10"
+                data-slide="0"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">01 / OPENING</div>
+                    <h1>
+                        เมื่อถนนถูกตัดขาด<br /><em
+                            >ชีวิตและเศรษฐกิจต้องไม่หยุด</em
+                        >
+                    </h1>
+                    <p class="lead">
+                        ในวิกฤต ร้านค้าบางแห่งยังมีสินค้า
+                        แต่ชุมชนกลับเข้าถึงสิ่งจำเป็นไม่ได้ เพราะข้อมูล
+                        ความต้องการ และเส้นทางไม่เชื่อมกัน
+                    </p>
+                    <div class="heroquote">
+                        “เราจะเชื่อมทรัพยากรที่ยังมีอยู่
+                        ให้ไปถึงคนที่ต้องการได้อย่างไร?”
+                    </div>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 2 of 10"
+                data-slide="1"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">02 / PROBLEM</div>
+                    <h1>ปัญหาไม่ใช่แค่ “น้ำท่วม”</h1>
+                    <div class="triples">
+                        <article>
+                            <b>01</b>
+                            <h3>ข้อมูลกระจัดกระจาย</h3>
+                            <p>
+                                ภัยพิบัติ คำขอความช่วยเหลือ
+                                และสต็อกร้านค้าอยู่คนละช่องทาง
+                            </p>
+                        </article>
+                        <article>
+                            <b>02</b>
+                            <h3>การเดินทางเปลี่ยนฉับพลัน</h3>
+                            <p>
+                                ถนนถูกจำกัดทำให้แผนจัดส่งเดิมอาจไม่สามารถดำเนินการได้
+                            </p>
+                        </article>
+                        <article>
+                            <b>03</b>
+                            <h3>รายได้ท้องถิ่นสะดุด</h3>
+                            <p>
+                                ร้านค้ามีสินค้าแต่เข้าถึงผู้ซื้อหรือจุดกระจายไม่ได้
+                            </p>
+                        </article>
+                    </div>
+                    <p class="under">
+                        Problem hypothesis —
+                        ต้องยืนยันด้วยผู้ใช้งานในพื้นที่นำร่อง
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 3 of 10"
+                data-slide="2"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">03 / SOLUTION</div>
+                    <h1>LocalShield AI</h1>
+                    <p class="lead">
+                        AI-Powered Community Resilience & Local Economic
+                        Continuity Platform
+                    </p>
+                    <div class="sequence">
+                        <span>Risk</span><i>→</i><span>Impact</span><i>→</i
+                        ><span>Coordinate</span><i>→</i><span>Action</span
+                        ><i>→</i><span>Recovery</span>
+                    </div>
+                    <p>
+                        หนึ่งระบบที่นำข้อมูลความเสี่ยง ร้านค้า คำขอ
+                        และเครือข่ายถนนมาร่วมวางแผน
+                        โดยให้ผู้ประสานงานอนุมัติก่อนดำเนินการ
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 4 of 10"
+                data-slide="3"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">04 / TRACK STRATEGY</div>
+                    <h1>หนึ่ง workflow เชื่อมสามมิติ</h1>
+                    <div class="triples">
+                        <article>
+                            <b>01</b>
+                            <h3>Community Resilience</h3>
+                            <p>
+                                ทำให้คำขอและข้อมูลบริบทของชุมชนมองเห็นและติดตามได้
+                            </p>
+                        </article>
+                        <article>
+                            <b>02</b>
+                            <h3>Adaptive Mobility</h3>
+                            <p>
+                                ปรับแผนจัดส่งเมื่อข้อจำกัดถนนเปลี่ยน โดยใช้
+                                graph logic ที่ตรวจสอบได้
+                            </p>
+                        </article>
+                        <article>
+                            <b>03</b>
+                            <h3>Local SME Continuity</h3>
+                            <p>
+                                ใช้สต็อกท้องถิ่นและติดตามการจัดสรรโดยไม่กล่าวอ้างรายได้ที่ยังไม่วัด
+                            </p>
+                        </article>
+                    </div>
+                    <p class="under">
+                        Product pillars: Resilience → Mobility → Local Economic
+                        Continuity · สำหรับ Sea x OpenAI ให้ map กับ AI-Native
+                        Products & Operations และ Deep Domain AI; adaptive
+                        replanning สนับสนุน Autonomous & Adaptive AI
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 5 of 10"
+                data-slide="4"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">05 / USER JOURNEY</div>
+                    <h1>จากคำร้อง → ถึงแผนส่งมอบ</h1>
+                    <div class="steps">
+                        <div>
+                            <span>01</span><strong>แจ้งความต้องการ</strong
+                            ><small>ชุมชนระบุของจำเป็นและจำนวน</small>
+                        </div>
+                        <div>
+                            <span>02</span><strong>ค้นหาร้านค้า</strong
+                            ><small>ตรวจสินค้าและจำนวนที่พร้อมจัดสรร</small>
+                        </div>
+                        <div>
+                            <span>03</span><strong>ปรับเส้นทาง</strong
+                            ><small>คำนึงถึงสถานะปิดถนนที่ระบุ</small>
+                        </div>
+                        <div>
+                            <span>04</span><strong>อนุมัติ & ติดตาม</strong
+                            ><small>เจ้าหน้าที่ตรวจแผนก่อนเริ่มภารกิจ</small>
+                        </div>
+                    </div>
+                    <p class="under">
+                        Primary User: ผู้ประสานงานชุมชน / อปท. · Secondary: SME,
+                        ผู้ขนส่ง, ประชาชน
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 6 of 10"
+                data-slide="5"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">06 / SYSTEM ARCHITECTURE</div>
+                    <h1>AI สนับสนุน ไม่ใช่เดาแทนระบบ</h1>
+                    <div class="arch">
+                        <div>
+                            ข้อมูลภัยพิบัติ / ถนน / ร้านค้า / คำร้อง<small
+                                >Source + Timestamp + Verification</small
+                            >
+                        </div>
+                        <span>↓</span>
+                        <div>
+                            FastAPI + PostgreSQL / PostGIS<small
+                                >Data Validation & Business Logic</small
+                            >
+                        </div>
+                        <span>↓</span>
+                        <div class="accent">
+                            AI Orchestrator + Deterministic Matching &
+                            Routing<small
+                                >LLM อธิบาย · Graph Algorithms คำนวณ · Evidence
+                                Gate ตรวจสอบ</small
+                            >
+                        </div>
+                        <span>↓</span>
+                        <div>
+                            Human Approval → Dispatch Tracking → QuickSight
+                            Analytics
+                        </div>
+                    </div>
+                    <p class="under">
+                        Architecture ที่เสนอสำหรับระบบเต็ม; HTML Hackathon
+                        เป็นการจำลองแบบออฟไลน์
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide demo"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 7 of 10"
+                data-slide="6"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">07 / INTERACTIVE DEMO</div>
+                    <h1>ทดลองเปลี่ยนเหตุการณ์ แล้วดูแผนใหม่</h1>
+                    <p class="demo_intro">
+                        ด้านล่างเป็นต้นแบบ Interactive ที่ทำงานในสไลด์นี้โดยตรง:
+                        คำนวณแผน → ปิดถนน B–D → คำนวณใหม่ → อนุมัติ
+                    </p>
+                    <div class="embedded">
+                        <iframe
+                            title="LocalShield AI interactive simulated dashboard"
+                            sandbox="allow-scripts"
+                            srcdoc='&lt;!doctype html&gt;
+&lt;html lang="th"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;&lt;meta name="viewport" content="width=device-width,initial-scale=1"&gt;&lt;meta name="color-scheme" content="light"&gt;
+&lt;title&gt;LocalShield AI — Community Resilience Demo&lt;/title&gt;
+&lt;style&gt;
+:root{--ink:#172b38;--muted:#607681;--teal:#087c70;--navy:#102c3b;--line:#dbe6e7;--bg:#f4f8f8;--amber:#b65b10;--red:#ac3b40;--green:#18764d;font-family:system-ui,-apple-system,&#x27;Noto Sans Thai&#x27;,sans-serif;color:var(--ink)}*{box-sizing:border-box}body{margin:0;background:var(--bg)}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #e6a443;outline-offset:3px}.layout{display:grid;grid-template-columns:242px minmax(0,1fr);min-height:100vh}.side{background:var(--navy);color:#ecf7f7;padding:27px 17px}.logo{font-size:1.28rem;font-weight:850;letter-spacing:-.6px;margin:0 0 8px}.logo span{color:#71dfcb}.side p{color:#b5cbd2;font-size:.79rem;line-height:1.6}.side .track{margin-top:24px;border-top:1px solid #31505f;padding-top:18px;line-height:2.2;color:#d0e4e8;font-size:.83rem}.side .tag{display:inline-block;background:#1d5460;padding:1px 9px;border-radius:20px;margin-right:6px;color:#bff9e8}.content{padding:28px 34px;max-width:1500px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}.eyebrow{font-weight:800;font-size:.71rem;letter-spacing:1.7px;text-transform:uppercase;color:var(--teal)}h1{font-size:clamp(1.65rem,3.1vw,2.4rem);margin:4px 0 7px;letter-spacing:-1.1px}h2{font-size:1.08rem;margin:0 0 14px}p{margin:.4rem 0;line-height:1.7}.subtitle{color:var(--muted);font-size:.91rem}.pill{border:1px solid #e7cfa6;background:#fff5df;color:#8c5011;padding:9px 13px;border-radius:99px;font-weight:750;font-size:.76rem;white-space:nowrap}.notice{background:#e4f4f2;color:#18564f;padding:12px 15px;border-radius:12px;margin:20px 0;font-size:.86rem;border:1px solid #bce4de}.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.card,.panel{background:white;border:1px solid var(--line);border-radius:16px;box-shadow:0 6px 20px #12384909}.card{padding:17px}.kpi-label{color:var(--muted);font-size:.76rem}.value{font-size:1.75rem;font-weight:850;line-height:1.2;margin:9px 0}.mini{font-size:.74rem;color:var(--muted)}.bodygrid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(290px,.88fr);gap:15px;margin-top:15px}.panel{padding:20px;min-width:0}.panel-header{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}.map{width:100%;height:auto;display:block;border:1px solid #cbdfe1;border-radius:14px;background:#e9f2ef}.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.74rem;color:var(--muted);margin-top:10px}.key{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:middle;margin-right:4px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.btn{background:var(--teal);color:white;padding:11px 14px;border:1px solid var(--teal);border-radius:10px;font-weight:750;font-size:.84rem}.btn:hover{filter:brightness(.94)}.btn.alt{background:white;color:var(--ink);border-color:#bfd2d4}.btn.danger{background:#fff0f0;border-color:#edbabb;color:#a32637}.btn:disabled{opacity:.48;cursor:not-allowed}.muted{color:var(--muted)}.block{border:1px solid var(--line);border-radius:11px;padding:12px;margin-top:10px}.row{display:flex;align-items:center;justify-content:space-between;gap:8px}.status{font-size:.74rem;font-weight:750;border-radius:8px;padding:4px 7px;background:#edf5f3;color:#16765d}.status.warn{background:#fff4e5;color:#945308}.status.bad{background:#ffe9e9;color:#a62e3a}.progress{height:8px;border-radius:10px;background:#e4eeec;overflow:hidden;margin:10px 0}.progress&gt;div{height:100%;background:var(--teal);transition:width .25s}.section{margin-top:15px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;text-align:left;font-size:.8rem}th,td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--muted);font-size:.72rem}svg text{font-family:system-ui,sans-serif}.details{font-size:.8rem;line-height:1.6}footer{font-size:.76rem;color:var(--muted);margin:22px 0}#toast{position:fixed;bottom:20px;right:20px;background:#173d47;color:white;padding:12px 17px;border-radius:12px;box-shadow:0 12px 40px #0003;display:none;max-width:340px;z-index:10}.roadopen{stroke:#1c9280}.roadclosed{stroke:#c1434a;stroke-dasharray:8 8}.routed{stroke:#136caa}.visuallyhidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:1080px){.layout{grid-template-columns:1fr}.side{padding:15px 22px}.side .track{margin-top:8px;padding-top:8px}.content{padding:24px}}@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}.bodygrid{grid-template-columns:1fr}.content{padding:16px}.panel{padding:15px}}@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="layout"&gt;&lt;aside class="side"&gt;&lt;div class="logo"&gt;◈ Local&lt;span&gt;Shield&lt;/span&gt; AI&lt;/div&gt;&lt;p&gt;Community Resilience &amp; Local Economic Continuity&lt;/p&gt;&lt;div class="track"&gt;&lt;div&gt;&lt;span class="tag"&gt;06&lt;/span&gt; Disaster &amp; Community&lt;/div&gt;&lt;div&gt;&lt;span class="tag"&gt;05&lt;/span&gt; Crisis Mobility&lt;/div&gt;&lt;div&gt;&lt;span class="tag"&gt;02&lt;/span&gt; Local Economy&lt;/div&gt;&lt;/div&gt;&lt;p style="margin-top:25px"&gt;Risk → Impact → Coordination → Action → Recovery&lt;/p&gt;&lt;p&gt;ต้นแบบเชิงโต้ตอบแบบออฟไลน์ ไม่มี API จริงหรือการรับรองความปลอดภัยเส้นทาง&lt;/p&gt;&lt;/aside&gt;
+&lt;main class="content"&gt;
+&lt;header class="top"&gt;&lt;div&gt;&lt;div class="eyebrow"&gt;Community Command Center / Pilot simulation&lt;/div&gt;&lt;h1&gt;เมื่อถนนปิด ชุมชนยังเดินต่อได้&lt;/h1&gt;&lt;p class="subtitle"&gt;จัดสรรสิ่งของจำเป็นจากร้านค้าในพื้นที่ ภายใต้ข้อจำกัดของเส้นทางและสต็อกสินค้า&lt;/p&gt;&lt;/div&gt;&lt;span class="pill"&gt;● SIMULATED DATA ONLY&lt;/span&gt;&lt;/header&gt;
+&lt;div class="notice" role="note"&gt;&lt;strong&gt;Scenario:&lt;/strong&gt; ฝนตกหนักในชุมชนสมมติ มีถนนหลัก 1 เส้นที่สามารถจำลองการปิดได้ · ข้อมูลทั้งหมดสร้างขึ้นเพื่อ Demo · ไม่ใช่คำแนะนำเดินทางหรือกู้ภัยจริง&lt;/div&gt;
+&lt;section class="kpis" aria-label="ภาพรวมสถานการณ์"&gt;&lt;div class="card"&gt;&lt;div class="kpi-label"&gt;ร้านค้าในเครือข่าย&lt;/div&gt;&lt;div class="value"&gt;15&lt;/div&gt;&lt;div class="mini"&gt;SIMULATED / ร้านค้าในพื้นที่&lt;/div&gt;&lt;/div&gt;&lt;div class="card"&gt;&lt;div class="kpi-label"&gt;ผู้ขนส่งที่มีอยู่&lt;/div&gt;&lt;div class="value"&gt;5&lt;/div&gt;&lt;div class="mini"&gt;SIMULATED / ไม่มีการส่งจริง&lt;/div&gt;&lt;/div&gt;&lt;div class="card"&gt;&lt;div class="kpi-label"&gt;คำขอที่ได้รับจัดสรร&lt;/div&gt;&lt;div class="value" id="allocated"&gt;0/3&lt;/div&gt;&lt;div class="mini"&gt;นับหลังอนุมัติแผนเท่านั้น&lt;/div&gt;&lt;/div&gt;&lt;div class="card"&gt;&lt;div class="kpi-label"&gt;มูลค่าจัดสรรในพื้นที่&lt;/div&gt;&lt;div class="value" id="commerce"&gt;฿0&lt;/div&gt;&lt;div class="mini"&gt;SIMULATED / ไม่ใช่รายได้จริง&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;
+&lt;div class="bodygrid"&gt;
+&lt;section class="panel" aria-labelledby="maptitle"&gt;&lt;div class="panel-header"&gt;&lt;h2 id="maptitle"&gt;01 / Crisis Mobility Network&lt;/h2&gt;&lt;span id="roadbadge" class="status"&gt;ถนนหลักเปิด (จำลอง)&lt;/span&gt;&lt;/div&gt;&lt;svg class="map" id="network" viewBox="0 0 640 372" role="img" aria-label="แผนผังเครือข่ายเส้นทางจำลองหกจุด ไม่ใช่แผนที่ภูมิศาสตร์จริง"&gt;&lt;defs&gt;&lt;pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"&gt;&lt;path d="M28 0H0V28" fill="none" stroke="#d9e8e5" stroke-width="1"/&gt;&lt;/pattern&gt;&lt;/defs&gt;&lt;rect width="640" height="372" fill="url(#grid)"/&gt;&lt;path d="M98 182 L240 78 L417 92 L546 179 L407 293 L237 286 Z" fill="#d5e8e0" fill-opacity=".4" stroke="#a9cbc3" stroke-width="1.5"/&gt;&lt;g id="roads" fill="none" stroke-linecap="round" stroke-width="9"&gt;&lt;/g&gt;&lt;g id="routes" fill="none" stroke-linecap="round" stroke-width="5"&gt;&lt;/g&gt;&lt;g id="nodes"&gt;&lt;/g&gt;&lt;text x="16" y="350" font-size="12" fill="#648078"&gt;SCHEMATIC GRAPH · NOT GEOGRAPHIC MAP · SIMULATED&lt;/text&gt;&lt;/svg&gt;&lt;div class="legend"&gt;&lt;span&gt;&lt;i class="key" style="background:#1c9280"&gt;&lt;/i&gt;ถนนเปิด&lt;/span&gt;&lt;span&gt;&lt;i class="key" style="background:#c1434a"&gt;&lt;/i&gt;ถนนปิด&lt;/span&gt;&lt;span&gt;&lt;i class="key" style="background:#136caa"&gt;&lt;/i&gt;เส้นทางแผนล่าสุด&lt;/span&gt;&lt;/div&gt;&lt;div class="actions"&gt;&lt;button id="plan" class="btn" type="button"&gt;คำนวณแผนจัดสรร&lt;/button&gt;&lt;button id="closure" class="btn danger" type="button" aria-pressed="false"&gt;จำลองปิดถนน B–D&lt;/button&gt;&lt;button id="approve" class="btn alt" type="button" disabled&gt;อนุมัติแผน&lt;/button&gt;&lt;button id="reset" class="btn alt" type="button"&gt;รีเซ็ต&lt;/button&gt;&lt;/div&gt;&lt;p class="mini" style="margin-top:10px"&gt;สถานะถนนเป็นข้อมูลสมมติ เปลี่ยนแล้วต้องกดคำนวณใหม่ แผนที่ยังไม่อนุมัติจะไม่ถูกนับเป็นการจัดสรร&lt;/p&gt;&lt;/section&gt;
+&lt;section class="panel" aria-labelledby="needtitle"&gt;&lt;div class="panel-header"&gt;&lt;h2 id="needtitle"&gt;02 / Community Demand&lt;/h2&gt;&lt;span class="status warn"&gt;3 จุดชุมชน&lt;/span&gt;&lt;/div&gt;&lt;div id="requestlist"&gt;&lt;/div&gt;&lt;div class="section"&gt;&lt;h2&gt;สถานะการวางแผน&lt;/h2&gt;&lt;div id="planstatus" class="block details" role="status" aria-live="polite"&gt;ยังไม่มีแผน — กด “คำนวณแผนจัดสรร” เพื่อเริ่มต้น&lt;/div&gt;&lt;div class="progress" aria-hidden="true"&gt;&lt;div id="fill" style="width:0%"&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="row mini"&gt;&lt;span&gt;คำขอที่จัดสรรและอนุมัติแล้ว&lt;/span&gt;&lt;span id="pct"&gt;0%&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="section"&gt;&lt;h2&gt;Data Provenance&lt;/h2&gt;&lt;p class="mini"&gt;Source: synthetic in-file JS dataset&lt;br&gt;Data status: SIMULATED&lt;br&gt;Verification: NOT_APPLICABLE&lt;br&gt;Real-time feed: NONE&lt;/p&gt;&lt;/div&gt;&lt;/section&gt;
+&lt;/div&gt;
+&lt;section class="panel section" aria-labelledby="resulttitle"&gt;&lt;div class="panel-header"&gt;&lt;h2 id="resulttitle"&gt;03 / Matching &amp; Dispatch Plan&lt;/h2&gt;&lt;span id="resultbadge" class="status warn"&gt;ยังไม่คำนวณ&lt;/span&gt;&lt;/div&gt;&lt;div class="tablewrap"&gt;&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th scope="col"&gt;จุดชุมชน / ความต้องการ&lt;/th&gt;&lt;th scope="col"&gt;ร้านค้า / สต็อก&lt;/th&gt;&lt;th scope="col"&gt;เส้นทาง (กราฟจำลอง)&lt;/th&gt;&lt;th scope="col"&gt;เวลา&lt;/th&gt;&lt;th scope="col"&gt;มูลค่า&lt;/th&gt;&lt;th scope="col"&gt;ผล&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody id="resultbody"&gt;&lt;tr&gt;&lt;td colspan="6" class="muted"&gt;ยังไม่มีแผน กรุณากดคำนวณ&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;p class="mini"&gt;เกณฑ์ Demo: เลือกร้านที่มีสต็อกเพียงพอและมีเส้นทางเป็นไปได้โดยใช้ shortest path; ไม่ใช่ AI model, ETA จริง, การรับรองเส้นทาง, การจัดตารางรถหรือการส่งมอบจริง&lt;/p&gt;&lt;/section&gt;
+&lt;section class="panel section"&gt;&lt;div class="panel-header"&gt;&lt;h2&gt;04 / How the pillars connect&lt;/h2&gt;&lt;span class="status"&gt;Design concept&lt;/span&gt;&lt;/div&gt;&lt;div class="bodygrid" style="margin-top:5px"&gt;&lt;div&gt;&lt;p&gt;&lt;strong&gt;6 · Resilience:&lt;/strong&gt; ตรวจความต้องการและทรัพยากรชุมชน&lt;br&gt;&lt;strong&gt;5 · Mobility:&lt;/strong&gt; เปลี่ยนแผนเมื่อถนนถูกจำกัด&lt;br&gt;&lt;strong&gt;2 · SME Economy:&lt;/strong&gt; บันทึกมูลค่าสินค้าที่จัดสรรจากร้านในพื้นที่&lt;/p&gt;&lt;/div&gt;&lt;div&gt;&lt;p class="mini"&gt;&lt;strong&gt;Human-in-the-loop:&lt;/strong&gt; ระบบไม่อนุมัติภารกิจอัตโนมัติ และไม่ใช้กราฟ Demo สำหรับคำแนะนำอพยพ&lt;br&gt;&lt;strong&gt;Future integration:&lt;/strong&gt; verified road GIS, GISTDA data, merchant inventory, QuickSight analytics&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/section&gt;
+&lt;footer&gt;LocalShield AI · Offline HTML MVP · ทุกตำแหน่ง ระยะทาง เวลา สต็อก ราคา และผลลัพธ์เป็นข้อมูล SIMULATED · ไม่มีข้อมูลส่วนบุคคล&lt;/footer&gt;
+&lt;/main&gt;&lt;/div&gt;&lt;div id="toast" role="status" aria-live="polite"&gt;&lt;/div&gt;
+&lt;script&gt;
+&#x27;use strict&#x27;;
+// Standalone deterministic demo; no network, no real hazard/road/safety assessment.
+const points={A:[98,182],B:[240,78],C:[237,286],D:[417,92],E:[407,293],F:[546,179]};
+const edges=[[&#x27;A&#x27;,&#x27;B&#x27;,6],[&#x27;A&#x27;,&#x27;C&#x27;,8],[&#x27;B&#x27;,&#x27;D&#x27;,6],[&#x27;B&#x27;,&#x27;C&#x27;,7],[&#x27;C&#x27;,&#x27;E&#x27;,7],[&#x27;D&#x27;,&#x27;E&#x27;,7],[&#x27;D&#x27;,&#x27;F&#x27;,6],[&#x27;E&#x27;,&#x27;F&#x27;,7]];
+const shops=Array.from({length:15},(_,i)=&gt;({id:&#x27;S&#x27;+String(i+1).padStart(2,&#x27;0&#x27;),node:[&#x27;A&#x27;,&#x27;B&#x27;,&#x27;C&#x27;,&#x27;D&#x27;,&#x27;E&#x27;][i%5],type:[&#x27;water&#x27;,&#x27;food&#x27;,&#x27;medicine&#x27;][i%3],stock:i===13?8:20+(i%4)*10,price:{water:12,food:28,medicine:45}[[&#x27;water&#x27;,&#x27;food&#x27;,&#x27;medicine&#x27;][i%3]]}));
+const requests=[{id:&#x27;R01&#x27;,community:&#x27;ชุมชนเหนือ&#x27;,node:&#x27;F&#x27;,type:&#x27;water&#x27;,name:&#x27;น้ำดื่ม&#x27;,qty:24},{id:&#x27;R02&#x27;,community:&#x27;ชุมชนกลาง&#x27;,node:&#x27;D&#x27;,type:&#x27;food&#x27;,name:&#x27;อาหารแห้ง&#x27;,qty:17},{id:&#x27;R03&#x27;,community:&#x27;ชุมชนใต้&#x27;,node:&#x27;E&#x27;,type:&#x27;medicine&#x27;,name:&#x27;ยาสามัญ&#x27;,qty:8}];
+let closed=false,proposal=null,approved=null;
+const el=id=&gt;document.getElementById(id), key=(a,b)=&gt;[a,b].sort().join(&#x27;-&#x27;);
+const money=n=&gt;&#x27;฿&#x27;+n.toLocaleString(&#x27;th-TH&#x27;);
+function shortest(start,end){let dist={};let prev={};const todo=new Set(Object.keys(points));Object.keys(points).forEach(n=&gt;dist[n]=Infinity);dist[start]=0;while(todo.size){let u=[...todo].sort((a,b)=&gt;dist[a]-dist[b])[0];if(!Number.isFinite(dist[u]))break;todo.delete(u);if(u===end)break;for(const [a,b,w] of edges){if(closed&amp;&amp;key(a,b)===&#x27;B-D&#x27;)continue;const v=a===u?b:b===u?a:null;if(v&amp;&amp;todo.has(v)&amp;&amp;dist[u]+w&lt;dist[v]){dist[v]=dist[u]+w;prev[v]=u}}}if(!Number.isFinite(dist[end]))return null;const path=[end];while(path[0]!==start)path.unshift(prev[path[0]]);return {path,minutes:dist[end]};}
+function compute(){const stock=Object.fromEntries(shops.map(s=&gt;[s.id,s.stock]));return requests.map(r=&gt;{const choices=shops.filter(s=&gt;s.type===r.type&amp;&amp;stock[s.id]&gt;=r.qty).map(s=&gt;({shop:s,route:shortest(s.node,r.node)})).filter(x=&gt;x.route).sort((a,b)=&gt;a.route.minutes-b.route.minutes||a.shop.id.localeCompare(b.shop.id));if(!choices.length)return {...r,ok:false};const choice=choices[0];stock[choice.shop.id]-=r.qty;return {...r,ok:true,shop:choice.shop,route:choice.route,amount:r.qty*choice.shop.price}})}
+function toast(message){el(&#x27;toast&#x27;).textContent=message;el(&#x27;toast&#x27;).style.display=&#x27;block&#x27;;clearTimeout(toast.timer);toast.timer=setTimeout(()=&gt;{el(&#x27;toast&#x27;).style.display=&#x27;none&#x27;},3200)}
+function make(tag,attrs,parent,text){const n=document.createElementNS(&#x27;http://www.w3.org/2000/svg&#x27;,tag);Object.entries(attrs).forEach(([k,v])=&gt;n.setAttribute(k,v));if(text!==undefined)n.textContent=text;parent.append(n);return n}
+function renderMap(){const road=el(&#x27;roads&#x27;),routes=el(&#x27;routes&#x27;),nodes=el(&#x27;nodes&#x27;);road.replaceChildren();routes.replaceChildren();nodes.replaceChildren();edges.forEach(([a,b])=&gt;make(&#x27;line&#x27;,{x1:points[a][0],y1:points[a][1],x2:points[b][0],y2:points[b][1],class:closed&amp;&amp;key(a,b)===&#x27;B-D&#x27;?&#x27;roadclosed&#x27;:&#x27;roadopen&#x27;,opacity:&#x27;.55&#x27;},road));if(proposal)proposal.filter(p=&gt;p.ok).forEach((p,i)=&gt;{for(let j=0;j&lt;p.route.path.length-1;j++){const a=p.route.path[j],b=p.route.path[j+1];make(&#x27;line&#x27;,{x1:points[a][0],y1:points[a][1],x2:points[b][0],y2:points[b][1],class:&#x27;routed&#x27;,opacity:String(.65+i*.1)},routes)}});Object.entries(points).forEach(([k,[x,y]])=&gt;{make(&#x27;circle&#x27;,{cx:x,cy:y,r:&#x27;18&#x27;,fill:&#x27;#fff&#x27;,stroke:&#x27;#245966&#x27;,&#x27;stroke-width&#x27;:&#x27;3&#x27;},nodes);make(&#x27;text&#x27;,{x,y:y+5,&#x27;font-size&#x27;:&#x27;14&#x27;,&#x27;text-anchor&#x27;:&#x27;middle&#x27;,&#x27;font-weight&#x27;:&#x27;bold&#x27;,fill:&#x27;#234b58&#x27;},nodes,k)});el(&#x27;roadbadge&#x27;).textContent=closed?&#x27;ถนน B–D ปิด (จำลอง)&#x27;:&#x27;ถนนหลักเปิด (จำลอง)&#x27;;el(&#x27;roadbadge&#x27;).className=&#x27;status&#x27;+(closed?&#x27; bad&#x27;:&#x27;&#x27;)}
+function showRequests(){el(&#x27;requestlist&#x27;).innerHTML=requests.map(r=&gt;`&lt;div class="block"&gt;&lt;div class="row"&gt;&lt;strong&gt;${r.community}&lt;/strong&gt;&lt;span class="status warn"&gt;${r.id}&lt;/span&gt;&lt;/div&gt;&lt;div class="muted" style="font-size:.82rem"&gt;${r.name} ${r.qty} หน่วย · จุด ${r.node}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;)}
+function showTable(){if(!proposal){el(&#x27;resultbody&#x27;).innerHTML=&#x27;&lt;tr&gt;&lt;td colspan="6" class="muted"&gt;ยังไม่มีแผน กรุณากดคำนวณ&lt;/td&gt;&lt;/tr&gt;&#x27;;return}el(&#x27;resultbody&#x27;).innerHTML=proposal.map(p=&gt;`&lt;tr&gt;&lt;td&gt;&lt;strong&gt;${p.community}&lt;/strong&gt;&lt;br&gt;${p.name} ${p.qty} หน่วย&lt;/td&gt;&lt;td&gt;${p.ok?p.shop.id+&#x27; / จุด &#x27;+p.shop.node:&#x27;ไม่มีร้าน/เส้นทางที่เป็นไปได้&#x27;}&lt;/td&gt;&lt;td&gt;${p.ok?p.route.path.join(&#x27; → &#x27;):&#x27;—&#x27;}&lt;/td&gt;&lt;td&gt;${p.ok?p.route.minutes+&#x27; นาที (จำลอง)&#x27;:&#x27;—&#x27;}&lt;/td&gt;&lt;td&gt;${p.ok?money(p.amount):&#x27;—&#x27;}&lt;/td&gt;&lt;td&gt;&lt;span class="status ${p.ok?&#x27;&#x27;:&#x27;bad&#x27;}"&gt;${!p.ok?&#x27;ไม่สำเร็จ&#x27;:approved?&#x27;อนุมัติแล้ว&#x27;:&#x27;รออนุมัติ&#x27;}&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;`).join(&#x27;&#x27;)}
+function render(){renderMap();showTable();const successes=approved?approved.filter(p=&gt;p.ok):[];el(&#x27;allocated&#x27;).textContent=successes.length+&#x27;/3&#x27;;el(&#x27;commerce&#x27;).textContent=money(successes.reduce((sum,p)=&gt;sum+p.amount,0));el(&#x27;fill&#x27;).style.width=(successes.length/requests.length*100)+&#x27;%&#x27;;el(&#x27;pct&#x27;).textContent=Math.round(successes.length/requests.length*100)+&#x27;%&#x27;;el(&#x27;closure&#x27;).textContent=closed?&#x27;เปิดถนน B–D&#x27;:&#x27;จำลองปิดถนน B–D&#x27;;el(&#x27;closure&#x27;).setAttribute(&#x27;aria-pressed&#x27;,String(closed));el(&#x27;approve&#x27;).disabled=!proposal||!!approved||!proposal.some(p=&gt;p.ok);el(&#x27;resultbadge&#x27;).textContent=approved?&#x27;อนุมัติแล้ว (จำลอง)&#x27;:proposal?&#x27;แผนรออนุมัติ&#x27;:&#x27;ยังไม่คำนวณ&#x27;;el(&#x27;resultbadge&#x27;).className=&#x27;status&#x27;+(!approved&amp;&amp;proposal?&#x27; warn&#x27;:&#x27;&#x27;);if(approved){el(&#x27;planstatus&#x27;).textContent=&#x27;อนุมัติการจัดสรร &#x27;+successes.length+&#x27; จาก 3 คำขอ (จำลอง) · ไม่ใช่หลักฐานการจัดส่งจริง&#x27;}else if(proposal){const feasible=proposal.filter(p=&gt;p.ok).length;el(&#x27;planstatus&#x27;).textContent=&#x27;วางแผนได้ &#x27;+feasible+&#x27;/3 คำขอ · กราฟเส้นทางที่เลือกเป็นข้อมูลจำลอง · ต้องให้ผู้ประสานงานตรวจและอนุมัติ&#x27;}else{el(&#x27;planstatus&#x27;).textContent=&#x27;ยังไม่มีแผน — กด “คำนวณแผนจัดสรร” เพื่อเริ่มต้น&#x27;}}
+el(&#x27;plan&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{proposal=compute();approved=null;render();toast(&#x27;สร้างแผนจากสต็อกและเส้นทางจำลองแล้ว กรุณาตรวจสอบก่อนอนุมัติ&#x27;)});
+el(&#x27;closure&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{closed=!closed;proposal=null;approved=null;render();toast(&#x27;เปลี่ยนข้อจำกัดถนนแล้ว · กรุณาคำนวณแผนใหม่&#x27;)});
+el(&#x27;approve&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{if(!proposal||approved)return;approved=proposal.map(p=&gt;({...p}));render();toast(&#x27;อนุมัติแผนจำลองแล้ว · ยังไม่มีการจัดส่งจริง&#x27;)});
+el(&#x27;reset&#x27;).addEventListener(&#x27;click&#x27;,()=&gt;{closed=false;proposal=null;approved=null;render();toast(&#x27;รีเซ็ตสถานการณ์จำลองเรียบร้อย&#x27;)});
+showRequests();render();
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;
+'
+                        ></iframe>
+                    </div>
+                    <p class="under">
+                        ทุกข้อมูลใน Demo เป็น SIMULATED ·
+                        ไม่ใช่การรับรองเส้นทางจริง
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 8 of 10"
+                data-slide="7"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">08 / IMPACT & SUSTAINABILITY</div>
+                    <h1>ใช้ได้ทั้งก่อน ระหว่าง และหลังวิกฤต</h1>
+                    <div class="triples">
+                        <article>
+                            <b>NORMAL</b>
+                            <h3>ธุรกิจใช้งานประจำวัน</h3>
+                            <p>
+                                อัปเดตสต็อก ค้นหาสินค้าภายในชุมชน
+                                และสร้างเครือข่ายขนส่ง
+                            </p>
+                        </article>
+                        <article>
+                            <b>CRISIS</b>
+                            <h3>ประสานการช่วยเหลือ</h3>
+                            <p>
+                                จัดสรรความต้องการและติดตามสถานะภายใต้ข้อจำกัดถนน
+                            </p>
+                        </article>
+                        <article>
+                            <b>RECOVERY</b>
+                            <h3>ฟื้นฟู SME</h3>
+                            <p>
+                                ติดตามร้านค้าที่เปิดอีกครั้งและความต้องการหลังเกิดเหตุ
+                            </p>
+                        </article>
+                    </div>
+                    <div class="footline">
+                        วัดผล: Fulfillment Rate · Planning Time · Replanning ·
+                        Local Procurement Share
+                    </div>
+                    <p class="under">
+                        KPI และโมเดลรายได้ยังเป็นสมมติฐาน
+                        รอการทดสอบ/สัมภาษณ์จริง
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 9 of 10"
+                data-slide="8"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">09 / TEAM</div>
+                    <h1>ทีมที่สร้างได้ทั้งระบบและประสบการณ์</h1>
+                    <div class="teamgrid">
+                        <article>
+                            <b>01</b>
+                            <h3>นรงศ์ศักดิ์</h3>
+                            <p>
+                                Full-Stack Developer<br />DevOps · AI Engineer
+                            </p>
+                        </article>
+                        <article>
+                            <b>02</b>
+                            <h3>เกตุศรัณย์</h3>
+                            <p>Full-Stack Developer<br />AI Engineer</p>
+                        </article>
+                        <article>
+                            <b>03</b>
+                            <h3>วัชรากร</h3>
+                            <p>Full-Stack Developer<br />System Analyst</p>
+                        </article>
+                        <article>
+                            <b>04</b>
+                            <h3>สมหมาย</h3>
+                            <p>Full-Stack Developer<br />Advanced Frontend</p>
+                        </article>
+                        <article>
+                            <b>05</b>
+                            <h3>รติมา</h3>
+                            <p>
+                                Business English<br />Pitch & language support
+                            </p>
+                        </article>
+                    </div>
+                    <p class="under">
+                        บทบาทตามข้อมูลทีม ·
+                        โปรดตรวจสอบจำนวนสมาชิกตามกติกาของการแข่งขันก่อนใช้สไลด์นี้ส่ง
+                    </p>
+                </div>
+            </section>
+            <section
+                class="slide h"
+                role="group"
+                aria-roledescription="slide"
+                aria-label="Slide 10 of 10"
+                data-slide="9"
+            >
+                <div class="slide-inner">
+                    <div class="eyebrow">10 / CLOSING</div>
+                    <h1>ชุมชนที่แข็งแรง<br />ไม่ควรหยุดเพราะเส้นทางเดียว</h1>
+                    <p class="lead">
+                        LocalShield AI ทำให้ “ข้อมูลความเสี่ยง” กลายเป็น
+                        “แผนประสานทรัพยากร” ที่ตรวจสอบได้
+                    </p>
+                    <div class="heroquote">
+                        Protect Communities.<br />Keep Local Economies Moving.
+                    </div>
+                    <p class="under">
+                        Next step: Validate users → Pilot one area → Test
+                        measurable impact
+                    </p>
+                </div>
+            </section>
+        </main>
+        <nav class="navigation" aria-label="Slide navigation">
+            <button id="prev" type="button" aria-label="Previous slide">
+                ← ก่อนหน้า
+            </button>
+            <div class="center">
+                <span id="counter">01 / 09</span>
+                <div class="progress"><div id="progress"></div></div>
+                <span>← → เพื่อเปลี่ยนสไลด์ · F เต็มจอ</span>
+            </div>
+            <button id="next" type="button" aria-label="Next slide">
+                ถัดไป →
+            </button>
+        </nav>
+        <script>
+            (() => {
+                "use strict";
+                const slides = [...document.querySelectorAll(".slide")],
+                    counter = document.querySelector("#counter"),
+                    progress = document.querySelector("#progress"),
+                    prev = document.querySelector("#prev"),
+                    next = document.querySelector("#next");
+                let current = 0;
+                function show(i) {
+                    current = Math.max(0, Math.min(slides.length - 1, i));
+                    slides.forEach((s, j) => {
+                        s.classList.toggle("active", j === current);
+                        s.setAttribute("aria-hidden", String(j !== current));
+                    });
+                    counter.textContent =
+                        String(current + 1).padStart(2, "0") +
+                        " / " +
+                        String(slides.length).padStart(2, "0");
+                    progress.style.width =
+                        (100 * (current + 1)) / slides.length + "%";
+                    prev.disabled = current === 0;
+                    next.disabled = current === slides.length - 1;
+                    history.replaceState(null, "", "#slide-" + (current + 1));
+                }
+                prev.addEventListener("click", () => show(current - 1));
+                next.addEventListener("click", () => show(current + 1));
+                window.addEventListener("keydown", (e) => {
+                    if (e.target.closest("button,input,textarea,select"))
+                        return;
+                    if (e.key === "ArrowRight" || e.key === "PageDown") {
+                        e.preventDefault();
+                        show(current + 1);
+                    } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+                        e.preventDefault();
+                        show(current - 1);
+                    } else if (e.key.toLowerCase() === "f") {
+                        document.documentElement
+                            .requestFullscreen?.()
+                            .catch(() => {});
+                    }
+                });
+                const start = Number(location.hash.replace("#slide-", "")) - 1;
+                show(Number.isInteger(start) ? start : 0);
+            })();
+        </script>
+    </body>
+</html>

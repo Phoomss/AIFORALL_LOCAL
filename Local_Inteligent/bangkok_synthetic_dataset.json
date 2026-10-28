@@ -1,0 +1,124 @@
+{
+  "metadata": {
+    "dataset_id": "BKK-LIP-DEMO-2026-10-29",
+    "title": "Local Intelligence Platform — Bangkok Pilot Synthetic Dataset",
+    "version": "1.0.0",
+    "locale": "th-TH",
+    "disclaimer": "Synthetic demonstration data only. It is not live operational, weather, traffic, business, or emergency information."
+  },
+  "scenarios": {
+    "flood": {
+      "id": "BKK-FLOOD-ORANGE-001",
+      "name_th": "น้ำท่วมเมือง",
+      "name_en": "Urban flood",
+      "observed_at": "2026-10-29T07:00:00+07:00",
+      "weather": { "temperature_c": 28, "rainfall_mm": 85, "relative_humidity_pct": 96, "rainfall_rate_mm_h": 42, "visibility_km": 2.0, "warning": "TMD ORANGE" },
+      "infrastructure": { "drainage_capacity_pct": 72 },
+      "kpis": { "max_flood_risk": 88, "active_sme_alerts": 3, "inventory_at_risk_thb": 55000, "safe_route_confidence_pct": 94 }
+    },
+    "normal": {
+      "id": "BKK-NORMAL-001",
+      "name_th": "วันปกติ",
+      "name_en": "Normal day",
+      "kpis": { "flood_risk_score": 5, "active_alerts": 0, "sme_revenue_opportunity_thb": 980, "route_status": "CLEAR" }
+    }
+  },
+  "local_shield": {
+    "businesses": [
+      {
+        "id": "SME-BKK-KS-0112",
+        "name_th": "ร้านกาแฟลุงอ้วน ริมคลองสาน",
+        "name_en": "Lung Uan Riverside Coffee — Khlong San",
+        "business_type": "CAFE",
+        "district": "คลองสาน",
+        "address_th": "23/4 ซ.เจริญนคร 17 เขตคลองสาน",
+        "online_ordering": true,
+        "flood_risk": { "score": 78, "level": "HIGH", "predicted_depth_cm": 20, "inventory_at_risk_thb": 12000, "revenue_at_risk_thb": 8500 },
+        "area_status": "ถนนเจริญนคร: PARTIALLY FLOODED; ทางเลี่ยงถนนกรุงธนบุรี ซอย 4: CLEAR; BTS กรุงธนบุรี: NORMAL",
+        "actions": [
+          { "priority": 1, "category": "INVENTORY", "deadline": "12:00", "instruction_th": "ย้ายถุงเมล็ดกาแฟและแป้งอบขนมขึ้นชั้นวางสูงเหนือระดับ 30 ซม. ก่อนเที่ยง" },
+          { "priority": 2, "category": "LOGISTICS", "deadline": "08:00", "instruction_th": "แจ้งซัพพลายเออร์นมสดและผลไม้ให้จัดส่งก่อน 10:00 น. ผ่านถนนกรุงธนบุรี" },
+          { "priority": 3, "category": "CUSTOMER", "deadline": "09:00", "instruction_th": "โพสต์ LINE OA และ Facebook แจ้งเปิดถึง 13:00 น. และเปิดรับ Grab/LINE Man" },
+          { "priority": 4, "category": "INFRA", "deadline": "11:00", "instruction_th": "วางกระสอบทราย 2 ชั้น เก็บโต๊ะริมคลอง และยกปลั๊กไฟชั้นล่าง" }
+        ]
+      },
+      {
+        "id": "SME-BKK-PP-0287",
+        "name_th": "ร้านขายยาจีนเจริญโอสถ เยาวราช",
+        "name_en": "Charoen Osot Chinese Pharmacy — Pom Prap",
+        "business_type": "PHARMACY",
+        "district": "ป้อมปราบศัตรูพ่าย",
+        "address_th": "156 ถนนเยาวราช เขตป้อมปราบฯ",
+        "online_ordering": false,
+        "flood_risk": { "score": 88, "level": "CRITICAL", "predicted_depth_cm": 28, "inventory_at_risk_thb": 35000, "revenue_at_risk_thb": 15000 },
+        "area_status": "ถนนเยาวราช: FLOODED; ถนนมังกร: PARTIALLY FLOODED; MRT วัดมังกร: NORMAL",
+        "actions": [
+          { "priority": 1, "category": "INVENTORY", "deadline": "10:00", "instruction_th": "ย้ายสมุนไพรลิ้นชักล่าง 2 แถวและรังนกแห้งขึ้นชั้น 3 หรือชั้นลอย" },
+          { "priority": 2, "category": "CUSTOMER", "deadline": "08:30", "instruction_th": "โทรแจ้งลูกค้า VIP 10 รายให้เลื่อนรับยา หรือจัดส่งทาง Lalamove" },
+          { "priority": 3, "category": "INVENTORY", "deadline": "11:00", "instruction_th": "คลุมพลาสติกกันน้ำและปิดผนึกซิปล็อก 2 ชั้น" },
+          { "priority": 4, "category": "INFRA", "deadline": "12:00", "instruction_th": "วางกระสอบทรายและแผ่นกั้นน้ำ ปิดร้านชั่วคราว 13:00-20:00" }
+        ]
+      },
+      {
+        "id": "SME-BKK-HK-0445",
+        "name_th": "ร้านข้าวมันไก่ประตูน้ำ สาขาห้วยขวาง",
+        "name_en": "Pratunam Chicken Rice — Huai Khwang",
+        "business_type": "RESTAURANT",
+        "district": "ห้วยขวาง",
+        "address_th": "89/2 ถนนประชาราษฎร์บำเพ็ญ เขตห้วยขวาง",
+        "online_ordering": true,
+        "flood_risk": { "score": 52, "level": "MODERATE", "predicted_depth_cm": 8, "inventory_at_risk_thb": 8000, "revenue_at_risk_thb": 5200 },
+        "area_status": "ถนนประชาราษฎร์บำเพ็ญ: SLOW_DRAINING; ถนนรัชดาภิเษก: CLEAR; MRT ห้วยขวาง: NORMAL",
+        "actions": [
+          { "priority": 1, "category": "INVENTORY", "deadline": "11:00", "instruction_th": "ยกกระสอบข้าวและถังซอสบนพาเลทไม้สูง 15 ซม." },
+          { "priority": 2, "category": "LOGISTICS", "deadline": "07:30", "instruction_th": "ให้ตลาดไก่สดส่งก่อน 09:00 น. ผ่านถนนรัชดาภิเษก" },
+          { "priority": 3, "category": "CUSTOMER", "deadline": "10:00", "instruction_th": "เปิดโปรโมชั่น Grab ลด 15% ช่วงบ่าย" },
+          { "priority": 4, "category": "INFRA", "deadline": "10:30", "instruction_th": "ตรวจท่อระบายน้ำหน้าร้านและเตรียมอุปกรณ์ตักน้ำ" }
+        ]
+      }
+    ]
+  },
+  "safe_route": {
+    "request": { "origin": "แยกอโศก (BTS Asok / MRT Sukhumvit)", "destination": "ชุมชนตลาดน้อย", "mode": "MULTIMODAL" },
+    "routes": [
+      {
+        "id": "A", "recommended": true, "distance_km": 12.5, "duration_minutes": 38, "flood_risk_score": 15, "risk_level": "LOW",
+        "description_th": "ผ่านสาทร-เจริญกรุง เลี่ยงจุดน้ำท่วมทั้งหมดและใช้ BTS",
+        "segments": [
+          { "name_th": "ถนนสุขุมวิท → BTS ศาลาแดง", "distance_range_km": "0-3", "risk_score": 5, "status": "CLEAR" },
+          { "name_th": "ถนนสาทร → สี่แยกบางรัก", "distance_range_km": "3-7", "risk_score": 12, "status": "CLEAR" },
+          { "name_th": "ถนนเจริญกรุง (บางรัก-ตลาดน้อย)", "distance_range_km": "7-10", "risk_score": 18, "status": "CLEAR" },
+          { "name_th": "ซอยเจริญกรุง 22-24 → ตลาดน้อย", "distance_range_km": "10-12.5", "risk_score": 20, "status": "CLEAR" }
+        ]
+      },
+      {
+        "id": "B", "recommended": false, "distance_km": 9.8, "duration_minutes": 30, "flood_risk_score": 85, "risk_level": "HIGH",
+        "description_th": "ผ่านพระราม 4-เยาวราช เร็วกว่าแต่น้ำท่วม 3 จุดต่อเนื่อง",
+        "segments": [
+          { "name_th": "ถนนพระราม 4 (อโศก-หัวลำโพง)", "distance_range_km": "0-3.5", "risk_score": 65, "status": "PARTIAL", "water_depth_cm": "10-15", "community_reports": 12 },
+          { "name_th": "ถนนเจริญกรุง (หัวลำโพง)", "distance_range_km": "3.5-6", "risk_score": 78, "status": "FLOODED", "water_depth_cm": "15-20" },
+          { "name_th": "ถนนเยาวราช", "distance_range_km": "6-8.5", "risk_score": 92, "status": "FLOODED", "water_depth_cm": "20-30", "community_reports": 18, "incidents": 2 },
+          { "name_th": "ถนนทรงวาด → ตลาดน้อย", "distance_range_km": "8.5-9.8", "risk_score": 55, "status": "PARTIAL", "water_depth_cm": "5-10" }
+        ]
+      }
+    ],
+    "recommendation_th": "เลือกเส้นทาง A แม้ใช้เวลาเพิ่ม 8 นาที เพราะลดคะแนนความเสี่ยงจาก 85 เหลือ 15"
+  },
+  "local_flow": {
+    "trip_request": { "theme": "Eco & Heritage", "travellers": 2, "budget_thb": 1500, "start_time": "09:00", "end_time": "18:00" },
+    "itinerary": [
+      { "order": 1, "time": "09:00-10:30", "name_th": "ชุมชนตลาดน้อย — ชมงาน Street Art ชิโน-โปรตุกีส", "category": "HERITAGE_WALK", "cost_thb": 0, "crowd_score": 0.15, "local_beneficiary": "ชุมชนตลาดน้อย" },
+      { "order": 2, "time": "10:38-11:30", "name_th": "ร้านกาแฟโบราณ บ้านอากง — สูตร 70 ปี", "category": "LOCAL_CAFE", "cost_thb": 120, "crowd_score": 0.2, "local_beneficiary": "ครอบครัวอากง รุ่นที่ 3" },
+      { "order": 3, "time": "11:50-13:00", "name_th": "ตลาดสดคลองสาน — ข้าวแกงป้าแจ๋ว + ขนมไทย", "category": "LOCAL_MARKET", "cost_thb": 180, "crowd_score": 0.3, "local_beneficiary": "แม่ค้าตลาดสด 5 แผง" },
+      { "order": 4, "time": "13:10-14:30", "name_th": "ร้านกาแฟลุงอ้วน — Latte Art Workshop", "category": "WORKSHOP_CAFE", "cost_thb": 350, "crowd_score": 0.1, "local_beneficiary": "ลุงอ้วน บาริสต้าชุมชนคลองสาน" },
+      { "order": 5, "time": "14:55-16:30", "name_th": "ชุมชนกุฎีจีน — ขนมฝรั่งโบราณ 200 ปี", "category": "HERITAGE_WORKSHOP", "cost_thb": 250, "crowd_score": 0.12, "local_beneficiary": "กลุ่มแม่บ้านกุฎีจีน" },
+      { "order": 6, "time": "16:48-18:00", "name_th": "Yodpiman River Walk — ชมพระอาทิตย์ตก", "category": "SCENIC", "cost_thb": 80, "crowd_score": 0.25, "local_beneficiary": "ร้านไอศกรีมมะพร้าวและโซดาคราฟท์" }
+    ],
+    "transport_cost_thb": 126,
+    "projected_spend_thb": 1106,
+    "remaining_budget_thb": 394,
+    "sme_income_distributed_thb": 980,
+    "sme_beneficiaries": 8,
+    "optimization_scores": { "satisfaction": 0.93, "sme_distribution": 0.95, "safety": 0.91, "budget": 0.89, "crowd": 0.92, "heritage": 0.96, "composite": 0.927 }
+  }
+}
