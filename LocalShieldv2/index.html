@@ -1,0 +1,3760 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>LocalShield AI — Hyperlocal Disaster-to-Commerce (D2C) Mesh</title>
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & SYSTEM RESET
+       ========================================================================== */
+    :root {
+      --primary: #0F172A;
+      --primary-light: #1E293B;
+      --primary-dark: #0A0F1D;
+      
+      --accent: #0D9488;
+      --accent-hover: #0F766E;
+      --accent-light: #F0FDFA;
+      --accent-border: #99F6E4;
+      
+      --bg-main: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F1F5F9;
+      --border-color: #E2E8F0;
+      --border-dark: #CBD5E1;
+
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+
+      --urgent-critical: #EF4444;
+      --urgent-critical-bg: #FEE2E2;
+      --urgent-critical-text: #991B1B;
+
+      --urgent-high: #F97316;
+      --urgent-high-bg: #FFEDD5;
+      --urgent-high-text: #9A3412;
+
+      --urgent-medium: #F59E0B;
+      --urgent-medium-bg: #FEF3C7;
+      --urgent-medium-text: #92400E;
+
+      --urgent-low: #10B981;
+      --urgent-low-bg: #D1FAE5;
+      --urgent-low-text: #065F46;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Thai", "Sarabun", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.55;
+      font-size: 14.5px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================================================
+       2. TOP NOTICES & HEADER
+       ========================================================================== */
+    .prototype-banner {
+      background-color: #0F172A;
+      color: #94A3B8;
+      font-size: 12px;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid #1E293B;
+    }
+
+    .badge-proto {
+      background: #334155;
+      color: #F8FAFC;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 10.5px;
+      letter-spacing: 0.04em;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .banner-link {
+      color: #38BDF8;
+      background: none;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+    }
+    .banner-link:hover {
+      color: #7DD3FC;
+    }
+
+    .header-main {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #0F172A 0%, #0D9488 100%);
+      color: white;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: -0.5px;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-text p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    .tagline-pill {
+      font-size: 11px;
+      color: var(--accent-hover);
+      background: var(--accent-light);
+      padding: 1px 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      border: 1px solid var(--accent-border);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .role-switcher-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .role-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .role-select {
+      background: transparent;
+      border: none;
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--primary);
+      cursor: pointer;
+      outline: none;
+      padding: 2px 2px;
+    }
+
+    .btn-header {
+      background: white;
+      border: 1px solid var(--border-color);
+      color: var(--primary);
+      padding: 5px 10px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn-header:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-dark);
+    }
+
+    .btn-header.accent {
+      background: #EEF2FF;
+      border-color: #C7D2FE;
+      color: #4338CA;
+    }
+    .btn-header.accent:hover {
+      background: #E0E7FF;
+      color: #3730A3;
+    }
+
+    .btn-header.danger:hover {
+      background: #FEE2E2;
+      border-color: #FCA5A5;
+      color: #991B1B;
+    }
+
+    /* ==========================================================================
+       3. NAVIGATION (Desktop Sidebar + Mobile/Tablet Top Nav)
+       ========================================================================== */
+    .app-layout {
+      display: flex;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    /* Desktop Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #FFFFFF;
+      border-right: 1px solid var(--border-color);
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item button svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      stroke-width: 2;
+    }
+
+    .nav-item button:hover {
+      background: var(--bg-subtle);
+      color: var(--primary);
+    }
+
+    .nav-item.active button {
+      background: var(--accent-light);
+      color: var(--accent-hover);
+      font-weight: 700;
+      border-color: var(--accent-border);
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: #F1F5F9;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+    }
+
+    .nav-item.active .nav-badge {
+      background: var(--accent);
+      color: white;
+    }
+
+    .sidebar-footer {
+      padding-top: 14px;
+      border-top: 1px solid var(--border-color);
+      font-size: 11.5px;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .track-pills {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-top: 3px;
+    }
+
+    .track-pill {
+      font-size: 10.5px;
+      background: #F1F5F9;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .track-pill strong {
+      color: var(--primary);
+      font-size: 10px;
+    }
+
+    /* Mobile / Tablet Horizontal Tab Navigation Bar */
+    .mobile-nav-bar {
+      display: none;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      padding: 6px 8px;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      position: sticky;
+      top: 59px;
+      z-index: 35;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .mobile-nav-inner {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .mobile-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: var(--radius-full);
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .mobile-nav-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .mobile-nav-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .mobile-nav-btn .badge-pill {
+      background: rgba(0,0,0,0.08);
+      font-size: 10.5px;
+      padding: 1px 5px;
+      border-radius: var(--radius-full);
+    }
+    .mobile-nav-btn.active .badge-pill {
+      background: rgba(255,255,255,0.25);
+      color: white;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 22px 20px;
+      overflow-y: auto;
+      min-width: 0;
+    }
+
+    /* Role Guidance Banner */
+    .role-guidance-banner {
+      background: #F8FAFC;
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .role-guidance-text {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .role-guidance-text strong {
+      color: var(--primary);
+    }
+
+    /* ==========================================================================
+       4. UI COMPONENTS: CARDS, BUTTONS, BADGES, FORMS
+       ========================================================================== */
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .page-title-wrap h2 {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .page-title-wrap p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 15px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      border-color: var(--border-color);
+      color: var(--primary);
+    }
+    .btn-secondary:hover {
+      background-color: var(--bg-subtle);
+      border-color: var(--border-dark);
+    }
+
+    .btn-dark {
+      background-color: var(--primary);
+      color: white;
+    }
+    .btn-dark:hover {
+      background-color: var(--primary-light);
+    }
+
+    .btn-danger {
+      background-color: #FEE2E2;
+      color: #991B1B;
+      border-color: #FCA5A5;
+    }
+    .btn-danger:hover {
+      background-color: #FCA5A5;
+      color: #7F1D1D;
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 12.5px;
+      border-radius: var(--radius-sm);
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .kpi-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--border-color);
+    }
+    .kpi-card.teal::before { background: var(--accent); }
+    .kpi-card.amber::before { background: var(--urgent-medium); }
+    .kpi-card.red::before { background: var(--urgent-critical); }
+    .kpi-card.blue::before { background: #3B82F6; }
+
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .kpi-footer {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 11.5px;
+      font-weight: 600;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .badge-critical {
+      background-color: var(--urgent-critical-bg);
+      color: var(--urgent-critical-text);
+      border: 1px solid #FECACA;
+    }
+    .badge-high {
+      background-color: var(--urgent-high-bg);
+      color: var(--urgent-high-text);
+      border: 1px solid #FED7AA;
+    }
+    .badge-medium {
+      background-color: var(--urgent-medium-bg);
+      color: var(--urgent-medium-text);
+      border: 1px solid #FDE68A;
+    }
+    .badge-low {
+      background-color: var(--urgent-low-bg);
+      color: var(--urgent-low-text);
+      border: 1px solid #A7F3D0;
+    }
+
+    .badge-status-pending { background: #FEF3C7; color: #92400E; }
+    .badge-status-confirmed { background: #DBEAFE; color: #1E40AF; }
+    .badge-status-delivering { background: #E0E7FF; color: #3730A3; }
+    .badge-status-completed { background: #D1FAE5; color: #065F46; }
+    .badge-status-cancelled { background: #F1F5F9; color: #64748B; }
+    .badge-status-problem { background: #FEE2E2; color: #991B1B; }
+
+    /* Forms & Inputs */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .form-label .required {
+      color: var(--urgent-critical);
+    }
+
+    .form-control {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: white;
+      color: var(--text-main);
+      transition: border-color 0.15s ease;
+      width: 100%;
+      font-size: 13.5px;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+    }
+
+    .form-help {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Filter & Search Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+
+    .search-input-wrap {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+
+    .search-input-wrap svg {
+      position: absolute;
+      left: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 15px;
+      height: 15px;
+    }
+
+    .search-input {
+      padding-left: 34px;
+    }
+
+    .select-filter {
+      min-width: 140px;
+    }
+
+    /* LocalShield Recommendation Panel */
+    .recommendation-card {
+      background: linear-gradient(135deg, #F0FDFA 0%, #FFFFFF 100%);
+      border: 1px solid var(--accent-border);
+      border-left: 5px solid var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .recommendation-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .recommendation-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--accent-hover);
+    }
+
+    .rule-badge {
+      background: #CCFBF1;
+      color: #0F766E;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid #99F6E4;
+    }
+
+    /* Visual Plan Diff */
+    .diff-box {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .diff-col {
+      padding: 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .diff-col.before {
+      background: #FFF1F2;
+      border-left: 3px solid #F43F5E;
+    }
+
+    .diff-col.after {
+      background: #ECFDF5;
+      border-left: 3px solid #10B981;
+    }
+
+    .diff-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    /* ==========================================================================
+       5. TABLE STYLES & RESPONSIVE CARDS
+       ========================================================================== */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13.5px;
+    }
+
+    th {
+      background: var(--bg-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #F8FAFC;
+    }
+
+    /* ==========================================================================
+       6. INTERACTIVE SVG MAP STYLES
+       ========================================================================== */
+    .map-container {
+      background: #0F172A;
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .map-svg {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 850 / 480;
+      max-height: 460px;
+      display: block;
+    }
+
+    .map-road {
+      stroke-width: 6;
+      stroke-linecap: round;
+      cursor: pointer;
+      transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    }
+
+    .map-road:hover {
+      stroke-width: 9;
+    }
+
+    .map-road.active-path {
+      stroke-dasharray: 8 4;
+      animation: dashMove 1.5s linear infinite;
+    }
+
+    @keyframes dashMove {
+      to {
+        stroke-dashoffset: -24;
+      }
+    }
+
+    .map-node {
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .map-node:hover {
+      transform: scale(1.06);
+      transform-origin: center;
+    }
+
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(4px);
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 11.5px;
+      margin-top: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    /* ==========================================================================
+       7. MODAL, DIALOG & TOAST
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-dialog {
+      background: white;
+      border-radius: var(--radius-lg);
+      max-width: 620px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-modal);
+      transform: translateY(12px);
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-backdrop.open .modal-dialog {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover {
+      background: var(--bg-subtle);
+      color: var(--primary);
+    }
+
+    .modal-body {
+      padding: 18px;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 12px 18px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: var(--bg-subtle);
+    }
+
+    /* Toast system */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 360px;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      background: #0F172A;
+      color: white;
+      padding: 11px 15px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      animation: slideIn 0.2s ease-out;
+      border-left: 4px solid var(--accent);
+    }
+
+    .toast.success { border-left-color: #10B981; }
+    .toast.warning { border-left-color: #F59E0B; }
+    .toast.error { border-left-color: #EF4444; }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 36px 16px;
+      color: var(--text-muted);
+    }
+    .empty-state svg {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 10px;
+      color: var(--text-light);
+    }
+    .empty-state h3 {
+      font-size: 15px;
+      color: var(--primary);
+      margin-bottom: 5px;
+    }
+
+    /* Wizard steps */
+    .wizard-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .wizard-step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .wizard-step.active {
+      color: var(--accent-hover);
+    }
+
+    .wizard-step.active .step-num {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .wizard-step.completed {
+      color: #10B981;
+    }
+
+    .wizard-step.completed .step-num {
+      background: #D1FAE5;
+      border-color: #10B981;
+      color: #065F46;
+    }
+
+    .wizard-step-sep {
+      flex: 1;
+      min-width: 16px;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    /* ==========================================================================
+       8. RESPONSIVE BREAKPOINTS (Desktop, Tablet, Mobile)
+       ========================================================================== */
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+      .mobile-nav-bar {
+        display: block;
+      }
+      .main-content {
+        padding: 16px 14px;
+      }
+    }
+
+    /* Responsive Cards Transform for Tables on Mobile */
+    @media (max-width: 768px) {
+      .table-responsive-cards table,
+      .table-responsive-cards thead,
+      .table-responsive-cards tbody,
+      .table-responsive-cards tr {
+        display: block;
+      }
+
+      .table-responsive-cards thead {
+        display: none;
+      }
+
+      .table-responsive-cards tr {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        margin-bottom: 12px;
+        padding: 12px 14px;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .table-responsive-cards td {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 8px;
+        align-items: baseline;
+        padding: 6px 0;
+        border: none;
+        border-bottom: 1px solid #F1F5F9;
+        font-size: 13px;
+      }
+
+      .table-responsive-cards td:last-child {
+        border-bottom: none;
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 10px;
+      }
+
+      .table-responsive-cards td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-muted);
+        font-size: 11.5px;
+        display: block;
+      }
+
+      .table-responsive-cards td:last-child::before {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header-inner {
+        padding: 8px 12px;
+      }
+      .brand-text p {
+        display: none;
+      }
+      .role-label {
+        display: none;
+      }
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .kpi-card {
+        padding: 12px 14px;
+      }
+      .kpi-value {
+        font-size: 24px;
+      }
+      .modal-dialog {
+        max-height: 94vh;
+        margin: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Announcement Bar (Synthetic demonstration reminder) -->
+  <aside class="prototype-banner" role="region" aria-label="สถานะระบบต้นแบบ">
+    <div style="display:flex; align-items:center; gap:6px;">
+      <span class="badge-proto">PROTOTYPE</span>
+      <span>ข้อมูลสังเคราะห์เพื่อการสาธิต • AI FOR ALL HACKATHON 2026</span>
+    </div>
+    <div class="banner-actions">
+      <span>Track 6 &gt; Track 5 &gt; Track 2</span>
+      <button class="banner-link" onclick="openJudgingGuideModal()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        ข้อมูลกรรมการ
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Sticky Header -->
+  <header class="header-main">
+    <div class="header-inner">
+      <div class="brand-wrap">
+        <div class="brand-logo" aria-hidden="true">LS</div>
+        <div class="brand-text">
+          <h1>LocalShield AI <span class="tagline-pill">D2C Mesh</span></h1>
+          <p>Protect Communities. Keep Local Economies Moving.</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Prototype Role Switcher -->
+        <div class="role-switcher-box" title="สลับบทบาทจำลองเพื่อทดสอบขั้นตอนการทำงาน">
+          <span class="role-label">บทบาท:</span>
+          <select id="roleSelect" class="role-select" onchange="handleRoleChange(this.value)" aria-label="สลับบทบาทจำลอง">
+            <option value="coordinator">ผู้ประสานงาน (Coordinator)</option>
+            <option value="resident">ประชาชนในพื้นที่ (Resident)</option>
+            <option value="merchant">ร้านค้า SME (Merchant)</option>
+            <option value="volunteer">อาสาสมัครภาคสนาม (Volunteer)</option>
+          </select>
+        </div>
+
+        <button class="btn-header accent" onclick="openJudgingGuideModal()" title="ดูคู่มือประเมินสำหรับกรรมการ">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          สรุปโครงการ
+        </button>
+
+        <button class="btn-header danger" onclick="confirmResetData()" title="คืนค่าข้อมูลตัวอย่างตั้งต้น">
+          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          รีเซ็ตข้อมูล
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile / Tablet Horizontal Navigation Bar (Always Visible on < 900px) -->
+  <nav class="mobile-nav-bar" id="mobileNavBar" aria-label="เมนูนำทางบนมือถือ">
+    <div class="mobile-nav-inner">
+      <button class="mobile-nav-btn active" id="mob-nav-overview" onclick="switchView('overview')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+        <span>ภาพรวม</span>
+      </button>
+      <button class="mobile-nav-btn" id="mob-nav-requests" onclick="switchView('requests')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+        <span>คำขอ</span>
+        <span class="badge-pill" id="mobBadgeReq">0</span>
+      </button>
+      <button class="mobile-nav-btn" id="mob-nav-planning" onclick="switchView('planning')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+        <span>วางแผน</span>
+      </button>
+      <button class="mobile-nav-btn" id="mob-nav-roads" onclick="switchView('roads')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+        <span>เส้นทาง</span>
+      </button>
+      <button class="mobile-nav-btn" id="mob-nav-merchants" onclick="switchView('merchants')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+        <span>ร้านค้า</span>
+        <span class="badge-pill" id="mobBadgeStock">0</span>
+      </button>
+      <button class="mobile-nav-btn" id="mob-nav-missions" onclick="switchView('missions')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        <span>ภารกิจ</span>
+        <span class="badge-pill" id="mobBadgeMission">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+    
+    <!-- Desktop Sidebar Navigation -->
+    <nav class="sidebar" id="sidebarNav" aria-label="เมนูหลัก">
+      <div>
+        <ul class="nav-list" role="tablist">
+          <li class="nav-item active" id="nav-overview">
+            <button onclick="switchView('overview')" role="tab" aria-selected="true">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+              <span>ภาพรวม</span>
+            </button>
+          </li>
+          <li class="nav-item" id="nav-requests">
+            <button onclick="switchView('requests')" role="tab" aria-selected="false">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <span>คำขอความช่วยเหลือ</span>
+              <span class="nav-badge" id="badgeReqCount">0</span>
+            </button>
+          </li>
+          <li class="nav-item" id="nav-planning">
+            <button onclick="switchView('planning')" role="tab" aria-selected="false">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+              <span>วางแผนส่งความช่วยเหลือ</span>
+            </button>
+          </li>
+          <li class="nav-item" id="nav-roads">
+            <button onclick="switchView('roads')" role="tab" aria-selected="false">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+              <span>เส้นทางและถนน</span>
+            </button>
+          </li>
+          <li class="nav-item" id="nav-merchants">
+            <button onclick="switchView('merchants')" role="tab" aria-selected="false">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+              <span>ร้านค้าและสิ่งของ</span>
+              <span class="nav-badge" id="badgeStockCount">0</span>
+            </button>
+          </li>
+          <li class="nav-item" id="nav-missions">
+            <button onclick="switchView('missions')" role="tab" aria-selected="false">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span>ภารกิจอาสาสมัคร</span>
+              <span class="nav-badge" id="badgeMissionCount">0</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div><strong>การเชื่อมโยง 3 Tracks:</strong></div>
+        <div class="track-pills">
+          <div class="track-pill"><span>Track 6: Resilience</span><strong>Core</strong></div>
+          <div class="track-pill"><span>Track 5: Mobility</span><strong>Enabler</strong></div>
+          <div class="track-pill"><span>Track 2: Local SME</span><strong>Recovery</strong></div>
+        </div>
+        <div style="margin-top: 8px; font-size:11px; color:#94A3B8;">
+          LocalShield AI Prototype v2.6<br>Single-File Hackathon Edition
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContainer">
+      <!-- Dynamic Views rendered here via JavaScript -->
+    </main>
+
+  </div>
+
+  <!-- Toast Notification Center -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Generic Modal Dialog Host -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" onclick="handleBackdropClick(event)">
+    <div class="modal-dialog" id="modalDialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">หัวข้อ</h3>
+        <button class="modal-close" onclick="closeModal()" aria-label="ปิดหน้าต่าง">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Injected content -->
+      </div>
+      <div class="modal-footer" id="modalFooter">
+        <!-- Injected footer buttons -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT: APPLICATION LOGIC & STATE
+       ========================================================================== */
+  <script>
+    /* ==========================================================================
+       1. SYNTHETIC DEMONSTRATION SEED DATA
+       ========================================================================== */
+    const STORAGE_KEY = 'localshield_ai_prototype_state_v2';
+
+    const NODES = {
+      'NODE_A': { id: 'NODE_A', name: 'ศูนย์ประสานงานกลาง (Central Hub)', type: 'hub', x: 140, y: 220, floodRisk: 'ต่ำ' },
+      'NODE_B': { id: 'NODE_B', name: 'ร้านประสานพาณิชย์ (ตลาดเก่า)', type: 'merchant', x: 300, y: 110, merchantId: 'MERCHANT_1' },
+      'NODE_C': { id: 'NODE_C', name: 'ชุมชนตลาดเก่า', type: 'community', x: 480, y: 90, floodRisk: 'ปานกลาง' },
+      'NODE_D': { id: 'NODE_D', name: 'ชุมชนริมน้ำ (ท่าแพ)', type: 'community', x: 700, y: 140, floodRisk: 'วิกฤต' },
+      'NODE_E': { id: 'NODE_E', name: 'ร้านมินิมาร์ทพัฒนา (พัฒนาใต้)', type: 'merchant', x: 280, y: 360, merchantId: 'MERCHANT_2' },
+      'NODE_F': { id: 'NODE_F', name: 'ชุมชนพัฒนาใต้', type: 'community', x: 470, y: 370, floodRisk: 'ปานกลาง' },
+      'NODE_G': { id: 'NODE_G', name: 'ร้านสุขอนามัยเภสัช (กลางเมือง)', type: 'merchant', x: 520, y: 230, merchantId: 'MERCHANT_3' },
+      'NODE_H': { id: 'NODE_H', name: 'ชุมชนดอนเมือง', type: 'community', x: 710, y: 340, floodRisk: 'ต่ำ' }
+    };
+
+    const INITIAL_ROADS = [
+      { id: 'ROAD_1', u: 'NODE_A', v: 'NODE_B', name: 'ถ.เทศบาลสาย 1', distanceKm: 3.2, status: 'OPEN', note: 'สัญจรปกติ ยานพาหนะทุกชนิดผ่านได้' },
+      { id: 'ROAD_2', u: 'NODE_B', v: 'NODE_C', name: 'ถ.ตลาดเก่า', distanceKm: 2.1, status: 'OPEN', note: 'สัญจรปกติ' },
+      { id: 'ROAD_3', u: 'NODE_C', v: 'NODE_D', name: 'ถ.เลียบแม่น้ำเหนือ', distanceKm: 4.5, status: 'CLOSED', note: 'น้ำท่วมผิวทางสูง 60 ซม. กระแสน้ำเชี่ยว ห้ามผ่านเด็ดขาด' },
+      { id: 'ROAD_4', u: 'NODE_A', v: 'NODE_E', name: 'ถ.วงแหวนใต้', distanceKm: 3.8, status: 'OPEN', note: 'สัญจรปกติ' },
+      { id: 'ROAD_5', u: 'NODE_E', v: 'NODE_F', name: 'ถ.พัฒนาการ', distanceKm: 2.6, status: 'OPEN', note: 'สัญจรปกติ' },
+      { id: 'ROAD_6', u: 'NODE_F', v: 'NODE_H', name: 'ถ.เลียบทางด่วนดอนเมือง', distanceKm: 4.0, status: 'OPEN', note: 'สัญจรปกติ' },
+      { id: 'ROAD_7', u: 'NODE_B', v: 'NODE_G', name: 'ถ.เชื่อมตลาด-กลางเมือง', distanceKm: 3.5, status: 'RESTRICTED', note: 'น้ำท่วมขัง 15-20 ซม. แนะนำเฉพาะรถกระบะยกสูง 4WD' },
+      { id: 'ROAD_8', u: 'NODE_G', v: 'NODE_D', name: 'ถ.สันเขื่อนตะวันออก', distanceKm: 3.9, status: 'OPEN', note: 'เส้นทางเลี่ยงน้ำท่วมเข้าสู่ชุมชนริมน้ำ สภาพแห้งดี' },
+      { id: 'ROAD_9', u: 'NODE_G', v: 'NODE_H', name: 'ถ.สุขุมสวัสดิ์', distanceKm: 3.1, status: 'OPEN', note: 'สัญจรปกติ' },
+      { id: 'ROAD_10', u: 'NODE_A', v: 'NODE_G', name: 'ถ.มิตรภาพชุมชน', distanceKm: 4.8, status: 'OPEN', note: 'ถนนสายหลัก สัญจรคล่องตัว' },
+      { id: 'ROAD_11', u: 'NODE_F', v: 'NODE_G', name: 'ซอยพัฒนาสามัคคี', distanceKm: 2.7, status: 'OPEN', note: 'สัญจรปกติ' }
+    ];
+
+    const INITIAL_MERCHANTS = [
+      {
+        id: 'MERCHANT_1',
+        nodeId: 'NODE_B',
+        name: 'ร้านประสานพาณิชย์',
+        owner: 'คุณประสาน สัจจะ',
+        phone: '081-555-0101',
+        locationName: 'ตลาดเก่า ซอย 2',
+        status: 'เปิดทำการพร้อมสนับสนุน',
+        products: [
+          { id: 'PROD_1_1', name: 'น้ำดื่มแพ็ก (600 มล. x 12 ขวด)', category: 'น้ำดื่ม', stock: 120, unit: 'แพ็ก', unitPriceSim: 55 },
+          { id: 'PROD_1_2', name: 'ข้าวสารหอมมะลิ (5 กก.)', category: 'อาหารแห้ง', stock: 45, unit: 'ถุง', unitPriceSim: 180 },
+          { id: 'PROD_1_3', name: 'ปลากระป๋องและอาหารพร้อมทาน (แพ็ก 10)', category: 'อาหารแห้ง', stock: 80, unit: 'แพ็ก', unitPriceSim: 140 }
+        ]
+      },
+      {
+        id: 'MERCHANT_2',
+        nodeId: 'NODE_E',
+        name: 'ร้านมินิมาร์ทชุมชนพัฒนา',
+        owner: 'ป้าสมศรี มีสุข',
+        phone: '089-444-0202',
+        locationName: 'ชุมชนพัฒนาใต้ หน้าปากซอย 4',
+        status: 'เปิดทำการพร้อมสนับสนุน',
+        products: [
+          { id: 'PROD_2_1', name: 'น้ำดื่มแพ็ก (600 มล. x 12 ขวด)', category: 'น้ำดื่ม', stock: 75, unit: 'แพ็ก', unitPriceSim: 55 },
+          { id: 'PROD_2_2', name: 'บะหมี่กึ่งสำเร็จรูป (กล่อง 30 ซอง)', category: 'อาหารแห้ง', stock: 60, unit: 'กล่อง', unitPriceSim: 195 },
+          { id: 'PROD_2_3', name: 'ไฟฉายพร้อมถ่านไฟฉาย AA', category: 'สิ่งของจำเป็น', stock: 35, unit: 'ชุด', unitPriceSim: 90 },
+          { id: 'PROD_2_4', name: 'ผ้าอนามัยและกระดาษชำระ', category: 'อุปกรณ์สุขอนามัย', stock: 50, unit: 'ชุด', unitPriceSim: 65 }
+        ]
+      },
+      {
+        id: 'MERCHANT_3',
+        nodeId: 'NODE_G',
+        name: 'สุขอนามัยโอสถ (เภสัชชุมชน)',
+        owner: 'ภก. วิชัย โอสถกุล',
+        phone: '086-777-0303',
+        locationName: 'สี่แยกกลางเมือง',
+        status: 'เปิดทำการพร้อมสนับสนุน',
+        products: [
+          { id: 'PROD_3_1', name: 'ชุดยาสามัญประจำบ้านและปฐมพยาบาล', category: 'ยาสามัญ', stock: 90, unit: 'กล่อง', unitPriceSim: 120 },
+          { id: 'PROD_3_2', name: 'ยาทาน้ำกัดเท้าและแอลกอฮอล์ล้างแผล', category: 'ยาสามัญ', stock: 110, unit: 'ชุด', unitPriceSim: 85 },
+          { id: 'PROD_3_3', name: 'ชุดสุขอนามัยและสบู่ฆ่าเชื้อ', category: 'อุปกรณ์สุขอนามัย', stock: 65, unit: 'ชุด', unitPriceSim: 70 },
+          { id: 'PROD_3_4', name: 'เกลือแร่ ORS และยาลดไข้พาราเซตามอล', category: 'ยาสามัญ', stock: 140, unit: 'ซอง/แผง', unitPriceSim: 35 }
+        ]
+      }
+    ];
+
+    const INITIAL_REQUESTS = [
+      {
+        id: 'LS-REQ-101',
+        communityNodeId: 'NODE_D',
+        communityName: 'ชุมชนริมน้ำ (ท่าแพ)',
+        contactName: 'นายกำนันสมควร ริมชล',
+        phone: '085-111-2233',
+        itemCategory: 'น้ำดื่ม',
+        itemDescription: 'น้ำดื่มสะอาดบรรจุขวด สำหรับเด็กและผู้สูงอายุที่ถูกตัดขาด',
+        quantityNeeded: 35,
+        unit: 'แพ็ก',
+        affectedCount: 85,
+        urgency: 'วิกฤต',
+        status: 'รอตรวจสอบ',
+        createdAt: '2026-10-28 08:30',
+        note: 'ระดับน้ำสูงขึ้นต่อเนื่อง ประปาชุมชนหยุดจ่ายน้ำ ต้องการน้ำดื่มด่วนที่สุด'
+      },
+      {
+        id: 'LS-REQ-102',
+        communityNodeId: 'NODE_C',
+        communityName: 'ชุมชนตลาดเก่า',
+        contactName: 'ป้ามาลี ชุมชนเข้มแข็ง',
+        phone: '082-333-4455',
+        itemCategory: 'อาหารแห้ง',
+        itemDescription: 'ข้าวสารและอาหารพร้อมทานสำหรับครัวกลางชุมชน',
+        quantityNeeded: 20,
+        unit: 'ถุง/กล่อง',
+        affectedCount: 45,
+        urgency: 'สูง',
+        status: 'ยืนยันแล้ว',
+        createdAt: '2026-10-28 09:15',
+        note: 'จัดตั้งโรงครัวชุมชนชั่วคราวเพื่อแจกจ่ายผู้ประสบภัยน้ำท่วมรอบนอก'
+      },
+      {
+        id: 'LS-REQ-103',
+        communityNodeId: 'NODE_F',
+        communityName: 'ชุมชนพัฒนาใต้',
+        contactName: 'นายประสิทธิ์ สถิตธรรม',
+        phone: '083-777-8899',
+        itemCategory: 'ยาสามัญ',
+        itemDescription: 'ชุดยาทาน้ำกัดเท้า ยาแก้ไข้ และชุดทำแผล',
+        quantityNeeded: 30,
+        unit: 'ชุด',
+        affectedCount: 30,
+        urgency: 'ปานกลาง',
+        status: 'ยืนยันแล้ว',
+        createdAt: '2026-10-28 10:00',
+        note: 'มีประชาชนเริ่มมีอาการน้ำกัดเท้าและไข้หวัดจากการเดินลุยน้ำ'
+      },
+      {
+        id: 'LS-REQ-104',
+        communityNodeId: 'NODE_H',
+        communityName: 'ชุมชนดอนเมือง',
+        contactName: 'คุณกิตติ์ ดอนเมือง',
+        phone: '084-222-9900',
+        itemCategory: 'สิ่งของจำเป็น',
+        itemDescription: 'ไฟฉายและชุดสุขอนามัยสำหรับศูนย์พักพิงชั่วคราว',
+        quantityNeeded: 15,
+        unit: 'ชุด',
+        affectedCount: 22,
+        urgency: 'ต่ำ',
+        status: 'ส่งมอบแล้ว',
+        createdAt: '2026-10-27 16:40',
+        note: 'รับมอบเรียบร้อยโดยทีมอาสาสมัครชุดที่ 1'
+      }
+    ];
+
+    const INITIAL_VOLUNTEERS = [
+      { id: 'VOL_1', name: 'นายวรพจน์ ว่องไว (ทีมเรือกู้ภัย)', vehicle: 'เรือท้องแบนติดเครื่องยนต์', phone: '089-991-1122', status: 'ว่าง' },
+      { id: 'VOL_2', name: 'นายธนา อาสาดี (ทีมกระบะยกสูง 4WD)', vehicle: 'รถกระบะยกสูง 4WD พร้อมกว้าน', phone: '086-554-4433', status: 'ติดภารกิจ' },
+      { id: 'VOL_3', name: 'น.ส.กานดา สุขใจ (ทีมมอเตอร์ไซค์ลาดตระเวน)', vehicle: 'มอเตอร์ไซค์วิบาก', phone: '081-223-3344', status: 'ว่าง' }
+    ];
+
+    const INITIAL_MISSIONS = [
+      {
+        id: 'LS-MSN-201',
+        requestId: 'LS-REQ-104',
+        destinationNodeId: 'NODE_H',
+        sourceNodeId: 'NODE_E',
+        merchantId: 'MERCHANT_2',
+        supplies: 'ไฟฉายและชุดสุขอนามัย (15 ชุด)',
+        volunteerId: 'VOL_1',
+        volunteerName: 'นายวรพจน์ ว่องไว',
+        routeSummary: 'ร้านมินิมาร์ทพัฒนา (NODE_E) -> ถ.พัฒนาการ -> ถ.เลียบทางด่วน -> ชุมชนดอนเมือง (NODE_H)',
+        distanceKm: 6.6,
+        status: 'ส่งมอบสำเร็จ',
+        createdAt: '2026-10-27 17:00',
+        completedAt: '2026-10-27 18:30',
+        issueNote: ''
+      },
+      {
+        id: 'LS-MSN-202',
+        requestId: 'LS-REQ-102',
+        destinationNodeId: 'NODE_C',
+        sourceNodeId: 'NODE_B',
+        merchantId: 'MERCHANT_1',
+        supplies: 'ข้าวสารและปลากระป๋อง (20 ชุด)',
+        volunteerId: 'VOL_2',
+        volunteerName: 'นายธนา อาสาดี',
+        routeSummary: 'ร้านประสานพาณิชย์ (NODE_B) -> ถ.ตลาดเก่า -> ชุมชนตลาดเก่า (NODE_C)',
+        distanceKm: 2.1,
+        status: 'กำลังดำเนินการ',
+        createdAt: '2026-10-28 09:40',
+        completedAt: null,
+        issueNote: ''
+      }
+    ];
+
+    const INITIAL_ACTIVITIES = [
+      { time: '10:15 วันนี้', text: 'นายธนา รับภารกิจ LS-MSN-202 กำลังเดินทางไปส่งที่ชุมชนตลาดเก่า', type: 'mission' },
+      { time: '09:40 วันนี้', text: 'ผู้ประสานงานสร้างภารกิจจัดส่ง LS-MSN-202 สำหรับคำขอ LS-REQ-102', type: 'plan' },
+      { time: '09:15 วันนี้', text: 'ชุมชนตลาดเก่าส่งคำขอความช่วยเหลือ LS-REQ-102 (อาหารแห้ง 20 ชุด)', type: 'request' },
+      { time: '08:30 วันนี้', text: 'ชุมชนริมน้ำส่งคำขอฉุกเฉิน LS-REQ-101 (น้ำดื่ม 35 แพ็ก)', type: 'request' },
+      { time: 'วานนี้ 18:30', text: 'ส่งมอบความช่วยเหลือภารกิจ LS-MSN-201 สำเร็จที่ชุมชนดอนเมือง', type: 'complete' }
+    ];
+
+    /* ==========================================================================
+       2. APPLICATION STATE & PERSISTENCE
+       ========================================================================== */
+    class StateManager {
+      constructor() {
+        this.currentRole = 'coordinator';
+        this.currentView = 'overview';
+        this.state = this.loadState();
+      }
+
+      loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.requests) && Array.isArray(parsed.merchants) && Array.isArray(parsed.roads) && Array.isArray(parsed.missions)) {
+              return parsed;
+            }
+          }
+        } catch (e) {
+          console.warn('LocalStorage unavailable or corrupted, using defaults.', e);
+        }
+        return this.getDefaultData();
+      }
+
+      getDefaultData() {
+        return {
+          requests: JSON.parse(JSON.stringify(INITIAL_REQUESTS)),
+          merchants: JSON.parse(JSON.stringify(INITIAL_MERCHANTS)),
+          roads: JSON.parse(JSON.stringify(INITIAL_ROADS)),
+          volunteers: JSON.parse(JSON.stringify(INITIAL_VOLUNTEERS)),
+          missions: JSON.parse(JSON.stringify(INITIAL_MISSIONS)),
+          activities: JSON.parse(JSON.stringify(INITIAL_ACTIVITIES))
+        };
+      }
+
+      saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        } catch (e) {
+          console.warn('Failed to save state to localStorage', e);
+        }
+        this.updateBadges();
+      }
+
+      resetData() {
+        this.state = this.getDefaultData();
+        this.saveState();
+        showToast('รีเซ็ตข้อมูลตัวอย่างเรียบร้อยแล้ว', 'success');
+        renderCurrentView();
+      }
+
+      logActivity(text, type = 'general') {
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} วันนี้`;
+        this.state.activities.unshift({ time: timeStr, text, type });
+        if (this.state.activities.length > 25) this.state.activities.pop();
+        this.saveState();
+      }
+
+      updateBadges() {
+        const pendingCount = this.state.requests.filter(r => r.status === 'รอตรวจสอบ' || r.status === 'ยืนยันแล้ว').length;
+        const badgeReq = document.getElementById('badgeReqCount');
+        if (badgeReq) badgeReq.textContent = pendingCount;
+        const mobBadgeReq = document.getElementById('mobBadgeReq');
+        if (mobBadgeReq) mobBadgeReq.textContent = pendingCount;
+
+        const totalStock = this.state.merchants.reduce((sum, m) => {
+          return sum + m.products.reduce((pSum, p) => pSum + p.stock, 0);
+        }, 0);
+        const badgeStock = document.getElementById('badgeStockCount');
+        if (badgeStock) badgeStock.textContent = totalStock;
+        const mobBadgeStock = document.getElementById('mobBadgeStock');
+        if (mobBadgeStock) mobBadgeStock.textContent = totalStock;
+
+        const activeMissions = this.state.missions.filter(m => m.status === 'กำลังดำเนินการ' || m.status === 'รอรับภารกิจ').length;
+        const badgeMission = document.getElementById('badgeMissionCount');
+        if (badgeMission) badgeMission.textContent = activeMissions;
+        const mobBadgeMission = document.getElementById('mobBadgeMission');
+        if (mobBadgeMission) mobBadgeMission.textContent = activeMissions;
+      }
+    }
+
+    const appState = new StateManager();
+
+    /* ==========================================================================
+       3. EXPLAINABLE DECISION SUPPORT & GRAPH ROUTING
+       ========================================================================== */
+    function calculatePriorityScore(request) {
+      let score = 0;
+      if (request.urgency === 'วิกฤต') score += 400;
+      else if (request.urgency === 'สูง') score += 250;
+      else if (request.urgency === 'ปานกลาง') score += 120;
+      else score += 50;
+
+      score += Math.min(request.affectedCount * 2, 200);
+
+      if (request.status === 'รอตรวจสอบ') score += 50;
+      else if (request.status === 'ยืนยันแล้ว') score += 30;
+
+      return score;
+    }
+
+    function getPriorityReasonText(request) {
+      const parts = [];
+      if (request.urgency === 'วิกฤต') {
+        parts.push('ระดับความเร่งด่วนขั้น "วิกฤต" ส่งผลต่อการดำรงชีพทันที');
+      } else if (request.urgency === 'สูง') {
+        parts.push('ระดับความเร่งด่วน "สูง" ต้องได้รับสิ่งของจำเป็นภายใน 24 ชม.');
+      }
+
+      if (request.affectedCount >= 50) {
+        parts.push(`มีผู้ประสบภัยจำนวนมาก (${request.affectedCount} คน)`);
+      } else if (request.affectedCount > 20) {
+        parts.push(`มีผู้ประสบภัยในพื้นที่ (${request.affectedCount} คน)`);
+      }
+
+      if (request.itemCategory === 'น้ำดื่ม' || request.itemCategory === 'ยาสามัญ') {
+        parts.push(`สินค้าที่ขอเป็นสิ่งของจำเป็นพื้นฐานเร่งด่วน (${request.itemCategory})`);
+      }
+
+      return parts.join(' • ') || 'ตามลำดับเวลาที่แจ้งคำขอ';
+    }
+
+    function findBestRoute(startNodeId, targetNodeId, roadsList) {
+      const adj = {};
+      Object.keys(NODES).forEach(nid => adj[nid] = []);
+
+      roadsList.forEach(r => {
+        if (r.status === 'CLOSED') return;
+        const penalty = (r.status === 'RESTRICTED') ? 8.0 : 0.0;
+        const weight = r.distanceKm + penalty;
+
+        adj[r.u].push({ neighbor: r.v, road: r, weight });
+        adj[r.v].push({ neighbor: r.u, road: r, weight });
+      });
+
+      const dist = {};
+      const prev = {};
+      const prevRoad = {};
+      const unvisited = new Set(Object.keys(NODES));
+
+      Object.keys(NODES).forEach(nid => {
+        dist[nid] = Infinity;
+        prev[nid] = null;
+        prevRoad[nid] = null;
+      });
+
+      dist[startNodeId] = 0;
+
+      while (unvisited.size > 0) {
+        let curr = null;
+        let smallest = Infinity;
+        for (const n of unvisited) {
+          if (dist[n] < smallest) {
+            smallest = dist[n];
+            curr = n;
+          }
+        }
+
+        if (curr === null || dist[curr] === Infinity || curr === targetNodeId) {
+          break;
+        }
+
+        unvisited.delete(curr);
+
+        for (const edge of adj[curr]) {
+          if (!unvisited.has(edge.neighbor)) continue;
+          const alt = dist[curr] + edge.weight;
+          if (alt < dist[edge.neighbor]) {
+            dist[edge.neighbor] = alt;
+            prev[edge.neighbor] = curr;
+            prevRoad[edge.neighbor] = edge.road;
+          }
+        }
+      }
+
+      if (dist[targetNodeId] === Infinity) {
+        return {
+          found: false,
+          pathNodes: [],
+          usedRoads: [],
+          totalKm: 0,
+          hasRestricted: false,
+          message: 'ไม่พบเส้นทางที่สัญจรได้เนื่องจากถนนเชื่อมต่อถูกปิด กรุณาตรวจสอบทางเลี่ยงหรือใช้เรือกู้ภัย'
+        };
+      }
+
+      const pathNodes = [];
+      const usedRoads = [];
+      let curr = targetNodeId;
+      let totalKm = 0;
+      let hasRestricted = false;
+
+      while (curr !== null) {
+        pathNodes.unshift(curr);
+        if (prevRoad[curr]) {
+          usedRoads.unshift(prevRoad[curr]);
+          totalKm += prevRoad[curr].distanceKm;
+          if (prevRoad[curr].status === 'RESTRICTED') hasRestricted = true;
+        }
+        curr = prev[curr];
+      }
+
+      return {
+        found: true,
+        pathNodes,
+        usedRoads,
+        totalKm: Math.round(totalKm * 10) / 10,
+        hasRestricted,
+        message: hasRestricted 
+          ? 'พบเส้นทางแนะนำ (มีช่วงถนนจำกัดการใช้งาน: แนะนำใช้รถยกสูง 4WD)'
+          : 'พบเส้นทางปลอดภัยที่เปิดใช้งานได้ตามปกติ'
+      };
+    }
+
+    function findBestMerchantForRequest(req, merchantsList, roadsList) {
+      const candidates = [];
+      merchantsList.forEach(m => {
+        const matchedProduct = m.products.find(p => p.category === req.itemCategory && p.stock > 0);
+        if (matchedProduct) {
+          const routeRes = findBestRoute(m.nodeId, req.communityNodeId, roadsList);
+          candidates.push({
+            merchant: m,
+            product: matchedProduct,
+            stock: matchedProduct.stock,
+            route: routeRes,
+            score: (routeRes.found ? 100 : 0) + (routeRes.hasRestricted ? -20 : 0) - (routeRes.totalKm * 5) + Math.min(matchedProduct.stock, 50)
+          });
+        }
+      });
+
+      candidates.sort((a, b) => b.score - a.score);
+      return candidates.length > 0 ? candidates[0] : null;
+    }
+
+    /* ==========================================================================
+       4. VIEW SWITCHER
+       ========================================================================== */
+    function switchView(viewName) {
+      appState.currentView = viewName;
+
+      // Update Desktop Nav
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('active');
+        const btn = el.querySelector('button');
+        if (btn) btn.setAttribute('aria-selected', 'false');
+      });
+
+      const activeDesktop = document.getElementById(`nav-${viewName}`);
+      if (activeDesktop) {
+        activeDesktop.classList.add('active');
+        const btn = activeDesktop.querySelector('button');
+        if (btn) btn.setAttribute('aria-selected', 'true');
+      }
+
+      // Update Mobile Nav
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeMobile = document.getElementById(`mob-nav-${viewName}`);
+      if (activeMobile) activeMobile.classList.add('active');
+
+      renderCurrentView();
+
+      // Scroll to top of content smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleRoleChange(newRole) {
+      appState.currentRole = newRole;
+      showToast(`สลับบทบาท: ${getRoleDisplayName(newRole)}`, 'info');
+      renderCurrentView();
+    }
+
+    function getRoleDisplayName(role) {
+      switch (role) {
+        case 'coordinator': return 'ผู้ประสานงาน (Coordinator)';
+        case 'resident': return 'ประชาชนในพื้นที่ (Resident)';
+        case 'merchant': return 'ร้านค้า SME (Merchant)';
+        case 'volunteer': return 'อาสาสมัครภาคสนาม (Volunteer)';
+        default: return role;
+      }
+    }
+
+    function renderRoleBanner() {
+      const role = appState.currentRole;
+      let text = '';
+      if (role === 'coordinator') {
+        text = '<strong>มุมมองผู้ประสานงาน (Coordinator):</strong> ตรวจสอบคำขอ, จัดสรรสินค้า SME, วิเคราะห์ถนนหลบเลี่ยงน้ำท่วม และอนุมัติภารกิจจัดส่ง';
+      } else if (role === 'resident') {
+        text = '<strong>มุมมองประชาชนในพื้นที่ (Resident):</strong> สามารถแจ้งขอความช่วยเหลือฉุกเฉิน และติดตามความคืบหน้าของคำขอได้โดยตรง';
+      } else if (role === 'merchant') {
+        text = '<strong>มุมมองร้านค้า SME (Merchant):</strong> ตรวจสอบและอัปเดตสต็อกสินค้าจำเป็นในพื้นที่ พร้อมรับคำสั่งจัดสรรเพื่อสนับสนุนชุมชน';
+      } else if (role === 'volunteer') {
+        text = '<strong>มุมมองอาสาสมัครภาคสนาม (Volunteer):</strong> ตรวจสอบภารกิจที่ได้รับมอบหมาย เส้นทางจัดส่ง และอัปเดตสถานะการส่งมอบถึงมือประชาชน';
+      }
+
+      return `
+        <div class="role-guidance-banner">
+          <div class="role-guidance-text">${text}</div>
+          <span class="badge" style="background:#E2E8F0; color:#334155;">บทบาทจำลอง</span>
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       5. VIEW RENDERERS
+       ========================================================================== */
+    function renderCurrentView() {
+      appState.updateBadges();
+      const container = document.getElementById('mainContainer');
+      if (!container) return;
+
+      switch (appState.currentView) {
+        case 'overview':
+          container.innerHTML = renderOverviewView();
+          break;
+        case 'requests':
+          container.innerHTML = renderRequestsView();
+          break;
+        case 'planning':
+          container.innerHTML = renderPlanningView();
+          break;
+        case 'roads':
+          container.innerHTML = renderRoadsView();
+          break;
+        case 'merchants':
+          container.innerHTML = renderMerchantsView();
+          break;
+        case 'missions':
+          container.innerHTML = renderMissionsView();
+          break;
+        default:
+          container.innerHTML = renderOverviewView();
+      }
+    }
+
+    // --------------------------------------------------------------------------
+    // VIEW 1: OVERVIEW (ภาพรวม)
+    // --------------------------------------------------------------------------
+    function renderOverviewView() {
+      const reqs = appState.state.requests;
+      const merchants = appState.state.merchants;
+      const missions = appState.state.missions;
+
+      const activeReqCount = reqs.filter(r => r.status === 'รอตรวจสอบ' || r.status === 'ยืนยันแล้ว').length;
+      const criticalReqCount = reqs.filter(r => (r.urgency === 'วิกฤต' || r.urgency === 'สูง') && r.status !== 'ส่งมอบแล้ว' && r.status !== 'ยกเลิก').length;
+      const totalAvailableItems = merchants.reduce((sum, m) => sum + m.products.reduce((pSum, p) => pSum + p.stock, 0), 0);
+      const activeMissionCount = missions.filter(m => m.status === 'กำลังดำเนินการ').length;
+
+      const pendingReqs = reqs.filter(r => r.status === 'รอตรวจสอบ' || r.status === 'ยืนยันแล้ว');
+      let topRecommendedReq = null;
+      let matchedMerchantInfo = null;
+
+      if (pendingReqs.length > 0) {
+        const sorted = [...pendingReqs].sort((a, b) => calculatePriorityScore(b) - calculatePriorityScore(a));
+        topRecommendedReq = sorted[0];
+        matchedMerchantInfo = findBestMerchantForRequest(topRecommendedReq, merchants, appState.state.roads);
+      }
+
+      return `
+        <section aria-label="ภาพรวมระบบ LocalShield AI">
+          ${renderRoleBanner()}
+
+          <header class="page-header">
+            <div class="page-title-wrap">
+              <h2>ภาพรวมการประสานความช่วยเหลือ (Overview)</h2>
+              <p>ระบบเชื่อมโยงข้อมูลคำขอฉุกเฉิน ทรัพยากรร้านค้า SME และสภาพเส้นทางขนส่งในพื้นที่</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="openCreateRequestModal()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                สร้างคำขอความช่วยเหลือ
+              </button>
+              <button class="btn btn-secondary" onclick="switchView('planning')">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                วางแผนส่งความช่วยเหลือ
+              </button>
+            </div>
+          </header>
+
+          <!-- 4 KPI Cards -->
+          <div class="kpi-grid">
+            <article class="kpi-card teal">
+              <div class="kpi-header">
+                <span>คำขอที่รอการช่วยเหลือ</span>
+                <svg width="18" height="18" fill="none" stroke="var(--accent)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              </div>
+              <div class="kpi-value">${activeReqCount}</div>
+              <div class="kpi-footer">จากทั้งหมด ${reqs.length} คำขอในระบบ</div>
+            </article>
+
+            <article class="kpi-card red">
+              <div class="kpi-header">
+                <span>คำขอเร่งด่วน / วิกฤต</span>
+                <svg width="18" height="18" fill="none" stroke="var(--urgent-critical)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              </div>
+              <div class="kpi-value" style="color:var(--urgent-critical);">${criticalReqCount}</div>
+              <div class="kpi-footer">ต้องการการตอบสนองเร่งด่วนที่สุด</div>
+            </article>
+
+            <article class="kpi-card blue">
+              <div class="kpi-header">
+                <span>สินค้า SME พร้อมจัดสรร</span>
+                <svg width="18" height="18" fill="none" stroke="#3B82F6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+              </div>
+              <div class="kpi-value" style="color:#2563EB;">${totalAvailableItems} <span style="font-size:15px; font-weight:600;">ชิ้น</span></div>
+              <div class="kpi-footer">จากร้านค้าเครือข่าย ${merchants.length} ร้าน</div>
+            </article>
+
+            <article class="kpi-card amber">
+              <div class="kpi-header">
+                <span>ภารกิจกำลังจัดส่ง</span>
+                <svg width="18" height="18" fill="none" stroke="var(--urgent-medium)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <div class="kpi-value" style="color:#D97706;">${activeMissionCount}</div>
+              <div class="kpi-footer">ทีมอาสาสมัครกำลังเดินทาง</div>
+            </article>
+          </div>
+
+          <!-- LocalShield Recommendation -->
+          ${topRecommendedReq ? `
+            <article class="recommendation-card" aria-label="LocalShield Recommendation">
+              <div class="recommendation-header">
+                <div class="recommendation-title">
+                  <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  <span>LocalShield Recommendation: ข้อเสนอแนะการช่วยเหลือเร่งด่วน</span>
+                </div>
+                <span class="rule-badge">Rule-based simulation — not connected to a live AI model</span>
+              </div>
+              <div style="font-size:13.5px; color:#1E293B; line-height:1.55;">
+                ระบบวิเคราะห์คำขอที่ควรดำเนินการเป็นลำดับแรก: <strong>${escapeHtml(topRecommendedReq.id)}</strong> (${escapeHtml(topRecommendedReq.communityName)})
+                <div style="margin: 8px 0; background:white; padding:10px 12px; border-radius:var(--radius-sm); border:1px solid #CCFBF1;">
+                  <strong>เหตุผลการจัดลำดับ:</strong> ${getPriorityReasonText(topRecommendedReq)} (คะแนนความเร่งด่วน: ${calculatePriorityScore(topRecommendedReq)})
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; font-size:12.5px; color:#475569;">
+                  <div>📦 <strong>ความต้องการ:</strong> ${escapeHtml(topRecommendedReq.itemDescription)} (${topRecommendedReq.quantityNeeded} ${escapeHtml(topRecommendedReq.unit)})</div>
+                  <div>👥 <strong>ผู้ประสบภัย:</strong> ${topRecommendedReq.affectedCount} คน</div>
+                  ${matchedMerchantInfo ? `
+                    <div>🏪 <strong>แหล่งสินค้าแนะนำ:</strong> ${escapeHtml(matchedMerchantInfo.merchant.name)} (มีสต็อก ${matchedMerchantInfo.stock} ชิ้น)</div>
+                    <div>🛣️ <strong>สภาพเส้นทาง:</strong> ${matchedMerchantInfo.route.found ? `${matchedMerchantInfo.route.totalKm} กม. (${matchedMerchantInfo.route.message})` : '<span style="color:#EF4444;">ไม่มีเส้นทางเปิดใช้งาน</span>'}</div>
+                  ` : `
+                    <div>⚠️ <strong>สินค้า:</strong> กำลังรอการเติมสต็อกในร้านค้าเครือข่าย</div>
+                  `}
+                </div>
+              </div>
+              <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-primary btn-sm" onclick="startPlanningWithRequest('${topRecommendedReq.id}')">
+                  วางแผนจัดส่งคำขอนี้ทันที
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="switchView('roads')">
+                  ตรวจสอบสภาพถนนในแผนที่
+                </button>
+              </div>
+            </article>
+          ` : ''}
+
+          <!-- 2 Columns: Priority Requests & Recent Activity -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap:18px;">
+            
+            <article class="card">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <h3 style="font-size:15px; font-weight:700; color:var(--primary);">รายการคำขอความช่วยเหลือเร่งด่วน</h3>
+                <button class="btn btn-secondary btn-sm" onclick="switchView('requests')">ดูทั้งหมด</button>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:10px;">
+                ${reqs.slice(0, 4).map(r => `
+                  <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 12px; display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">
+                    <div style="flex:1;">
+                      <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
+                        <strong>${escapeHtml(r.id)}</strong>
+                        ${renderUrgencyBadge(r.urgency)}
+                        ${renderStatusBadge(r.status)}
+                      </div>
+                      <div style="font-size:13px; font-weight:600; color:var(--primary);">${escapeHtml(r.communityName)}</div>
+                      <div style="font-size:12px; color:var(--text-muted);">${escapeHtml(r.itemDescription)} (${r.quantityNeeded} ${escapeHtml(r.unit)})</div>
+                    </div>
+                    <div>
+                      <button class="btn btn-secondary btn-sm" onclick="viewRequestDetails('${r.id}')">รายละเอียด</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </article>
+
+            <article class="card">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <h3 style="font-size:15px; font-weight:700; color:var(--primary);">ประวัติการดำเนินการ (Audit Trail)</h3>
+                <span class="badge" style="background:#F1F5F9; color:#64748B;">บันทึกย้อนหลังได้</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:10px; max-height:360px; overflow-y:auto;">
+                ${appState.state.activities.map(act => `
+                  <div style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; padding-bottom:8px; border-bottom:1px solid #F1F5F9;">
+                    <span style="color:var(--accent); font-weight:bold; font-size:15px;">•</span>
+                    <div style="flex:1;">
+                      <div style="color:var(--text-main);">${escapeHtml(act.text)}</div>
+                      <div style="font-size:11px; color:var(--text-muted); margin-top:1px;">${escapeHtml(act.time)}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </article>
+
+          </div>
+        </section>
+      `;
+    }
+
+    // --------------------------------------------------------------------------
+    // VIEW 2: REQUESTS MANAGEMENT (คำขอความช่วยเหลือ)
+    // --------------------------------------------------------------------------
+    let reqFilterSearch = '';
+    let reqFilterUrgency = 'all';
+    let reqFilterStatus = 'all';
+    let reqSortBy = 'priority';
+
+    function renderRequestsView() {
+      const reqs = appState.state.requests;
+
+      let filtered = reqs.filter(r => {
+        const matchesSearch = !reqFilterSearch || 
+          r.id.toLowerCase().includes(reqFilterSearch.toLowerCase()) ||
+          r.communityName.toLowerCase().includes(reqFilterSearch.toLowerCase()) ||
+          r.contactName.toLowerCase().includes(reqFilterSearch.toLowerCase()) ||
+          r.itemCategory.toLowerCase().includes(reqFilterSearch.toLowerCase()) ||
+          r.itemDescription.toLowerCase().includes(reqFilterSearch.toLowerCase());
+
+        const matchesUrgency = (reqFilterUrgency === 'all') || (r.urgency === reqFilterUrgency);
+        const matchesStatus = (reqFilterStatus === 'all') || (r.status === reqFilterStatus);
+
+        return matchesSearch && matchesUrgency && matchesStatus;
+      });
+
+      if (reqSortBy === 'priority') {
+        filtered.sort((a, b) => calculatePriorityScore(b) - calculatePriorityScore(a));
+      } else if (reqSortBy === 'newest') {
+        filtered.sort((a, b) => b.id.localeCompare(a.id));
+      } else if (reqSortBy === 'affected') {
+        filtered.sort((a, b) => b.affectedCount - a.affectedCount);
+      }
+
+      return `
+        <section aria-label="จัดการคำขอความช่วยเหลือ">
+          ${renderRoleBanner()}
+
+          <header class="page-header">
+            <div class="page-title-wrap">
+              <h2>จัดการคำขอความช่วยเหลือ (Assistance Requests)</h2>
+              <p>Track 6: Resilient Communities — รวบรวม ตรวจสอบ และติดตามสถานะคำขอสิ่งของจำเป็นจากชุมชนผู้ประสบภัย</p>
+            </div>
+            <div>
+              <button class="btn btn-primary" onclick="openCreateRequestModal()">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                สร้างคำขอใหม่
+              </button>
+            </div>
+          </header>
+
+          <!-- Filter & Search Bar -->
+          <div class="card" style="margin-bottom:18px; padding:12px 14px;">
+            <div class="filter-bar" style="margin-bottom:0;">
+              <div class="search-input-wrap">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" class="form-control search-input" placeholder="ค้นหาด้วยรหัส, ชุมชน, ชื่อผู้ขอ, สิ่งของ..." value="${escapeHtml(reqFilterSearch)}" oninput="handleReqSearch(this.value)">
+              </div>
+
+              <select class="form-control select-filter" onchange="handleReqUrgencyFilter(this.value)" aria-label="กรองระดับความเร่งด่วน">
+                <option value="all" ${reqFilterUrgency === 'all' ? 'selected' : ''}>ทุกความเร่งด่วน</option>
+                <option value="วิกฤต" ${reqFilterUrgency === 'วิกฤต' ? 'selected' : ''}>วิกฤต</option>
+                <option value="สูง" ${reqFilterUrgency === 'สูง' ? 'selected' : ''}>สูง</option>
+                <option value="ปานกลาง" ${reqFilterUrgency === 'ปานกลาง' ? 'selected' : ''}>ปานกลาง</option>
+                <option value="ต่ำ" ${reqFilterUrgency === 'ต่ำ' ? 'selected' : ''}>ต่ำ</option>
+              </select>
+
+              <select class="form-control select-filter" onchange="handleReqStatusFilter(this.value)" aria-label="กรองสถานะ">
+                <option value="all" ${reqFilterStatus === 'all' ? 'selected' : ''}>ทุกสถานะ</option>
+                <option value="รอตรวจสอบ" ${reqFilterStatus === 'รอตรวจสอบ' ? 'selected' : ''}>รอตรวจสอบ</option>
+                <option value="ยืนยันแล้ว" ${reqFilterStatus === 'ยืนยันแล้ว' ? 'selected' : ''}>ยืนยันแล้ว</option>
+                <option value="กำลังจัดส่ง" ${reqFilterStatus === 'กำลังจัดส่ง' ? 'selected' : ''}>กำลังจัดส่ง</option>
+                <option value="ส่งมอบแล้ว" ${reqFilterStatus === 'ส่งมอบแล้ว' ? 'selected' : ''}>ส่งมอบแล้ว</option>
+                <option value="ยกเลิก" ${reqFilterStatus === 'ยกเลิก' ? 'selected' : ''}>ยกเลิก</option>
+              </select>
+
+              <select class="form-control select-filter" onchange="handleReqSort(this.value)" aria-label="เรียงลำดับ">
+                <option value="priority" ${reqSortBy === 'priority' ? 'selected' : ''}>ลำดับความสำคัญ</option>
+                <option value="newest" ${reqSortBy === 'newest' ? 'selected' : ''}>คำขอล่าสุด</option>
+                <option value="affected" ${reqSortBy === 'affected' ? 'selected' : ''}>ผู้ประสบภัยมากสุด</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Responsive Table / Cards -->
+          ${filtered.length === 0 ? `
+            <div class="card empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <h3>ไม่พบข้อมูลคำขอตามเงื่อนไขที่กำหนด</h3>
+              <p>ลองเปลี่ยนคำค้นหา หรือรีเซ็ตตัวกรอง</p>
+            </div>
+          ` : `
+            <div class="table-container table-responsive-cards">
+              <table>
+                <thead>
+                  <tr>
+                    <th>รหัสคำขอ</th>
+                    <th>ชุมชน / ผู้ขอ</th>
+                    <th>สิ่งของที่ต้องการ</th>
+                    <th>ผู้ประสบภัย</th>
+                    <th>ความเร่งด่วน</th>
+                    <th>สถานะ</th>
+                    <th>เวลาบันทึก</th>
+                    <th style="text-align:right;">การดำเนินการ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${filtered.map(r => `
+                    <tr>
+                      <td data-label="รหัสคำขอ"><strong>${escapeHtml(r.id)}</strong></td>
+                      <td data-label="ชุมชน / ผู้ขอ">
+                        <div style="font-weight:600; color:var(--primary);">${escapeHtml(r.communityName)}</div>
+                        <div style="font-size:12px; color:var(--text-muted);">${escapeHtml(r.contactName)} (${escapeHtml(r.phone)})</div>
+                      </td>
+                      <td data-label="สิ่งของที่ต้องการ">
+                        <div style="font-weight:600;">${escapeHtml(r.itemCategory)}</div>
+                        <div style="font-size:12px; color:var(--text-muted);">${escapeHtml(r.itemDescription)} <strong>(${r.quantityNeeded} ${escapeHtml(r.unit)})</strong></div>
+                      </td>
+                      <td data-label="ผู้ประสบภัย">
+                        <span style="font-weight:600;">${r.affectedCount}</span> คน
+                      </td>
+                      <td data-label="ความเร่งด่วน">${renderUrgencyBadge(r.urgency)}</td>
+                      <td data-label="สถานะ">${renderStatusBadge(r.status)}</td>
+                      <td data-label="เวลาบันทึก" style="font-size:12px; color:var(--text-muted);">${escapeHtml(r.createdAt)}</td>
+                      <td data-label="การดำเนินการ" style="text-align:right; white-space:nowrap;">
+                        <button class="btn btn-secondary btn-sm" onclick="viewRequestDetails('${r.id}')" title="ดูรายละเอียด">
+                          รายละเอียด
+                        </button>
+                        ${r.status === 'รอตรวจสอบ' || r.status === 'ยืนยันแล้ว' ? `
+                          <button class="btn btn-primary btn-sm" onclick="startPlanningWithRequest('${r.id}')" style="margin-left:4px;">
+                            วางแผน
+                          </button>
+                        ` : ''}
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function handleReqSearch(val) {
+      reqFilterSearch = val;
+      renderCurrentView();
+    }
+    function handleReqUrgencyFilter(val) {
+      reqFilterUrgency = val;
+      renderCurrentView();
+    }
+    function handleReqStatusFilter(val) {
+      reqFilterStatus = val;
+      renderCurrentView();
+    }
+    function handleReqSort(val) {
+      reqSortBy = val;
+      renderCurrentView();
+    }
+
+    // --------------------------------------------------------------------------
+    // VIEW 3: RELIEF PLANNING (วางแผนส่งความช่วยเหลือ)
+    // --------------------------------------------------------------------------
+    let planningSelectedReqId = null;
+    let planningSelectedMerchantId = null;
+    let planningAllocQty = null;
+
+    function renderPlanningView() {
+      const reqs = appState.state.requests.filter(r => r.status === 'รอตรวจสอบ' || r.status === 'ยืนยันแล้ว');
+      const merchants = appState.state.merchants;
+      const roads = appState.state.roads;
+
+      if (!planningSelectedReqId && reqs.length > 0) {
+        const sorted = [...reqs].sort((a, b) => calculatePriorityScore(b) - calculatePriorityScore(a));
+        planningSelectedReqId = sorted[0].id;
+      }
+
+      const selectedReq = appState.state.requests.find(r => r.id === planningSelectedReqId);
+
+      let matchedMerchantInfo = null;
+      if (selectedReq) {
+        matchedMerchantInfo = findBestMerchantForRequest(selectedReq, merchants, roads);
+        if (!planningSelectedMerchantId && matchedMerchantInfo) {
+          planningSelectedMerchantId = matchedMerchantInfo.merchant.id;
+          planningAllocQty = Math.min(selectedReq.quantityNeeded, matchedMerchantInfo.stock);
+        }
+      }
+
+      const selectedMerchant = merchants.find(m => m.id === planningSelectedMerchantId);
+      const matchedProduct = (selectedMerchant && selectedReq) 
+        ? selectedMerchant.products.find(p => p.category === selectedReq.itemCategory) 
+        : null;
+
+      let routeResult = null;
+      if (selectedMerchant && selectedReq) {
+        routeResult = findBestRoute(selectedMerchant.nodeId, selectedReq.communityNodeId, roads);
+      }
+
+      return `
+        <section aria-label="วางแผนส่งความช่วยเหลือ">
+          ${renderRoleBanner()}
+
+          <header class="page-header">
+            <div class="page-title-wrap">
+              <h2>วางแผนส่งความช่วยเหลือ (Relief Planning Workflow)</h2>
+              <p>เชื่อมโยงความต้องการชุมชน (Track 6), เส้นทางที่เข้าถึงได้ (Track 5) และสินค้าจากร้านค้า SME (Track 2) เข้าด้วยกัน</p>
+            </div>
+          </header>
+
+          <!-- 4-Step Wizard Indicator -->
+          <div class="wizard-steps">
+            <div class="wizard-step ${selectedReq ? 'completed' : 'active'}">
+              <span class="step-num">${selectedReq ? '✓' : '1'}</span>
+              <span>1. เลือกคำขอ</span>
+            </div>
+            <div class="wizard-step-sep"></div>
+            <div class="wizard-step ${selectedMerchant ? 'completed' : (selectedReq ? 'active' : '')}">
+              <span class="step-num">${selectedMerchant ? '✓' : '2'}</span>
+              <span>2. เลือกร้านค้า SME</span>
+            </div>
+            <div class="wizard-step-sep"></div>
+            <div class="wizard-step ${routeResult && routeResult.found ? 'completed' : (selectedMerchant ? 'active' : '')}">
+              <span class="step-num">${routeResult && routeResult.found ? '✓' : '3'}</span>
+              <span>3. ตรวจสอบเส้นทาง</span>
+            </div>
+            <div class="wizard-step-sep"></div>
+            <div class="wizard-step ${selectedReq && selectedMerchant && routeResult && routeResult.found ? 'active' : ''}">
+              <span class="step-num">4</span>
+              <span>4. สรุปและอนุมัติ</span>
+            </div>
+          </div>
+
+          ${reqs.length === 0 ? `
+            <div class="card empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <h3>ไม่มีคำขอที่รอการวางแผนในขณะนี้</h3>
+              <p>คำขอทั้งหมดได้รับการจัดส่งหรือส่งมอบเรียบร้อยแล้ว ท่านสามารถสร้างคำขอใหม่เพื่อทดสอบขั้นตอนได้</p>
+              <div style="margin-top:14px;">
+                <button class="btn btn-primary" onclick="openCreateRequestModal()">สร้างคำขอทดสอบใหม่</button>
+              </div>
+            </div>
+          ` : `
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:18px;">
+              
+              <!-- Left Pane: Step 1 & Step 2 Selection -->
+              <div style="display:flex; flex-direction:column; gap:18px;">
+                
+                <!-- Step 1: Select Request -->
+                <article class="card">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <h3 style="font-size:14.5px; font-weight:700; color:var(--primary);">
+                      1. เลือกคำขอความช่วยเหลือ (Select Request)
+                    </h3>
+                    <span class="badge" style="background:#F1F5F9; color:#475569;">รอจัดสรร ${reqs.length} รายการ</span>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom:10px;">
+                    <label class="form-label">คำขอที่ต้องการวางแผน:</label>
+                    <select class="form-control" onchange="handlePlanningSelectReq(this.value)">
+                      ${reqs.map(r => `
+                        <option value="${r.id}" ${r.id === planningSelectedReqId ? 'selected' : ''}>
+                          [${r.urgency}] ${r.id} - ${r.communityName} (${r.itemDescription})
+                        </option>
+                      `).join('')}
+                    </select>
+                  </div>
+
+                  ${selectedReq ? `
+                    <div style="background:#F8FAFC; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:10px 12px; font-size:12.5px;">
+                      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <strong>${escapeHtml(selectedReq.communityName)}</strong>
+                        ${renderUrgencyBadge(selectedReq.urgency)}
+                      </div>
+                      <div style="color:var(--text-muted); margin-bottom:6px;">
+                        ผู้ขอ: ${escapeHtml(selectedReq.contactName)} (${escapeHtml(selectedReq.phone)}) • ผู้ประสบภัย: <strong>${selectedReq.affectedCount}</strong> คน
+                      </div>
+                      <div style="color:#0F172A; background:white; padding:8px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                        📦 ต้องการ: <strong>${escapeHtml(selectedReq.itemDescription)}</strong> จำนวน <strong>${selectedReq.quantityNeeded} ${escapeHtml(selectedReq.unit)}</strong>
+                      </div>
+                      <div style="margin-top:6px; font-size:11.5px; color:#0F766E;">
+                        💡 <strong>เหตุผลการจัดลำดับ:</strong> ${getPriorityReasonText(selectedReq)}
+                      </div>
+                    </div>
+                  ` : ''}
+                </article>
+
+                <!-- Step 2: Select SME Merchant & Stock -->
+                <article class="card">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <h3 style="font-size:14.5px; font-weight:700; color:var(--primary);">
+                      2. เลือกร้านค้า SME ในพื้นที่ (Select Merchant)
+                    </h3>
+                    <span class="badge" style="background:#CCFBF1; color:#0F766E;">จับคู่หมวดหมู่</span>
+                  </div>
+
+                  ${!selectedReq ? '<p style="color:var(--text-muted);">กรุณาเลือกคำขอก่อน</p>' : `
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                      ${merchants.map(m => {
+                        const prod = m.products.find(p => p.category === selectedReq.itemCategory);
+                        const isSelected = m.id === planningSelectedMerchantId;
+                        const hasStock = prod && prod.stock > 0;
+
+                        return `
+                          <div style="border:2px solid ${isSelected ? 'var(--accent)' : 'var(--border-color)'}; background:${isSelected ? 'var(--accent-light)' : 'white'}; border-radius:var(--radius-md); padding:10px 12px; cursor:pointer; transition:all 0.15s ease;" onclick="handlePlanningSelectMerchant('${m.id}')">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:3px;">
+                              <strong style="color:var(--primary); font-size:13.5px;">${escapeHtml(m.name)}</strong>
+                              <span class="badge ${hasStock ? 'badge-low' : 'badge-critical'}">
+                                ${hasStock ? `มีสต็อก ${prod.stock} ${prod.unit}` : 'ไม่มีสต็อก'}
+                              </span>
+                            </div>
+                            <div style="font-size:12px; color:var(--text-muted);">
+                              📍 ${escapeHtml(m.locationName)} • โทร ${escapeHtml(m.phone)}
+                            </div>
+                            ${prod ? `
+                              <div style="font-size:12px; margin-top:4px; color:#334155;">
+                                สินค้า: ${escapeHtml(prod.name)} (฿${prod.unitPriceSim}/${prod.unit})
+                              </div>
+                            ` : `
+                              <div style="font-size:12px; margin-top:4px; color:#EF4444;">
+                                ไม่มีสินค้าในหมวด ${escapeHtml(selectedReq.itemCategory)}
+                              </div>
+                            `}
+                          </div>
+                        `;
+                      }).join('')}
+                    </div>
+
+                    ${matchedProduct ? `
+                      <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                        <label class="form-label">จำนวนสินค้าที่จะจัดสรรจากร้านนี้ (${escapeHtml(matchedProduct.unit)}):</label>
+                        <input type="number" class="form-control" min="1" max="${matchedProduct.stock}" value="${planningAllocQty || Math.min(selectedReq.quantityNeeded, matchedProduct.stock)}" onchange="handlePlanningAllocQty(this.value)">
+                        <span class="form-help">ความต้องการทั้งหมด: ${selectedReq.quantityNeeded} ${escapeHtml(selectedReq.unit)} • สต็อกร้านค้า: ${matchedProduct.stock} ${escapeHtml(matchedProduct.unit)}</span>
+                      </div>
+                    ` : ''}
+                  `}
+                </article>
+
+              </div>
+
+              <!-- Right Pane: Step 3 (Route Analysis) & Step 4 (Summary & Approval) -->
+              <div style="display:flex; flex-direction:column; gap:18px;">
+                
+                <!-- Step 3: Route Verification -->
+                <article class="card">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <h3 style="font-size:14.5px; font-weight:700; color:var(--primary);">
+                      3. การตรวจสอบเส้นทางขนส่ง (Route Verification)
+                    </h3>
+                    <span class="badge" style="background:#F1F5F9; color:#475569;">Track 5</span>
+                  </div>
+
+                  ${!routeResult ? '<p style="color:var(--text-muted); font-size:12.5px;">กรุณาเลือกคำขอและร้านค้าเพื่อคำนวณเส้นทาง</p>' : `
+                    ${routeResult.found ? `
+                      <div style="background:#F8FAFC; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:12px;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                          <span style="font-size:13px; font-weight:600; color:var(--primary);">
+                            ระยะทางขนส่งรวม: <span style="color:var(--accent-hover); font-size:15px;">${routeResult.totalKm} กม.</span>
+                          </span>
+                          <span class="badge ${routeResult.hasRestricted ? 'badge-medium' : 'badge-low'}">
+                            ${routeResult.hasRestricted ? 'จำกัดยานพาหนะ' : 'สัญจรปกติ'}
+                          </span>
+                        </div>
+                        
+                        <div style="font-size:12.5px; color:#334155; margin-bottom:8px;">
+                          <strong>เส้นทางผ่าน:</strong><br>
+                          ${routeResult.pathNodes.map(nid => NODES[nid].name).join(' ➔ ')}
+                        </div>
+
+                        <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:8px 10px; font-size:11.5px;">
+                          <strong>รายละเอียดถนนแต่ละช่วง:</strong>
+                          <ul style="margin-left:16px; margin-top:3px;">
+                            ${routeResult.usedRoads.map(r => `
+                              <li>${escapeHtml(r.name)} (${r.distanceKm} กม.) — <span style="font-weight:600; color:${r.status === 'RESTRICTED' ? 'var(--urgent-medium)' : '#10B981'};">${r.status === 'RESTRICTED' ? 'จำกัดการใช้งาน (น้ำท่วมขัง 15-20 ซม.)' : 'ใช้งานได้ปกติ'}</span></li>
+                            `).join('')}
+                          </ul>
+                        </div>
+
+                        ${routeResult.hasRestricted ? `
+                          <div style="margin-top:8px; background:#FEF3C7; border:1px solid #FDE68A; padding:7px 10px; border-radius:var(--radius-sm); font-size:11.5px; color:#92400E;">
+                            ⚠️ <strong>คำเตือน:</strong> มีช่วงถนนที่มีน้ำท่วมขัง แนะนำมอบหมายอาสาสมัครที่มีรถกระบะยกสูง 4WD หรือเรือ
+                          </div>
+                        ` : ''}
+                      </div>
+                    ` : `
+                      <div style="background:#FEE2E2; border:1px solid #FECACA; border-radius:var(--radius-md); padding:12px; font-size:12.5px; color:#991B1B;">
+                        <strong>⚠️ ไม่พบเส้นทางที่สามารถสัญจรได้:</strong>
+                        <p style="margin-top:3px;">ถนนที่เชื่อมต่อไปยังชุมชนนี้ถูกปิดทั้งหมด (น้ำท่วมสูง) ไม่สามารถจัดส่งทางบกทั่วไปได้ ต้องใช้เรือกู้ภัย</p>
+                      </div>
+                    `}
+                  `}
+                </article>
+
+                <!-- Step 4: Summary, Plan Diff & Human Confirmation -->
+                <article class="card" style="border-top:3px solid var(--accent);">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <h3 style="font-size:15px; font-weight:700; color:var(--primary);">
+                      4. สรุปแผนและยืนยันการปฏิบัติการ (Plan Approval)
+                    </h3>
+                    <span class="badge" style="background:#CCFBF1; color:#0F766E;">Human-in-the-loop</span>
+                  </div>
+
+                  ${(!selectedReq || !selectedMerchant || !routeResult || !routeResult.found) ? `
+                    <p style="color:var(--text-muted); font-size:12.5px;">
+                      กรุณาตรวจสอบว่าเลือกคำขอ, เลือกร้านค้าที่มีสต็อก และพบเส้นทางที่ปลอดภัยครบถ้วน
+                    </p>
+                  ` : `
+                    <div style="font-size:12.5px; color:#1E293B; display:flex; flex-direction:column; gap:8px;">
+                      <div style="background:var(--bg-subtle); padding:10px; border-radius:var(--radius-sm);">
+                        <div>🎯 <strong>ปลายทาง:</strong> ${escapeHtml(selectedReq.communityName)} (${escapeHtml(selectedReq.contactName)})</div>
+                        <div>🏪 <strong>ต้นทาง:</strong> ${escapeHtml(selectedMerchant.name)} (${escapeHtml(selectedMerchant.locationName)})</div>
+                        <div>📦 <strong>สิ่งของจัดส่ง:</strong> ${escapeHtml(selectedReq.itemDescription)} จำนวน <strong>${planningAllocQty} ${escapeHtml(selectedReq.unit)}</strong></div>
+                        <div>🚗 <strong>ระยะทาง:</strong> ${routeResult.totalKm} กม.</div>
+                      </div>
+
+                      <!-- Visual Plan Diff -->
+                      <div class="diff-box">
+                        <div style="font-size:11.5px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">
+                          VISUAL PLAN DIFF (ผลกระทบจากการอนุมัติแผน):
+                        </div>
+                        <div class="diff-grid">
+                          <div class="diff-col before">
+                            <div class="diff-label" style="color:#BE123C;">ก่อนดำเนินการ</div>
+                            <div style="font-size:11.5px;">
+                              • สต็อกร้านค้า: <strong>${matchedProduct ? matchedProduct.stock : 0} ${matchedProduct ? matchedProduct.unit : ''}</strong><br>
+                              • สถานะคำขอ: <span class="badge badge-status-pending">${selectedReq.status}</span>
+                            </div>
+                          </div>
+                          <div class="diff-col after">
+                            <div class="diff-label" style="color:#047857;">หลังอนุมัติแผน</div>
+                            <div style="font-size:11.5px;">
+                              • สต็อกจะเหลือ: <strong>${matchedProduct ? Math.max(0, matchedProduct.stock - planningAllocQty) : 0} ${matchedProduct ? matchedProduct.unit : ''}</strong><br>
+                              • สถานะคำขอเปลี่ยนเป็น: <span class="badge badge-status-delivering">กำลังจัดส่ง</span><br>
+                              • สร้างภารกิจใหม่อัตโนมัติ
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style="margin-top:10px; background:#F8FAFC; border:1px solid var(--border-color); padding:8px 10px; border-radius:var(--radius-sm); font-size:11.5px; color:#475569;">
+                        <strong>การมอบหมายอาสาสมัคร:</strong> ระบบจะเลือกอาสาสมัครที่มีพาหนะเหมาะสม (แนะนำ: ${routeResult.hasRestricted ? 'รถกระบะยกสูง 4WD' : 'รถยนต์/กระบะทั่วไป'})
+                      </div>
+
+                      <div style="margin-top:14px;">
+                        <button class="btn btn-primary" style="width:100%; padding:10px;" onclick="confirmReliefPlan()">
+                          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                          อนุมัติแผนและสร้างภารกิจจัดส่ง (Confirm Mission)
+                        </button>
+                      </div>
+                    </div>
+                  `}
+                </article>
+
+              </div>
+
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function handlePlanningSelectReq(reqId) {
+      planningSelectedReqId = reqId;
+      planningSelectedMerchantId = null;
+      renderCurrentView();
+    }
+
+    function handlePlanningSelectMerchant(mId) {
+      planningSelectedMerchantId = mId;
+      const req = appState.state.requests.find(r => r.id === planningSelectedReqId);
+      const m = appState.state.merchants.find(item => item.id === mId);
+      if (req && m) {
+        const prod = m.products.find(p => p.category === req.itemCategory);
+        if (prod) {
+          planningAllocQty = Math.min(req.quantityNeeded, prod.stock);
+        }
+      }
+      renderCurrentView();
+    }
+
+    function handlePlanningAllocQty(val) {
+      planningAllocQty = parseInt(val, 10) || 1;
+      renderCurrentView();
+    }
+
+    function startPlanningWithRequest(reqId) {
+      planningSelectedReqId = reqId;
+      planningSelectedMerchantId = null;
+      switchView('planning');
+    }
+
+    function confirmReliefPlan() {
+      const req = appState.state.requests.find(r => r.id === planningSelectedReqId);
+      const merchant = appState.state.merchants.find(m => m.id === planningSelectedMerchantId);
+      const roads = appState.state.roads;
+
+      if (!req || !merchant) return;
+
+      const product = merchant.products.find(p => p.category === req.itemCategory);
+      if (!product) {
+        showToast('ไม่พบสินค้าที่ตรงกันในร้านค้าที่เลือก', 'error');
+        return;
+      }
+
+      const qty = planningAllocQty || Math.min(req.quantityNeeded, product.stock);
+
+      if (product.stock < qty) {
+        showToast('สต็อกสินค้าในร้านค้ามีไม่เพียงพอต่อการจัดสรร', 'error');
+        return;
+      }
+
+      const routeResult = findBestRoute(merchant.nodeId, req.communityNodeId, roads);
+      if (!routeResult.found) {
+        showToast('ไม่สามารถสร้างภารกิจได้เนื่องจากเส้นทางถูกปิด', 'error');
+        return;
+      }
+
+      const suitableVol = appState.state.volunteers.find(v => {
+        if (routeResult.hasRestricted) {
+          return v.vehicle.includes('4WD') || v.vehicle.includes('เรือ');
+        }
+        return true;
+      }) || appState.state.volunteers[0];
+
+      product.stock -= qty;
+      req.status = 'กำลังจัดส่ง';
+
+      const missionId = `LS-MSN-${200 + appState.state.missions.length + 1}`;
+      const now = new Date();
+      const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const newMission = {
+        id: missionId,
+        requestId: req.id,
+        destinationNodeId: req.communityNodeId,
+        sourceNodeId: merchant.nodeId,
+        merchantId: merchant.id,
+        supplies: `${product.name} (${qty} ${product.unit})`,
+        volunteerId: suitableVol.id,
+        volunteerName: suitableVol.name,
+        routeSummary: `${merchant.name} -> ${routeResult.pathNodes.map(nid => NODES[nid].name).join(' -> ')}`,
+        distanceKm: routeResult.totalKm,
+        status: 'รอรับภารกิจ',
+        createdAt: timeStr,
+        completedAt: null,
+        issueNote: ''
+      };
+
+      appState.state.missions.unshift(newMission);
+      appState.logActivity(`อนุมัติแผนช่วยเหลือ ${missionId}: ส่ง ${product.name} จาก ${merchant.name} ไป ${req.communityName}`, 'mission');
+      appState.saveState();
+      showToast(`สร้างภารกิจ ${missionId} เรียบร้อยแล้ว!`, 'success');
+
+      planningSelectedReqId = null;
+      planningSelectedMerchantId = null;
+      switchView('missions');
+    }
+
+    // --------------------------------------------------------------------------
+    // VIEW 4: ROADS & ROUTES (เส้นทางและถนน - SVG MAP)
+    // --------------------------------------------------------------------------
+    let selectedRouteStart = 'NODE_A';
+    let selectedRouteEnd = 'NODE_D';
+
+    function renderRoadsView() {
+      const roads = appState.state.roads;
+      const calculatedRoute = findBestRoute(selectedRouteStart, selectedRouteEnd, roads);
+
+      return `
+        <section aria-label="เส้นทางและสภาพถนน">
+          ${renderRoleBanner()}
+
+          <header class="page-header">
+            <div class="page-title-wrap">
+              <h2>เส้นทางและสภาพถนน (Roads & Route Network)</h2>
+              <p>Track 5: Transportation & Smart Cities — แผนผังโครงข่ายคมนาคมจำลอง (สามารถคลิกที่ถนนเพื่อสลับสถานะจำลองได้)</p>
+            </div>
+            <div>
+              <span class="badge" style="background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; padding:5px 10px;">
+                ⚠️ ข้อมูลสังเคราะห์เพื่อการสาธิต — ไม่ใช่ข้อมูลถนนเรียลไทม์จริง
+              </span>
+            </div>
+          </header>
+
+          <!-- Interactive SVG Map with proportional auto-scaling -->
+          <div class="map-container">
+            <svg class="map-svg" viewBox="0 0 850 480" preserveAspectRatio="xMidYMid meet" aria-label="แผนที่โครงข่ายคมนาคมจำลอง">
+              <defs>
+                <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#1E293B"/>
+                  <stop offset="100%" stop-color="#0F172A"/>
+                </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
+              <rect width="100%" height="100%" fill="url(#gridGrad)"/>
+              <g stroke="#334155" stroke-width="0.5" stroke-opacity="0.4">
+                <line x1="0" y1="80" x2="850" y2="80"/>
+                <line x1="0" y1="160" x2="850" y2="160"/>
+                <line x1="0" y1="240" x2="850" y2="240"/>
+                <line x1="0" y1="320" x2="850" y2="320"/>
+                <line x1="0" y1="400" x2="850" y2="400"/>
+                <line x1="140" y1="0" x2="140" y2="480"/>
+                <line x1="280" y1="0" x2="280" y2="480"/>
+                <line x1="420" y1="0" x2="420" y2="480"/>
+                <line x1="560" y1="0" x2="560" y2="480"/>
+                <line x1="700" y1="0" x2="700" y2="480"/>
+              </g>
+
+              <path d="M 620,0 C 640,120 720,200 660,320 C 610,400 680,480 720,480" fill="none" stroke="#0284C7" stroke-width="26" stroke-opacity="0.35"/>
+              <text x="640" y="40" fill="#38BDF8" font-size="11" font-weight="600" opacity="0.8">แม่น้ำสายหลัก (ระดับน้ำล้นตลิ่ง)</text>
+
+              <!-- Roads -->
+              <g id="mapRoadsGroup">
+                ${roads.map(r => {
+                  const uNode = NODES[r.u];
+                  const vNode = NODES[r.v];
+                  if (!uNode || !vNode) return '';
+
+                  let strokeColor = '#10B981';
+                  let strokeDash = 'none';
+
+                  if (r.status === 'RESTRICTED') {
+                    strokeColor = '#F59E0B';
+                    strokeDash = '6,4';
+                  } else if (r.status === 'CLOSED') {
+                    strokeColor = '#EF4444';
+                    strokeDash = '4,4';
+                  }
+
+                  const isInRoute = calculatedRoute.found && calculatedRoute.usedRoads.some(ur => ur.id === r.id);
+                  if (isInRoute) {
+                    strokeColor = '#06B6D4';
+                  }
+
+                  const midX = (uNode.x + vNode.x) / 2;
+                  const midY = (uNode.y + vNode.y) / 2;
+
+                  return `
+                    <g class="map-road-group" onclick="toggleRoadStatus('${r.id}')" style="cursor:pointer;">
+                      <line x1="${uNode.x}" y1="${uNode.y}" x2="${vNode.x}" y2="${vNode.y}" 
+                            stroke="${strokeColor}" 
+                            stroke-dasharray="${strokeDash}"
+                            class="map-road ${isInRoute ? 'active-path' : ''}" 
+                            id="svg-road-${r.id}" />
+                      <rect x="${midX - 26}" y="${midY - 9}" width="52" height="18" rx="4" fill="#0F172A" stroke="${strokeColor}" stroke-width="1.5" opacity="0.9"/>
+                      <text x="${midX}" y="${midY + 3.5}" fill="white" font-size="9.5" font-weight="600" text-anchor="middle">
+                        ${r.distanceKm} km
+                      </text>
+                    </g>
+                  `;
+                }).join('')}
+              </g>
+
+              <!-- Nodes -->
+              <g id="mapNodesGroup">
+                ${Object.values(NODES).map(n => {
+                  let fillCol = '#3B82F6';
+                  let iconChar = 'C';
+                  if (n.type === 'hub') { fillCol = '#6366F1'; iconChar = 'HUB'; }
+                  else if (n.type === 'merchant') { fillCol = '#10B981'; iconChar = 'SME'; }
+                  else if (n.type === 'community') { fillCol = '#F43F5E'; iconChar = 'POP'; }
+
+                  const isStart = n.id === selectedRouteStart;
+                  const isEnd = n.id === selectedRouteEnd;
+
+                  return `
+                    <g class="map-node" transform="translate(${n.x}, ${n.y})">
+                      ${isStart ? `<circle r="20" fill="none" stroke="#10B981" stroke-width="3" stroke-dasharray="4,2"/>` : ''}
+                      ${isEnd ? `<circle r="20" fill="none" stroke="#F43F5E" stroke-width="3" stroke-dasharray="4,2"/>` : ''}
+
+                      <circle r="14" fill="${fillCol}" stroke="#FFFFFF" stroke-width="2.5" filter="url(#glow)"/>
+                      <text x="0" y="4" fill="white" font-size="8.5" font-weight="800" text-anchor="middle">${iconChar}</text>
+
+                      <rect x="-62" y="17" width="124" height="20" rx="4" fill="#0F172A" opacity="0.88"/>
+                      <text x="0" y="31" fill="#F8FAFC" font-size="10.5" font-weight="600" text-anchor="middle">${escapeHtml(n.name)}</text>
+                    </g>
+                  `;
+                }).join('')}
+              </g>
+            </svg>
+
+            <!-- Map Legend -->
+            <div class="map-legend">
+              <div class="legend-item">
+                <div class="legend-color" style="background:#10B981;"></div>
+                <span>ใช้งานได้ (OPEN)</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background:#F59E0B;"></div>
+                <span>จำกัดการใช้งาน (RESTRICTED)</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background:#EF4444;"></div>
+                <span>ปิดเส้นทาง (CLOSED)</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color" style="background:#06B6D4;"></div>
+                <span>เส้นทางนำทาง (Active Route)</span>
+              </div>
+              <div style="margin-left:auto; font-size:11px; color:#94A3B8;">
+                💡 แตะที่เส้นถนนในแผนที่หรือตารางเพื่อสลับสถานะจำลอง
+              </div>
+            </div>
+          </div>
+
+          <!-- Route Testing Simulator Controls -->
+          <article class="card" style="margin-top:18px;">
+            <h3 style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:10px;">
+              ทดสอบการคำนวณเส้นทางหลบเลี่ยงน้ำท่วม (Dynamic Replanning Simulator)
+            </h3>
+            <div class="form-row" style="align-items:flex-end;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">จุดเริ่มต้น (Origin):</label>
+                <select class="form-control" onchange="handleRouteChangeStart(this.value)">
+                  ${Object.values(NODES).map(n => `
+                    <option value="${n.id}" ${n.id === selectedRouteStart ? 'selected' : ''}>${n.name}</option>
+                  `).join('')}
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">จุดหมายปลายทาง (Destination):</label>
+                <select class="form-control" onchange="handleRouteChangeEnd(this.value)">
+                  ${Object.values(NODES).map(n => `
+                    <option value="${n.id}" ${n.id === selectedRouteEnd ? 'selected' : ''}>${n.name}</option>
+                  `).join('')}
+                </select>
+              </div>
+              <div>
+                <button class="btn btn-primary" onclick="renderCurrentView()">
+                  <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  คำนวณเส้นทางใหม่
+                </button>
+              </div>
+            </div>
+
+            <!-- Calculation Outcome Card -->
+            <div style="margin-top:14px; padding:12px; background:var(--bg-subtle); border-radius:var(--radius-md); font-size:13px;">
+              ${calculatedRoute.found ? `
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px;">
+                  <div>
+                    <strong style="color:var(--primary);">ผลลัพธ์:</strong> ${escapeHtml(calculatedRoute.message)}
+                  </div>
+                  <div>
+                    ระยะทางรวม: <strong style="color:var(--accent-hover); font-size:14.5px;">${calculatedRoute.totalKm} กิโลเมตร</strong>
+                  </div>
+                </div>
+                <div style="margin-top:6px; font-size:12px; color:#475569;">
+                  <strong>ลำดับการเดินทาง:</strong> ${calculatedRoute.pathNodes.map(nid => NODES[nid].name).join(' ➔ ')}
+                </div>
+              ` : `
+                <div style="color:#991B1B; font-weight:600;">
+                  ❌ ไม่พบเส้นทางเชื่อมต่อที่เปิดใช้งานอยู่ กรุณากดเปลี่ยนสถานะถนนให้เปิดใช้งาน หรือใช้เรือบรรเทาสาธารณภัย
+                </div>
+              `}
+            </div>
+          </article>
+
+          <!-- Road Status Table -->
+          <article class="card" style="margin-top:18px;">
+            <h3 style="font-size:15px; font-weight:700; color:var(--primary); margin-bottom:10px;">
+              รายการสายทางในเครือข่ายจำลอง (${roads.length} สายทาง)
+            </h3>
+            <div class="table-container table-responsive-cards">
+              <table>
+                <thead>
+                  <tr>
+                    <th>รหัส</th>
+                    <th>ชื่อถนน</th>
+                    <th>เชื่อมระหว่าง</th>
+                    <th>ระยะทาง</th>
+                    <th>สถานะปัจจุบัน</th>
+                    <th>ข้อสังเกตหน้างาน</th>
+                    <th style="text-align:right;">สลับสถานะจำลอง</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${roads.map(r => `
+                    <tr>
+                      <td data-label="รหัส"><strong>${escapeHtml(r.id)}</strong></td>
+                      <td data-label="ชื่อถนน" style="font-weight:600;">${escapeHtml(r.name)}</td>
+                      <td data-label="เชื่อมระหว่าง" style="font-size:12px; color:var(--text-muted);">
+                        ${NODES[r.u].name} &harr; ${NODES[r.v].name}
+                      </td>
+                      <td data-label="ระยะทาง">${r.distanceKm} กม.</td>
+                      <td data-label="สถานะปัจจุบัน">${renderRoadBadge(r.status)}</td>
+                      <td data-label="ข้อสังเกตหน้างาน" style="font-size:11.5px; color:#475569;">${escapeHtml(r.note)}</td>
+                      <td data-label="การดำเนินการ" style="text-align:right;">
+                        <button class="btn btn-secondary btn-sm" onclick="toggleRoadStatus('${r.id}')">
+                          สลับสถานะ
+                        </button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      `;
+    }
+
+    function toggleRoadStatus(roadId) {
+      const road = appState.state.roads.find(r => r.id === roadId);
+      if (!road) return;
+
+      if (road.status === 'OPEN') {
+        road.status = 'RESTRICTED';
+        road.note = 'ระดับน้ำท่วมผิวทาง 15-20 ซม. แนะนำรถยกสูง 4WD';
+      } else if (road.status === 'RESTRICTED') {
+        road.status = 'CLOSED';
+        road.note = 'น้ำท่วมสูง 60 ซม. กระแสน้ำเชี่ยว ปิดการจราจรเด็ดขาด';
+      } else {
+        road.status = 'OPEN';
+        road.note = 'ระดับน้ำลดลงเป็นปกติ สัญจรได้ทุกชนิดยานพาหนะ';
+      }
+
+      appState.logActivity(`เปลี่ยนสถานะ ${road.name} เป็น ${road.status}`, 'road');
+      appState.saveState();
+      showToast(`เปลี่ยนสถานะ ${road.name}: ${road.status}`, 'info');
+      renderCurrentView();
+    }
+
+    function handleRouteChangeStart(val) {
+      selectedRouteStart = val;
+      renderCurrentView();
+    }
+
+    function handleRouteChangeEnd(val) {
+      selectedRouteEnd = val;
+      renderCurrentView();
+    }
+
+    // --------------------------------------------------------------------------
+    // VIEW 5: SME MERCHANTS & INVENTORY (ร้านค้าและสิ่งของ)
+    // --------------------------------------------------------------------------
+    let merchantSearch = '';
+    let merchantCategoryFilter = 'all';
+
+    function renderMerchantsView() {
+      const merchants = appState.state.merchants;
+
+      const filteredMerchants = merchants.map(m => {
+        let prods = m.products;
+        if (merchantCategoryFilter !== 'all') {
+          prods = prods.filter(p => p.category === merchantCategoryFilter);
+        }
+        if (merchantSearch) {
+          const q = merchantSearch.toLowerCase();
+          prods = prods.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+        }
+        return { ...m, displayProducts: prods };
+      });
+
+      return `
+        <section aria-label="ร้านค้าท้องถิ่นและคลังสินค้าจำเป็น">
+          ${renderRoleBanner()}
+
+          <header class="page-header">
+            <div class="page-title-wrap">
+              <h2>ร้านค้าท้องถิ่นและคลังสินค้าจำเป็น (Local SME & Inventory)</h2>
+              <p>Track 2: SME & Local Economy — เชื่อมสินค้าชุมชนเข้ากับวงจรการบรรเทาสาธารณภัยเพื่อขับเคลื่อนเศรษฐกิจท้องถิ่น</p>
+            </div>
+            <div>
+              <span class="badge" style="background:#CCFBF1; color:#0F766E; padding:5px 10px; font-size:12px;">
+                🛡️ จำลองการจัดซื้อบรรเทาทุกข์ (Simulated D2C Commerce)
+              </span>
+            </div>
+          </header>
+
+          <!-- Filter & Search Bar -->
+          <div class="card" style="margin-bottom:18px; padding:12px 14px;">
+            <div class="filter-bar" style="margin-bottom:0;">
+              <div class="search-input-wrap">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" class="form-control search-input" placeholder="ค้นหาชื่อสินค้า, ยา, อาหารแห้ง..." value="${escapeHtml(merchantSearch)}" oninput="handleMerchantSearch(this.value)">
+              </div>
+
+              <select class="form-control select-filter" onchange="handleMerchantCategoryFilter(this.value)" aria-label="กรองหมวดหมู่สินค้า">
+                <option value="all" ${merchantCategoryFilter === 'all' ? 'selected' : ''}>ทุกหมวดหมู่</option>
+                <option value="น้ำดื่ม" ${merchantCategoryFilter === 'น้ำดื่ม' ? 'selected' : ''}>น้ำดื่ม</option>
+                <option value="อาหารแห้ง" ${merchantCategoryFilter === 'อาหารแห้ง' ? 'selected' : ''}>อาหารแห้ง / พร้อมทาน</option>
+                <option value="ยาสามัญ" ${merchantCategoryFilter === 'ยาสามัญ' ? 'selected' : ''}>ยาสามัญ / ปฐมพยาบาล</option>
+                <option value="อุปกรณ์สุขอนามัย" ${merchantCategoryFilter === 'อุปกรณ์สุขอนามัย' ? 'selected' : ''}>อุปกรณ์สุขอนามัย</option>
+                <option value="สิ่งของจำเป็น" ${merchantCategoryFilter === 'สิ่งของจำเป็น' ? 'selected' : ''}>สิ่งของจำเป็น</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Merchant Cards -->
+          <div style="display:flex; flex-direction:column; gap:18px;">
+            ${filteredMerchants.map(m => `
+              <article class="card">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                  <div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <h3 style="font-size:16px; font-weight:700; color:var(--primary);">${escapeHtml(m.name)}</h3>
+                      <span class="badge" style="background:#D1FAE5; color:#065F46;">${escapeHtml(m.status)}</span>
+                    </div>
+                    <div style="font-size:12.5px; color:var(--text-muted); margin-top:2px;">
+                      ผู้ติดต่อ: <strong>${escapeHtml(m.owner)}</strong> • โทร: ${escapeHtml(m.phone)} • ที่ตั้ง: ${escapeHtml(m.locationName)}
+                    </div>
+                  </div>
+                  <div>
+                    <span class="badge" style="background:#F1F5F9; color:#475569;">
+                      จุดเชื่อมต่อ: ${NODES[m.nodeId].name}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Product Table -->
+                ${m.displayProducts.length === 0 ? `
+                  <p style="font-size:12.5px; color:var(--text-muted); padding:8px 0;">ไม่พบสินค้าในหมวดที่ค้นหา</p>
+                ` : `
+                  <div class="table-container table-responsive-cards">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>ชื่อสินค้าจำเป็น</th>
+                          <th>หมวดหมู่</th>
+                          <th>สต็อกคงเหลือ</th>
+                          <th>ราคาจำลอง</th>
+                          <th>สถานะสต็อก</th>
+                          <th style="text-align:right;">ปรับปรุงสต็อก (Simulation)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${m.displayProducts.map(p => `
+                          <tr>
+                            <td data-label="ชื่อสินค้า"><strong>${escapeHtml(p.name)}</strong></td>
+                            <td data-label="หมวดหมู่"><span class="badge" style="background:#F1F5F9; color:#334155;">${escapeHtml(p.category)}</span></td>
+                            <td data-label="สต็อกคงเหลือ">
+                              <strong style="font-size:14px; color:${p.stock <= 10 ? 'var(--urgent-critical)' : 'var(--primary)'};">
+                                ${p.stock}
+                              </strong> ${escapeHtml(p.unit)}
+                            </td>
+                            <td data-label="ราคาประมาณการ" style="color:var(--text-muted);">฿${p.unitPriceSim} / ${escapeHtml(p.unit)}</td>
+                            <td data-label="สถานะสต็อก">
+                              ${p.stock === 0 ? '<span class="badge badge-critical">สินค้าหมด</span>' : 
+                                (p.stock <= 20 ? '<span class="badge badge-medium">สต็อกใกล้หมด</span>' : '<span class="badge badge-low">พร้อมจัดสรร</span>')}
+                            </td>
+                            <td data-label="การปรับสต็อก" style="text-align:right; white-space:nowrap;">
+                              <div style="display:inline-flex; gap:4px;">
+                                <button class="btn btn-secondary btn-sm" onclick="adjustProductStock('${m.id}', '${p.id}', -5)" title="ลดสต็อก 5 หน่วย">-5</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adjustProductStock('${m.id}', '${p.id}', -1)" title="ลดสต็อก 1 หน่วย">-1</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adjustProductStock('${m.id}', '${p.id}', 5)" title="เพิ่มสต็อก 5 หน่วย">+5</button>
+                                <button class="btn btn-secondary btn-sm" onclick="adjustProductStock('${m.id}', '${p.id}', 20)" title="เพิ่มสต็อก 20 หน่วย">+20</button>
+                              </div>
+                            </td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                `}
+              </article>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function handleMerchantSearch(val) {
+      merchantSearch = val;
+      renderCurrentView();
+    }
+    function handleMerchantCategoryFilter(val) {
+      merchantCategoryFilter = val;
+      renderCurrentView();
+    }
+
+    function adjustProductStock(merchantId, productId, delta) {
+      const merchant = appState.state.merchants.find(m => m.id === merchantId);
+      if (!merchant) return;
+      const prod = merchant.products.find(p => p.id === productId);
+      if (!prod) return;
+
+      const newStock = prod.stock + delta;
+      if (newStock < 0) {
+        showToast('สต็อกไม่สามารถติดลบได้ (No negative inventory)', 'warning');
+        return;
+      }
+
+      prod.stock = newStock;
+      appState.logActivity(`ปรับสต็อก ${prod.name} (${merchant.name}) เป็น ${prod.stock} ${prod.unit}`, 'inventory');
+      appState.saveState();
+      showToast(`อัปเดตสต็อก ${prod.name}: ${prod.stock} ${prod.unit}`, 'success');
+      renderCurrentView();
+    }
+
+    // --------------------------------------------------------------------------
+    // VIEW 6: VOLUNTEER MISSIONS (ภารกิจอาสาสมัคร)
+    // --------------------------------------------------------------------------
+    let missionTabStatus = 'all';
+
+    function renderMissionsView() {
+      const missions = appState.state.missions;
+
+      const filteredMissions = missions.filter(m => {
+        if (missionTabStatus === 'all') return true;
+        return m.status === missionTabStatus;
+      });
+
+      return `
+        <section aria-label="ภารกิจอาสาสมัครภาคสนาม">
+          ${renderRoleBanner()}
+
+          <header class="page-header">
+            <div class="page-title-wrap">
+              <h2>ภารกิจจัดส่งและอาสาสมัครภาคสนาม (Volunteer Missions)</h2>
+              <p>ติดตามการกระจายสิ่งของบรรเทาทุกข์ การเดินทาง และการยืนยันการส่งมอบถึงมือประชาชน</p>
+            </div>
+            <div>
+              <span class="badge" style="background:#E0E7FF; color:#3730A3; padding:5px 10px; font-size:12px;">
+                ภารกิจทั้งหมด: ${missions.length} รายการ
+              </span>
+            </div>
+          </header>
+
+          <!-- Mission Status Tabs -->
+          <div style="display:flex; gap:6px; margin-bottom:18px; overflow-x:auto; padding-bottom:3px;">
+            <button class="btn btn-sm ${missionTabStatus === 'all' ? 'btn-dark' : 'btn-secondary'}" onclick="handleMissionTab('all')">
+              ทั้งหมด (${missions.length})
+            </button>
+            <button class="btn btn-sm ${missionTabStatus === 'รอรับภารกิจ' ? 'btn-dark' : 'btn-secondary'}" onclick="handleMissionTab('รอรับภารกิจ')">
+              รอรับภารกิจ (${missions.filter(m => m.status === 'รอรับภารกิจ').length})
+            </button>
+            <button class="btn btn-sm ${missionTabStatus === 'กำลังดำเนินการ' ? 'btn-dark' : 'btn-secondary'}" onclick="handleMissionTab('กำลังดำเนินการ')">
+              กำลังดำเนินการ (${missions.filter(m => m.status === 'กำลังดำเนินการ').length})
+            </button>
+            <button class="btn btn-sm ${missionTabStatus === 'ส่งมอบสำเร็จ' ? 'btn-dark' : 'btn-secondary'}" onclick="handleMissionTab('ส่งมอบสำเร็จ')">
+              ส่งมอบสำเร็จ (${missions.filter(m => m.status === 'ส่งมอบสำเร็จ').length})
+            </button>
+            <button class="btn btn-sm ${missionTabStatus === 'มีปัญหา' ? 'btn-dark' : 'btn-secondary'}" onclick="handleMissionTab('มีปัญหา')">
+              มีปัญหา (${missions.filter(m => m.status === 'มีปัญหา').length})
+            </button>
+          </div>
+
+          <!-- Missions Cards Grid -->
+          ${filteredMissions.length === 0 ? `
+            <div class="card empty-state">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <h3>ไม่มีภารกิจในหมวดหมู่นี้</h3>
+              <p>ท่านสามารถวางแผนและสร้างภารกิจใหม่ได้จากเมนู "วางแผนส่งความช่วยเหลือ"</p>
+            </div>
+          ` : `
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap:18px;">
+              ${filteredMissions.map(m => {
+                const relReq = appState.state.requests.find(r => r.id === m.requestId);
+                const relMerchant = appState.state.merchants.find(item => item.id === m.merchantId);
+
+                return `
+                  <article class="card" style="display:flex; flex-direction:column; justify-content:space-between; gap:12px;">
+                    <div>
+                      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                          <strong style="font-size:14.5px; color:var(--primary);">${escapeHtml(m.id)}</strong>
+                          <span class="badge" style="background:#F1F5F9; color:#475569;">อ้างอิง: ${escapeHtml(m.requestId)}</span>
+                        </div>
+                        ${renderMissionBadge(m.status)}
+                      </div>
+
+                      <div style="background:#F8FAFC; border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:10px; font-size:12.5px; margin-bottom:8px;">
+                        <div>🏪 <strong>ต้นทาง:</strong> ${relMerchant ? escapeHtml(relMerchant.name) : 'ร้านค้าท้องถิ่น'}</div>
+                        <div>🎯 <strong>ปลายทาง:</strong> ${relReq ? escapeHtml(relReq.communityName) : NODES[m.destinationNodeId].name}</div>
+                        <div>📦 <strong>สิ่งของ:</strong> <strong style="color:var(--accent-hover);">${escapeHtml(m.supplies)}</strong></div>
+                      </div>
+
+                      <div style="font-size:12px; color:#475569; margin-bottom:5px;">
+                        <strong>อาสาสมัครผู้รับผิดชอบ:</strong> ${escapeHtml(m.volunteerName)}
+                      </div>
+
+                      <div style="font-size:11.5px; color:var(--text-muted); background:white; border:1px solid var(--border-color); padding:7px 9px; border-radius:var(--radius-sm);">
+                        🛣️ <strong>เส้นทาง:</strong> ${escapeHtml(m.routeSummary)} (${m.distanceKm} กม.)
+                      </div>
+
+                      ${m.issueNote ? `
+                        <div style="margin-top:6px; background:#FEE2E2; border:1px solid #FECACA; padding:7px 9px; border-radius:var(--radius-sm); font-size:11.5px; color:#991B1B;">
+                          ⚠️ <strong>รายงานปัญหา:</strong> ${escapeHtml(m.issueNote)}
+                        </div>
+                      ` : ''}
+
+                      <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">
+                        สร้างเมื่อ: ${escapeHtml(m.createdAt)} ${m.completedAt ? `• ส่งมอบสำเร็จ: ${escapeHtml(m.completedAt)}` : ''}
+                      </div>
+                    </div>
+
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; border-top:1px solid var(--border-color); padding-top:10px;">
+                      ${m.status === 'รอรับภารกิจ' ? `
+                        <button class="btn btn-primary btn-sm" onclick="startMission('${m.id}')" style="flex:1;">
+                          รับภารกิจและเริ่มเดินทาง
+                        </button>
+                      ` : ''}
+
+                      ${m.status === 'กำลังดำเนินการ' ? `
+                        <button class="btn btn-primary btn-sm" onclick="confirmCompleteMissionDialog('${m.id}')" style="flex:1; background:#10B981;">
+                          ✓ ยืนยันส่งมอบสำเร็จ
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="openReportIssueModal('${m.id}')">
+                          แจ้งปัญหา
+                        </button>
+                      ` : ''}
+
+                      ${m.status === 'มีปัญหา' ? `
+                        <button class="btn btn-secondary btn-sm" onclick="startMission('${m.id}')" style="flex:1;">
+                          เริ่มเดินทางใหม่
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="confirmCompleteMissionDialog('${m.id}')" style="background:#10B981;">
+                          ✓ ยืนยันส่งมอบ
+                        </button>
+                      ` : ''}
+
+                      ${m.status === 'ส่งมอบสำเร็จ' ? `
+                        <div style="font-size:12px; color:#065F46; font-weight:600; display:flex; align-items:center; gap:4px;">
+                          ✓ ส่งมอบถึงมือผู้ประสบภัยเรียบร้อย
+                        </div>
+                      ` : ''}
+                    </div>
+                  </article>
+                `;
+              }).join('')}
+            </div>
+          `}
+        </section>
+      `;
+    }
+
+    function handleMissionTab(status) {
+      missionTabStatus = status;
+      renderCurrentView();
+    }
+
+    function startMission(missionId) {
+      const mission = appState.state.missions.find(m => m.id === missionId);
+      if (!mission) return;
+      mission.status = 'กำลังดำเนินการ';
+      appState.logActivity(`อาสาสมัครเริ่มออกเดินทางในภารกิจ ${mission.id}`, 'mission');
+      appState.saveState();
+      showToast(`เริ่มดำเนินภารกิจ ${mission.id} แล้ว`, 'info');
+      renderCurrentView();
+    }
+
+    function confirmCompleteMissionDialog(missionId) {
+      const mission = appState.state.missions.find(m => m.id === missionId);
+      if (!mission) return;
+
+      openModal({
+        title: 'ยืนยันการส่งมอบความช่วยเหลือสำเร็จ',
+        body: `
+          <div style="font-size:13.5px; line-height:1.55;">
+            <p>ท่านต้องการยืนยันว่าภารกิจ <strong>${escapeHtml(mission.id)}</strong> ได้ส่งมอบสิ่งของ:</p>
+            <div style="background:#F8FAFC; border:1px solid var(--border-color); padding:10px; border-radius:var(--radius-sm); margin:10px 0;">
+              <strong>${escapeHtml(mission.supplies)}</strong><br>
+              ถึงมือประชาชนผู้ประสบภัยเรียบร้อยแล้วใช่หรือไม่?
+            </div>
+            <p style="font-size:12px; color:var(--text-muted);">
+              * การยืนยันจะอัปเดตสถานะของคำขอต้นทางเป็น "ส่งมอบแล้ว" และบันทึกประวัติทันที
+            </p>
+          </div>
+        `,
+        confirmText: 'ยืนยันการส่งมอบ',
+        confirmBtnClass: 'btn-primary',
+        onConfirm: () => {
+          completeMission(missionId);
+        }
+      });
+    }
+
+    function completeMission(missionId) {
+      const mission = appState.state.missions.find(m => m.id === missionId);
+      if (!mission) return;
+
+      const now = new Date();
+      const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      mission.status = 'ส่งมอบสำเร็จ';
+      mission.completedAt = timeStr;
+
+      const req = appState.state.requests.find(r => r.id === mission.requestId);
+      if (req) {
+        req.status = 'ส่งมอบแล้ว';
+      }
+
+      appState.logActivity(`ภารกิจ ${mission.id} ส่งมอบสำเร็จเรียบร้อย (${mission.supplies})`, 'complete');
+      appState.saveState();
+      closeModal();
+      showToast(`ภารกิจ ${mission.id} ส่งมอบสำเร็จเรียบร้อยแล้ว`, 'success');
+      renderCurrentView();
+    }
+
+    function openReportIssueModal(missionId) {
+      const mission = appState.state.missions.find(m => m.id === missionId);
+      if (!mission) return;
+
+      openModal({
+        title: `รายงานปัญหาในภารกิจ ${mission.id}`,
+        body: `
+          <div class="form-group">
+            <label class="form-label" for="issueType">ประเภทปัญหาที่พบ:</label>
+            <select id="issueType" class="form-control">
+              <option value="ถนนถูกตัดขาด/น้ำท่วมสูงเกินยานพาหนะ">ถนนถูกตัดขาด / น้ำท่วมสูงเกินยานพาหนะ</option>
+              <option value="ไม่พบผู้ติดต่อตามพิกัด">ไม่พบตัวแทนชุมชนตามพิกัด</option>
+              <option value="ยานพาหนะขัดข้อง">ยานพาหนะขัดข้อง</option>
+              <option value="สินค้าเสียหายระหว่างเดินทาง">สินค้าเสียหายระหว่างเดินทาง</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="issueDetail">รายละเอียดเพิ่มเติม:</label>
+            <textarea id="issueDetail" class="form-control" rows="3" placeholder="ระบุสภาพปัญหาหน้างานเพื่อส่งต่อผู้ประสานงาน..."></textarea>
+          </div>
+        `,
+        confirmText: 'ส่งรายงานปัญหา',
+        confirmBtnClass: 'btn-danger',
+        onConfirm: () => {
+          const type = document.getElementById('issueType').value;
+          const detail = document.getElementById('issueDetail').value.trim();
+          mission.status = 'มีปัญหา';
+          mission.issueNote = `${type} ${detail ? `(${detail})` : ''}`;
+          appState.logActivity(`รายงานปัญหาในภารกิจ ${mission.id}: ${mission.issueNote}`, 'warning');
+          appState.saveState();
+          closeModal();
+          showToast(`บันทึกรายงานปัญหาภารกิจ ${mission.id} แล้ว`, 'warning');
+          renderCurrentView();
+        }
+      });
+    }
+
+    /* ==========================================================================
+       6. MODAL & REQUEST ACTIONS
+       ========================================================================== */
+    function openCreateRequestModal() {
+      const communities = Object.values(NODES).filter(n => n.type === 'community');
+
+      openModal({
+        title: 'สร้างคำขอความช่วยเหลือฉุกเฉิน (New Request)',
+        body: `
+          <form id="createRequestForm" onsubmit="event.preventDefault(); submitCreateRequest();">
+            <div class="form-group">
+              <label class="form-label" for="newReqCommunity">ชุมชน / พื้นที่ประสบภัย <span class="required">*</span></label>
+              <select id="newReqCommunity" class="form-control" required>
+                ${communities.map(c => `
+                  <option value="${c.id}">${c.name} (ความเสี่ยงน้ำท่วม: ${c.floodRisk})</option>
+                `).join('')}
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="newReqContact">ชื่อผู้ติดต่อ / ตัวแทนชุมชน <span class="required">*</span></label>
+                <input type="text" id="newReqContact" class="form-control" placeholder="เช่น นายสมหมาย ใจดี" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newReqPhone">เบอร์โทรศัพท์ติดต่อ <span class="required">*</span></label>
+                <input type="tel" id="newReqPhone" class="form-control" placeholder="เช่น 081-234-5678" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="newReqCategory">หมวดหมู่สิ่งของที่ต้องการ <span class="required">*</span></label>
+                <select id="newReqCategory" class="form-control" required>
+                  <option value="น้ำดื่ม">น้ำดื่ม</option>
+                  <option value="อาหารแห้ง">อาหารแห้ง / อาหารพร้อมทาน</option>
+                  <option value="ยาสามัญ">ยาสามัญประจำบ้าน / ชุดปฐมพยาบาล</option>
+                  <option value="อุปกรณ์สุขอนามัย">อุปกรณ์สุขอนามัย</option>
+                  <option value="สิ่งของจำเป็น">สิ่งของจำเป็น (ไฟฉาย/ถ่าน)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newReqUrgency">ระดับความเร่งด่วน <span class="required">*</span></label>
+                <select id="newReqUrgency" class="form-control" required>
+                  <option value="วิกฤต">วิกฤต (ต้องการทันที)</option>
+                  <option value="สูง" selected>สูง (ภายใน 24 ชม.)</option>
+                  <option value="ปานกลาง">ปานกลาง (2-3 วัน)</option>
+                  <option value="ต่ำ">ต่ำ (เตรียมความพร้อม)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="newReqQty">จำนวนที่ต้องการ <span class="required">*</span></label>
+                <input type="number" id="newReqQty" class="form-control" min="1" max="500" value="25" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newReqUnit">หน่วยนับ</label>
+                <input type="text" id="newReqUnit" class="form-control" value="แพ็ก/ชุด" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="newReqAffected">จำนวนผู้ประสบภัย (คน) <span class="required">*</span></label>
+                <input type="number" id="newReqAffected" class="form-control" min="1" max="1000" value="30" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="newReqDescription">รายละเอียดสิ่งของและสถานการณ์ในพื้นที่</label>
+              <textarea id="newReqDescription" class="form-control" rows="2" placeholder="เช่น น้ำดื่มสะอาดบรรจุขวด สำหรับเด็กและผู้สูงอายุในศูนย์อพยพ"></textarea>
+            </div>
+          </form>
+        `,
+        confirmText: 'บันทึกคำขอความช่วยเหลือ',
+        confirmBtnClass: 'btn-primary',
+        onConfirm: () => {
+          submitCreateRequest();
+        }
+      });
+    }
+
+    function submitCreateRequest() {
+      const commId = document.getElementById('newReqCommunity').value;
+      const contact = document.getElementById('newReqContact').value.trim();
+      const phone = document.getElementById('newReqPhone').value.trim();
+      const category = document.getElementById('newReqCategory').value;
+      const urgency = document.getElementById('newReqUrgency').value;
+      const qty = parseInt(document.getElementById('newReqQty').value, 10) || 1;
+      const unit = document.getElementById('newReqUnit').value.trim() || 'ชุด';
+      const affected = parseInt(document.getElementById('newReqAffected').value, 10) || 1;
+      const desc = document.getElementById('newReqDescription').value.trim() || `${category} สำหรับผู้ประสบภัย`;
+
+      if (!contact || !phone) {
+        showToast('กรุณากรอกชื่อและเบอร์ติดต่อให้ครบถ้วน', 'warning');
+        return;
+      }
+
+      const commNode = NODES[commId];
+      const newId = `LS-REQ-${100 + appState.state.requests.length + 1}`;
+      const now = new Date();
+      const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const newRequest = {
+        id: newId,
+        communityNodeId: commId,
+        communityName: commNode.name,
+        contactName: contact,
+        phone: phone,
+        itemCategory: category,
+        itemDescription: desc,
+        quantityNeeded: qty,
+        unit: unit,
+        affectedCount: affected,
+        urgency: urgency,
+        status: 'รอตรวจสอบ',
+        createdAt: timeStr,
+        note: 'บันทึกผ่านแบบฟอร์มรับคำขอฉุกเฉิน'
+      };
+
+      appState.state.requests.unshift(newRequest);
+      appState.logActivity(`สร้างคำขอความช่วยเหลือใหม่ ${newId} (${commNode.name}): ${desc}`, 'request');
+      appState.saveState();
+
+      closeModal();
+      showToast(`บันทึกคำขอ ${newId} สำเร็จเรียบร้อยแล้ว`, 'success');
+      renderCurrentView();
+    }
+
+    function viewRequestDetails(reqId) {
+      const req = appState.state.requests.find(r => r.id === reqId);
+      if (!req) return;
+
+      openModal({
+        title: `รายละเอียดคำขอ ${req.id}`,
+        body: `
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:13px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#F8FAFC; padding:10px 12px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+              <div>
+                <div style="font-weight:700; font-size:15px; color:var(--primary);">${escapeHtml(req.communityName)}</div>
+                <div style="color:var(--text-muted); font-size:12px;">ผู้ติดต่อ: ${escapeHtml(req.contactName)} (${escapeHtml(req.phone)})</div>
+              </div>
+              <div style="text-align:right;">
+                ${renderUrgencyBadge(req.urgency)}
+                <div style="margin-top:3px;">${renderStatusBadge(req.status)}</div>
+              </div>
+            </div>
+
+            <div style="background:white; border:1px solid var(--border-color); padding:10px 12px; border-radius:var(--radius-md);">
+              <div>📦 <strong>สิ่งของที่ต้องการ:</strong> ${escapeHtml(req.itemDescription)}</div>
+              <div style="margin-top:4px;">📊 <strong>จำนวน:</strong> ${req.quantityNeeded} ${escapeHtml(req.unit)} • 👥 <strong>ผู้ประสบภัย:</strong> ${req.affectedCount} คน</div>
+              <div style="margin-top:4px; color:var(--text-muted); font-size:12px;">🕒 บันทึกเวลา: ${escapeHtml(req.createdAt)}</div>
+              ${req.note ? `<div style="margin-top:5px; font-size:12px; color:#475569;">📝 หมายเหตุ: ${escapeHtml(req.note)}</div>` : ''}
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="changeReqStatusSelect">ปรับเปลี่ยนสถานะคำขอ:</label>
+              <select id="changeReqStatusSelect" class="form-control" onchange="handleDirectStatusChange('${req.id}', this.value)">
+                <option value="รอตรวจสอบ" ${req.status === 'รอตรวจสอบ' ? 'selected' : ''}>รอตรวจสอบ</option>
+                <option value="ยืนยันแล้ว" ${req.status === 'ยืนยันแล้ว' ? 'selected' : ''}>ยืนยันแล้ว</option>
+                <option value="กำลังจัดส่ง" ${req.status === 'กำลังจัดส่ง' ? 'selected' : ''}>กำลังจัดส่ง</option>
+                <option value="ส่งมอบแล้ว" ${req.status === 'ส่งมอบแล้ว' ? 'selected' : ''}>ส่งมอบแล้ว</option>
+                <option value="ยกเลิก" ${req.status === 'ยกเลิก' ? 'selected' : ''}>ยกเลิก</option>
+              </select>
+            </div>
+          </div>
+        `,
+        confirmText: (req.status === 'รอตรวจสอบ' || req.status === 'ยืนยันแล้ว') ? 'นำคำขอนี้ไปวางแผนจัดส่ง' : 'ปิดหน้าต่าง',
+        confirmBtnClass: 'btn-primary',
+        onConfirm: () => {
+          closeModal();
+          if (req.status === 'รอตรวจสอบ' || req.status === 'ยืนยันแล้ว') {
+            startPlanningWithRequest(req.id);
+          }
+        }
+      });
+    }
+
+    function handleDirectStatusChange(reqId, newStatus) {
+      const req = appState.state.requests.find(r => r.id === reqId);
+      if (!req) return;
+      req.status = newStatus;
+      appState.logActivity(`เปลี่ยนสถานะคำขอ ${req.id} เป็น "${newStatus}"`, 'request');
+      appState.saveState();
+      showToast(`อัปเดตสถานะคำขอ ${req.id}: ${newStatus}`, 'info');
+      renderCurrentView();
+    }
+
+    function openJudgingGuideModal() {
+      openModal({
+        title: 'ข้อมูลสรุปสำหรับกรรมการ (Judging Guide & Project Scope)',
+        body: `
+          <div style="font-size:13px; line-height:1.55; display:flex; flex-direction:column; gap:12px;">
+            <div style="background:#EEF2FF; border:1px solid #C7D2FE; padding:10px 12px; border-radius:var(--radius-md);">
+              <strong style="color:#3730A3; font-size:14px;">LocalShield AI: Hyperlocal Disaster-to-Commerce (D2C) Mesh</strong><br>
+              <span style="color:#4338CA; font-weight:600;">"Protect Communities. Keep Local Economies Moving."</span><br>
+              <span style="font-size:11.5px; color:#6366F1;">ปกป้องชุมชน พร้อมขับเคลื่อนเศรษฐกิจท้องถิ่นให้เดินหน้าต่อได้</span>
+            </div>
+
+            <div>
+              <strong>1. การเชื่อมโยงหัวข้อการแข่งขัน 3 ด้าน (Track 6 &gt; Track 5 &gt; Track 2):</strong>
+              <ul style="margin-left:16px; margin-top:3px;">
+                <li><strong>Track 6 (Resilience - Core):</strong> จัดการคำขอ ประเมินความเร่งด่วน และจัดสรรทรัพยากรช่วยเหลืออย่างเป็นระบบ</li>
+                <li><strong>Track 5 (Mobility - Enabler):</strong> วิเคราะห์สภาพถนน (OPEN, RESTRICTED, CLOSED) หลบเลี่ยงเส้นทางน้ำท่วมและคำนวณเส้นทางใหม่</li>
+                <li><strong>Track 2 (Local SME - Recovery):</strong> เชื่อมสต็อกสินค้าจากร้านค้าในชุมชนเข้ากับวงจรบรรเทาสาธารณภัยเพื่อหมุนเวียนเศรษฐกิจท้องถิ่น</li>
+              </ul>
+            </div>
+
+            <div>
+              <strong>2. สิ่งที่พัฒนาแล้วใน Prototype (Implemented Capabilities):</strong>
+              <ul style="margin-left:16px; margin-top:3px;">
+                <li>Single-File HTML/CSS/JS ทำงานได้ 100% ออฟไลน์โดยไม่ต้องติดตั้ง</li>
+                <li>อัลกอริทึมกราฟ Dijkstra สำหรับคำนวณเส้นทางหลบเลี่ยงถนนปิด</li>
+                <li>ระบบคำนวณลำดับความสำคัญเชิงกฎ (Rule-based explainable scoring) พร้อมคำอธิบาย</li>
+                <li>Visual Plan Diff ก่อน-หลังการอนุมัติแผนจัดส่ง</li>
+                <li>การอัปเดตสถานะและสต็อกสินค้าสัมพันธ์กันทั้งระบบ (Consistent State & Persistence)</li>
+              </ul>
+            </div>
+
+            <div>
+              <strong>3. แผนพัฒนาในอนาคต (Proposed Future Architecture):</strong>
+              <ul style="margin-left:16px; margin-top:3px;">
+                <li>การเชื่อมต่อ API น้ำท่วมและเซนเซอร์ระดับน้ำจาก GISTDA / กรมชลประทาน</li>
+                <li>ระบบยืนยันตัวตนข้าราชการและประชาชน (D.DOPA) และระบบ RBAC เต็มรูปแบบ</li>
+                <li>ระบบคูปองชำระเงินดิจิทัลผ่าน PromptPay หรือ Krungthai Open API</li>
+                <li>โมเดล AI / LLM เพื่อสรุปรายงานสถานการณ์ (SitRep) และแยกแยะรูปภาพความเสียหาย</li>
+              </ul>
+            </div>
+
+            <div style="background:#FFF1F2; border:1px solid #FECACA; padding:8px 10px; border-radius:var(--radius-sm); font-size:11.5px; color:#991B1B;">
+              <strong>นโยบายความโปร่งใส:</strong> ข้อมูลทั้งหมดในต้นแบบนี้เป็นข้อมูลสังเคราะห์เพื่อการสาธิต ระบบยึดหลัก Human-in-the-loop เจ้าหน้าที่มนุษย์ต้องเป็นผู้อนุมัติแผนจัดสรรเสมอ ไม่มีการกล่าวอ้างเกินจริงเกี่ยวกับผลกระทบภาคสนาม
+            </div>
+          </div>
+        `,
+        confirmText: 'รับทราบ',
+        confirmBtnClass: 'btn-primary',
+        onConfirm: () => {
+          closeModal();
+        }
+      });
+    }
+
+    /* ==========================================================================
+       7. GENERIC MODAL, CONFIRM & TOAST UTILITIES
+       ========================================================================== */
+    let currentModalConfirmCallback = null;
+
+    function openModal({ title, body, confirmText = 'ตกลง', confirmBtnClass = 'btn-primary', onConfirm = null }) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalBody').innerHTML = body;
+
+      const footer = document.getElementById('modalFooter');
+      currentModalConfirmCallback = onConfirm;
+
+      footer.innerHTML = `
+        <button class="btn btn-secondary" onclick="closeModal()">ยกเลิก</button>
+        ${onConfirm ? `<button class="btn ${confirmBtnClass}" id="modalConfirmBtn">${confirmText}</button>` : ''}
+      `;
+
+      if (onConfirm) {
+        document.getElementById('modalConfirmBtn').onclick = () => {
+          if (currentModalConfirmCallback) currentModalConfirmCallback();
+        };
+      }
+
+      const backdrop = document.getElementById('modalBackdrop');
+      backdrop.classList.add('open');
+      backdrop.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeModal() {
+      const backdrop = document.getElementById('modalBackdrop');
+      backdrop.classList.remove('open');
+      backdrop.setAttribute('aria-hidden', 'true');
+      currentModalConfirmCallback = null;
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target.id === 'modalBackdrop') {
+        closeModal();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    function confirmResetData() {
+      openModal({
+        title: 'ยืนยันการรีเซ็ตข้อมูลตัวอย่าง',
+        body: `
+          <div style="font-size:13.5px; line-height:1.55;">
+            <p>ท่านต้องการรีเซ็ตข้อมูลทั้งหมดกลับเป็น <strong>ข้อมูลสังเคราะห์สำหรับสาธิตชุดเริ่มต้น</strong> ใช่หรือไม่?</p>
+            <p style="color:#EF4444; font-size:12px; margin-top:6px;">
+              * ข้อมูลคำขอที่สร้างใหม่ และการปรับเปลี่ยนสต็อกสินค้าทั้งหมดจะถูกล้างและคืนค่าเริ่มต้น
+            </p>
+          </div>
+        `,
+        confirmText: 'ยืนยันรีเซ็ตข้อมูล',
+        confirmBtnClass: 'btn-danger',
+        onConfirm: () => {
+          closeModal();
+          appState.resetData();
+        }
+      });
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.setAttribute('role', 'alert');
+      toast.innerHTML = `
+        <span>${escapeHtml(message)}</span>
+        <button onclick="this.parentElement.remove()" style="background:none; border:none; color:white; cursor:pointer; opacity:0.8; font-size:16px;" aria-label="ปิดแจ้งเตือน">&times;</button>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        if (toast.parentElement) toast.remove();
+      }, 4000);
+    }
+
+    // Badge render helpers
+    function renderUrgencyBadge(urgency) {
+      switch (urgency) {
+        case 'วิกฤต': return '<span class="badge badge-critical">วิกฤต</span>';
+        case 'สูง': return '<span class="badge badge-high">สูง</span>';
+        case 'ปานกลาง': return '<span class="badge badge-medium">ปานกลาง</span>';
+        case 'ต่ำ': return '<span class="badge badge-low">ต่ำ</span>';
+        default: return `<span class="badge">${escapeHtml(urgency)}</span>`;
+      }
+    }
+
+    function renderStatusBadge(status) {
+      switch (status) {
+        case 'รอตรวจสอบ': return '<span class="badge badge-status-pending">รอตรวจสอบ</span>';
+        case 'ยืนยันแล้ว': return '<span class="badge badge-status-confirmed">ยืนยันแล้ว</span>';
+        case 'กำลังจัดส่ง': return '<span class="badge badge-status-delivering">กำลังจัดส่ง</span>';
+        case 'ส่งมอบแล้ว': return '<span class="badge badge-status-completed">ส่งมอบแล้ว</span>';
+        case 'ยกเลิก': return '<span class="badge badge-status-cancelled">ยกเลิก</span>';
+        default: return `<span class="badge">${escapeHtml(status)}</span>`;
+      }
+    }
+
+    function renderRoadBadge(status) {
+      switch (status) {
+        case 'OPEN': return '<span class="badge badge-low">ใช้งานได้</span>';
+        case 'RESTRICTED': return '<span class="badge badge-medium">จำกัดการใช้งาน</span>';
+        case 'CLOSED': return '<span class="badge badge-critical">ปิดเส้นทาง</span>';
+        default: return `<span class="badge">${escapeHtml(status)}</span>`;
+      }
+    }
+
+    function renderMissionBadge(status) {
+      switch (status) {
+        case 'รอรับภารกิจ': return '<span class="badge badge-status-pending">รอรับภารกิจ</span>';
+        case 'กำลังดำเนินการ': return '<span class="badge badge-status-delivering">กำลังดำเนินการ</span>';
+        case 'ส่งมอบสำเร็จ': return '<span class="badge badge-status-completed">ส่งมอบสำเร็จ</span>';
+        case 'มีปัญหา': return '<span class="badge badge-status-problem">มีปัญหา</span>';
+        default: return `<span class="badge">${escapeHtml(status)}</span>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* ==========================================================================
+       8. APPLICATION INITIALIZATION (Immediate + DOMContentLoaded Safe)
+       ========================================================================== */
+    function initApp() {
+      const roleSelect = document.getElementById('roleSelect');
+      if (roleSelect) roleSelect.value = appState.currentRole;
+
+      renderCurrentView();
+
+      console.log('LocalShield AI Prototype loaded successfully.');
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>
