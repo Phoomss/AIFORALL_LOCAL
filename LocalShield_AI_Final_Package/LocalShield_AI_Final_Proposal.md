@@ -66,10 +66,9 @@ flowchart LR
   * [Year-round Value Hypothesis](#year-round-value-hypothesis)
   * [Possible Funding Models to Validate](#possible-funding-models-to-validate)
 * [9. ความปลอดภัย ความเป็นส่วนตัว และความน่าเชื่อถือ (Safety, Privacy & Reliability)](#9-safety-privacy--reliability)
-* [10. สคริปต์การสาธิต 3 นาที (Three-Minute Demo Script)](#10-three-minute-demo-script)
-* [11. ทีมงานและความรับผิดชอบ (Team & Responsibilities)](#11-team--responsibilities)
-* [12. ทะเบียนหลักฐานการกล่าวอ้าง (Evidence Ledger)](#12-evidence-ledger)
-* [13. แหล่งข้อมูลอ้างอิง (References)](#13-references)
+* [10. ทีมงานและความรับผิดชอบ (Team & Responsibilities)](#10-team--responsibilities)
+* [11. ทะเบียนหลักฐานการกล่าวอ้าง (Evidence Ledger)](#11-evidence-ledger)
+* [12. แหล่งข้อมูลอ้างอิง (References)](#12-references)
 * [ภาคผนวก (Appendices)](#ภาคผนวก-appendices)
   * [Appendix A: Detailed User Journeys and Operational States](#appendix-a-detailed-user-journeys-and-operational-states)
   * [Appendix B: Data Model and Data Quality Policy](#appendix-b-data-model-and-data-quality-policy)
@@ -376,21 +375,7 @@ flowchart LR
 
 ---
 
-## 10. Three-minute Demo Script
-
-| ช่วงเวลา | สิ่งที่ต้องแสดงบนหน้าจอ | สาระสำคัญในการสื่อสาร |
-| :---: | :--- | :--- |
-| **0:00–0:25** | เปิดหน้าจอแสดงบริบทถนนถูกตัดขาดและข้อมูลกระจัดกระจาย | ชี้ให้เห็นว่าสินค้าอาจยังมีอยู่ในชุมชน แต่ปัญหาคือข้อมูลไม่เชื่อมต่อกัน |
-| **0:25–0:50** | เปิด Dashboard รวม และชี้แจงว่าเป็นข้อมูล `SIMULATED` | แนะนำว่าระบบคือ Workspace สำหรับประสานคำขอ สต็อก และเส้นทาง |
-| **0:50–1:20** | กดปุ่มคำนวณแผนจัดสรรสิ่งของบรรเทาทุกข์ | ระบบจับคู่คำขอกับร้านค้าที่มีสินค้าตามข้อจำกัดจำลองอย่างเป็นระบบ |
-| **1:20–1:55** | ปิดถนนเส้น B–D แล้วกดให้ระบบคำนวณแผนใหม่ | ระบบ Replan เส้นทางเลี่ยงจากกราฟถนนจริง ไม่ใช่การให้ LLM คาดเดาทาง |
-| **1:55–2:25** | เปิดแถบแสดงเหตุผลเบื้องหลัง และกดอนุมัติแผน | ตอกย้ำว่า AI ช่วยวิเคราะห์ แต่การตัดสินใจขั้นสุดท้ายเป็นของมนุษย์เสมอ |
-| **2:25–2:45** | เปิดดูหน้าสรุป KPI และผลลัพธ์การจัดซื้อในพื้นที่ | ชี้แจงอย่างตรงไปตรงมาว่าตัวเลขเป็นผลจำลอง ยังไม่ใช่ผลกระทบจริง |
-| **2:45–3:00** | ปิดการนำเสนอด้วยแผนการทดสอบขั้นถัดไป | สรุปก้าวต่อไปคือการ Validate กับผู้ใช้จริงและทดสอบในพื้นที่ Pilot ที่ได้รับอนุญาต |
-
----
-
-## 11. Team & Responsibilities
+## 10. Team & Responsibilities
 
 | สมาชิกในทีม | บทบาทความเชี่ยวชาญ | ความรับผิดชอบหลักที่ได้รับมอบหมายในโครงการ |
 | :--- | :--- | :--- |
@@ -405,7 +390,7 @@ flowchart LR
 
 ---
 
-## 12. Evidence Ledger
+## 11. Evidence Ledger
 
 ตารางบันทึกสถานะการกล่าวอ้างเชิงประจักษ์ (Claims Transparency):
 
@@ -422,7 +407,7 @@ flowchart LR
 
 ---
 
-## 13. References
+## 12. References
 
 * **GISTDA Disaster Open API Documentation:** [https://disaster.gistda.or.th/v2/services/open-api](https://disaster.gistda.or.th/v2/services/open-api)
 * **Sahana Eden Disaster Management Project:** [https://eden-legacy.sahanafoundation.org/](https://eden-legacy.sahanafoundation.org/)
