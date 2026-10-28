@@ -1,494 +1,688 @@
-# LocalShield AI — Final Idea Proposal
+# 🛡️ LocalShield AI — Final Idea Proposal
+### AI-Assisted Community Relief Coordination & Local Economic Continuity
+> **Tagline:** *"Protect Communities. Keep Local Economies Moving."*
 
-> **ชื่อโครงการ:** LocalShield AI  
-> **คำอธิบาย:** AI-Assisted Community Relief Coordination & Local Economic Continuity  
-> **Tagline:** Protect Communities. Keep Local Economies Moving.  
-> **เวอร์ชันเอกสาร:** 2.1 · 28 ตุลาคม 2026  
-> **สถานะผลิตภัณฑ์:** Concept + Interactive HTML Prototype (Synthetic Data Only)
+---
 
-## Contents
+| 📋 มิติโครงการ | 🔍 รายละเอียด |
+| :--- | :--- |
+| **ชื่อโครงการ** | **LocalShield AI** |
+| **คำอธิบายแนวคิด** | ระบบช่วยประสานงานจัดสรรสินค้าจำเป็นและสิ่งของบรรเทาทุกข์ในภาวะวิกฤติ เชื่อมโยงสต็อกร้านค้า SME ชุมชน และเส้นทางการขนส่งที่ปรับตัวได้ |
+| **เวอร์ชันเอกสาร** | **v2.1** \| 28 ตุลาคม 2026 |
+| **สถานะผลิตภัณฑ์** | `Concept` + `Interactive HTML Prototype` *(Synthetic Demonstration Data Only)* |
+| **ขอบเขตการตัดสินใจ** | ขอความเห็นชอบเพื่อพัฒนา **MVP สำหรับทดสอบ Workflow** (ยังไม่ใช่ระบบ Dispatch ภาคสนามจริง) |
 
-1. Executive Summary
-2. Problem Statement
-3. Proposed Solution
-4. Fit to AI Product / Hackathon Directions
-5. Novelty & Competitive Differentiation
-6. Technical Architecture
-7. Current MVP and Scope Boundaries
-8. Impact, KPIs & Validation Plan
-9. Sustainability & Viability
-10. Safety, Privacy & Reliability
-11. Three-minute Demo Script
-12. Team & Responsibilities
-13. Evidence Ledger and References
-14. Appendices: user journeys, data policy, planning logic, API blueprint, controls, delivery, risks, glossary
+---
+
+> [!IMPORTANT]
+> ### 💡 Executive Summary & Core Pitch
+> **One-line pitch:** LocalShield AI turns community needs, local inventory and verified road constraints into explainable, human-approved relief allocation plans—so essential goods can keep moving when normal routes are disrupted.
+>
+> เมื่อเกิดน้ำท่วมหรือเหตุที่ทำให้ถนนบางช่วงใช้การไม่ได้ ชุมชนอาจยังมีร้านค้าที่มีน้ำดื่ม อาหารแห้ง และของจำเป็น แต่ผู้ประสานงานต้องรวบรวมข้อมูลคำขอ สต็อกสินค้า สถานะถนน และผู้ขนส่งจากหลายช่องทาง **LocalShield AI** เสนอระบบช่วยประสานข้อมูลเหล่านี้เป็นแผนจัดสรรและจัดส่งที่ตรวจสอบเหตุผลได้ พร้อมให้ผู้รับผิดชอบตรวจและอนุมัติก่อนดำเนินการ
+>
+> LocalShield AI **ไม่ใช่เพียงแอปแจ้งเตือนน้ำท่วม** และ **ไม่ได้อ้างว่าพยากรณ์ระดับน้ำรายซอยหรือรับรองเส้นทางปลอดภัยได้** ระบบมุ่งแก้ช่วงต่อระหว่าง:
+> **รู้ว่ามีความเสี่ยง ➔ รู้ว่าใครต้องการอะไร ➔ รู้ว่าร้านไหนมีสินค้า ➔ ตรวจข้อจำกัดเส้นทาง ➔ เสนอแผน ➔ ให้คนอนุมัติ ➔ ติดตามผล**
+
+```mermaid
+flowchart LR
+    A["🌊 1. Risk Context<br/><i>รับสัญญาณเหตุ/น้ำท่วม</i>"] --> B["📢 2. Community Needs<br/><i>รวบรวมคำขอจำเป็น</i>"]
+    B --> C["🏪 3. Inventory Matching<br/><i>จับคู่สต็อกร้าน SME</i>"]
+    C --> D["🚗 4. Route Replanning<br/><i>คำนวณทางเลี่ยงจุดปิด</i>"]
+    D --> E["👤 5. Human Approval<br/><i>ผู้ประสานงานตรวจ & อนุมัติ</i>"]
+    E --> F["📊 6. Tracking & Learning<br/><i>ติดตามผล & คืนสต็อก</i>"]
+
+    classDef step fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
+    class A,B,C,D,E,F step;
+```
+
+---
+
+## 📑 สารบัญเอกสาร (Table of Contents)
+
+* [ส่วนสรุปผู้บริหารและสมมติฐาน (Executive Summary & Assumptions)](#executive-summary)
+  * [Decision Requested](#decision-requested)
+  * [Assumptions for the MVP](#assumptions-for-the-mvp)
+* [1. ปัญหาและกลุ่มผู้ใช้เป้าหมาย (Problem Statement & Target Users)](#1-problem-statement)
+  * [Problem Hypothesis](#problem-hypothesis)
+  * [Target Users](#target-users)
+  * [Current Workflow vs Proposed Workflow](#current-workflow-vs-proposed-workflow)
+* [2. แนวทางแก้ปัญหาและกระบวนการทำงาน (Proposed Solution & Workflow)](#2-proposed-solution)
+  * [A. Community Resilience](#a-community-resilience)
+  * [B. Adaptive Mobility & Relief Logistics](#b-adaptive-mobility--relief-logistics)
+  * [C. Local SME Continuity](#c-local-sme-continuity)
+  * [Workflow การทำงาน 7 ขั้นตอน](#workflow)
+* [3. ความสอดคล้องกับทิศทางผลิตภัณฑ์ AI (Fit to AI Product / Hackathon Directions)](#3-fit-to-ai-product--hackathon-directions)
+* [4. ความแปลกใหม่และการเปรียบเทียบเชิงแข่งขัน (Novelty & Competitive Differentiation)](#4-novelty--competitive-differentiation)
+* [5. สถาปัตยกรรมทางเทคนิค (Technical Architecture)](#5-technical-architecture)
+  * [Proposed Tech Stack](#proposed-stack-not-yet-integrated-in-the-prototype)
+  * [Clear Separation of Responsibilities](#clear-separation-of-responsibilities)
+* [6. ขอบเขต MVP และสิ่งที่ยังไม่ได้ทำ (Current MVP and Scope Boundaries)](#6-current-mvp-and-scope-boundaries)
+  * [What the Prototype Demonstrates vs What It Does Not Do](#what-the-current-html-prototype-demonstrates)
+  * [Synthetic Demo Setup](#synthetic-demo-setup)
+* [7. ตัวชี้วัดผลกระทบและแผนการทดสอบ (Impact, KPIs & Validation Plan)](#7-impact-kpis--validation-plan)
+  * [KPI Matrix](#7-impact-kpis--validation-plan)
+  * [Pilot Plan (5 ขั้นตอน)](#pilot-plan)
+* [8. ความยั่งยืนและความเป็นไปได้ทางธุรกิจ (Sustainability & Viability)](#8-sustainability--viability)
+  * [Year-round Value Hypothesis](#year-round-value-hypothesis)
+  * [Possible Funding Models to Validate](#possible-funding-models-to-validate)
+* [9. ความปลอดภัย ความเป็นส่วนตัว และความน่าเชื่อถือ (Safety, Privacy & Reliability)](#9-safety-privacy--reliability)
+* [10. สคริปต์การสาธิต 3 นาที (Three-Minute Demo Script)](#10-three-minute-demo-script)
+* [11. ทีมงานและความรับผิดชอบ (Team & Responsibilities)](#11-team--responsibilities)
+* [12. ทะเบียนหลักฐานการกล่าวอ้าง (Evidence Ledger)](#12-evidence-ledger)
+* [13. แหล่งข้อมูลอ้างอิง (References)](#13-references)
+* [ภาคผนวก (Appendices)](#ภาคผนวก-appendices)
+  * [Appendix A: Detailed User Journeys and Operational States](#appendix-a-detailed-user-journeys-and-operational-states)
+  * [Appendix B: Data Model and Data Quality Policy](#appendix-b-data-model-and-data-quality-policy)
+  * [Appendix C: Planning Logic, Explainability and Fairness](#appendix-c-planning-logic-explainability-and-fairness)
+  * [Appendix D: API and Integration Blueprint](#appendix-d-api-and-integration-blueprint)
+  * [Appendix E: Security, Privacy and Operational Controls](#appendix-e-security-privacy-and-operational-controls)
+  * [Appendix F: Delivery Plan and Acceptance Criteria](#appendix-f-delivery-plan-and-acceptance-criteria)
+  * [Appendix G: Risks, Dependencies and Open Questions](#appendix-g-risks-dependencies-and-open-questions)
+  * [Appendix H: Glossary (คำศัพท์สำคัญ)](#appendix-h-glossary)
+
+---
 
 ## Executive Summary
 
-เมื่อเกิดน้ำท่วมหรือเหตุที่ทำให้ถนนบางช่วงใช้การไม่ได้ ชุมชนอาจยังมีร้านค้าที่มีน้ำดื่ม อาหารแห้ง และของจำเป็น แต่ผู้ประสานงานต้องรวบรวมข้อมูลคำขอ สต็อกสินค้า สถานะถนน และผู้ขนส่งจากหลายช่องทาง LocalShield AI เสนอระบบช่วยประสานข้อมูลเหล่านี้เป็นแผนจัดสรรและจัดส่งที่ตรวจสอบเหตุผลได้ พร้อมให้ผู้รับผิดชอบตรวจและอนุมัติก่อนดำเนินการ
+เมื่อเกิดน้ำท่วมหรือเหตุการณ์ที่ทำให้เส้นทางคมนาคมบางช่วงถูกตัดขาด ชุมชนยังอาจมีร้านค้าในพื้นที่ที่มีสต็อกน้ำดื่ม อาหารแห้ง เวชภัณฑ์ และสิ่งของจำเป็น แต่ปัญหาใหญ่คือ **ผู้ประสานงานต้องรวบรวมข้อมูลอย่างกระจัดกระจาย** จากทั้งโทรศัพท์ แชตกลุ่ม บันทึกสต็อกของร้านค้า และรายงานสภาพถนนที่ยังไม่ได้รับการยืนยัน
 
-LocalShield AI ไม่ใช่เพียงแอปแจ้งเตือนน้ำท่วม และไม่ได้อ้างว่าพยากรณ์ระดับน้ำรายซอยหรือรับรองเส้นทางปลอดภัยได้ ระบบมุ่งแก้ช่วงต่อระหว่าง **รู้ว่ามีความเสี่ยง → รู้ว่าใครต้องการอะไร → รู้ว่าร้านไหนมีสินค้า → ตรวจข้อจำกัดเส้นทาง → เสนอแผน → ให้คนอนุมัติ → ติดตามผล**
+**LocalShield AI** ได้รับการออกแบบให้เป็น **Coordination Workspace** ที่รวบรวมข้อมูลความต้องการ ตรวจสอบสต็อกร้านค้าในพื้นที่ วิเคราะห์ข้อจำกัดของเส้นทาง แล้วสร้างข้อเสนอแผนจัดสรรและกระจายของบรรเทาทุกข์ที่ **ตรวจสอบที่มาได้ (Explainable)** พร้อมให้ผู้มีอำนาจตัดสินใจตรวจทานและอนุมัติก่อนสั่งการจริง
 
-**One-line pitch:** LocalShield AI turns community needs, local inventory and verified road constraints into explainable, human-approved relief allocation plans—so essential goods can keep moving when normal routes are disrupted.
-
-**Core workflow:** `Risk Context → Needs → Inventory Matching → Route Replanning → Human Approval → Tracking & Learning`
+> [!NOTE]
+> **Core Workflow Sequence:**  
+> `Risk Context` ➔ `Needs` ➔ `Inventory Matching` ➔ `Route Replanning` ➔ `Human Approval` ➔ `Tracking & Learning`
 
 ### Decision requested
 
-เอกสารนี้เสนอให้เห็นชอบการพัฒนา **MVP เพื่อทดสอบ workflow** ไม่ใช่การเปิดใช้ระบบ dispatch จริงในภาคสนามทันที โดยเป้าหมายของรอบถัดไปคือพิสูจน์ 3 ประเด็น: (1) ผู้ประสานงานเข้าใจและใช้แผนที่ระบบเสนอได้หรือไม่ (2) แผนเคารพข้อจำกัดสต็อกและถนนตามข้อมูลที่ป้อนหรือไม่ และ (3) ร้านค้า/ผู้ขนส่งยอมอัปเดตข้อมูลในความถี่ที่ workflow ต้องใช้หรือไม่
+เอกสารนี้เสนอให้เห็นชอบการพัฒนา **MVP เพื่อทดสอบ workflow** ไม่ใช่การเปิดใช้ระบบ dispatch จริงในภาคสนามทันที โดยเป้าหมายของรอบถัดไปคือพิสูจน์ 3 ประเด็น:
+1. **Usability:** ผู้ประสานงานเข้าใจและใช้แผนที่ระบบเสนอได้จริงหรือไม่
+2. **Constraint Honoring:** แผนที่ระบบสร้างเคารพข้อจำกัดสต็อกและถนนตามข้อมูลที่ป้อนหรือไม่
+3. **Data Cadence:** ร้านค้าและผู้ขนส่งยินยอมอัปเดตข้อมูลในความถี่ที่ workflow ต้องใช้หรือไม่
 
 ### Assumptions for the MVP
 
-| สมมติฐาน | ผลต่อการออกแบบ | สิ่งที่ต้องยืนยันก่อน pilot |
-|---|---|---|
-| มีผู้ประสานงานที่มีสิทธิ์อนุมัติภารกิจ | ระบบออกแบบให้ทุกแผนอยู่ในสถานะร่างก่อนอนุมัติ | บทบาท ผู้อนุมัติสำรอง และเวลาตอบรับ |
-| ร้านค้ายินยอมแจ้งสต็อกที่จัดสรรได้ | สต็อกในระบบคือ `allocatable stock` ไม่ใช่สต็อกรวมทั้งหมดของร้าน | ความถี่อัปเดตและวิธีแก้ไขข้อมูลผิดพลาด |
-| สถานะถนนมาจากแหล่งที่ระบุได้ | routing ใช้เฉพาะข้อจำกัดที่บันทึกเป็นข้อมูลโครงสร้าง | ผู้ยืนยันสถานะถนน อายุข้อมูลสูงสุด และช่องทางรายงาน |
-| การส่งจริงยังอยู่ภายใต้หน่วยงาน/ผู้ขนส่ง | MVP ไม่สั่งงานหรือชำระเงินอัตโนมัติ | SOP การรับมอบ การยืนยันส่งสำเร็จ และการรับผิดชอบ |
+| สมมติฐานหลัก | ผลต่อการออกแบบระบบ | สิ่งที่ต้องยืนยันก่อนเริ่ม Pilot |
+| :--- | :--- | :--- |
+| **มีผู้ประสานงานที่มีสิทธิ์อนุมัติภารกิจ** | ระบบออกแบบให้ทุกแผนอยู่ในสถานะร่าง (`DRAFT`) ก่อนอนุมัติเสมอ | กำหนดบทบาท ผู้อนุมัติสำรอง และ SLA เวลาตอบรับ |
+| **ร้านค้ายินยอมแจ้งสต็อกที่จัดสรรได้** | สต็อกในระบบคือ `allocatable stock` ไม่ใช่สต็อกรวมทั้งหมดของร้าน | ความถี่ในการอัปเดตและวิธีแก้ไขข้อมูลกรณีคลาดเคลื่อน |
+| **สถานะถนนมาจากแหล่งที่ระบุได้** | Routing engine ใช้เฉพาะข้อจำกัดที่บันทึกเป็นข้อมูลโครงสร้าง | ผู้รับรองสถานะถนน, อายุข้อมูลสูงสุด (TTL) และช่องทางแจ้งเหตุ |
+| **การส่งมอบจริงอยู่ภายใต้หน่วยงาน/ผู้ขนส่ง** | MVP ไม่สั่งงานหรือตัดเงินอัตโนมัติ | SOP การรับมอบสินค้า, การยืนยันส่งสำเร็จ และขอบเขตความรับผิดชอบ |
+
+---
 
 ## 1. Problem Statement
 
 ### Problem hypothesis
 
-ในเหตุฉุกเฉิน ข้อมูลที่จำเป็นต่อการจัดสรรสิ่งของอาจแยกอยู่ในรายงานภัยพิบัติ โทรศัพท์หรือแชตของชุมชน รายการสินค้าของร้านค้า และข้อมูลสภาพถนน ผู้ประสานงานจึงอาจต้องรวมข้อมูลด้วยตนเองและปรับแผนซ้ำเมื่อเงื่อนไขเปลี่ยนไป
+ในเหตุฉุกเฉิน ข้อมูลที่จำเป็นต่อการจัดสรรสิ่งของมักแยกส่วนอยู่ในรายงานภัยพิบัติ, โทรศัพท์หรือแชตของชุมชน, รายการสินค้าของร้านค้า และข้อมูลสภาพถนน ผู้ประสานงานจึงต้องรวบรวมข้อมูลด้วยตนเองและปรับแผนซ้ำๆ เมื่อเงื่อนไขหน้างานเปลี่ยนไป
 
-นี่เป็น **สมมติฐานปัญหาที่ต้องตรวจสอบกับผู้ใช้จริง** ไม่ใช่ข้อสรุปจากการสัมภาษณ์หรือสถิติที่ทีมยืนยันแล้ว
+> [!NOTE]
+> นี่เป็น **สมมติฐานปัญหาที่ต้องตรวจสอบกับผู้ใช้จริง** ไม่ใช่ข้อสรุปจากการสำรวจทางสถิติที่ทีมยืนยันแล้ว
 
 ### Target users
 
-- **ผู้ใช้หลัก:** ผู้ประสานงานชุมชนหรือองค์กรท้องถิ่นที่รับคำขอ จัดลำดับ และอนุมัติภารกิจ
-- **ผู้ใช้รอง 1:** ร้านค้า SME ที่ลงทะเบียนสินค้า สต็อก เวลาทำการ และสถานะความพร้อม
-- **ผู้ใช้รอง 2:** ผู้ขนส่งหรืออาสาสมัครที่ได้รับมอบหมาย ซึ่งต้องเห็นข้อมูลจุดรับส่งและข้อจำกัดถนนที่มีแหล่งที่มา
-- **ผู้ได้รับประโยชน์:** ประชาชนที่ต้องการสินค้าจำเป็นและเข้าถึงข้อมูลสถานะคำขอ
+* **ผู้ใช้หลัก (Primary User):** ผู้ประสานงานชุมชนหรือองค์กรท้องถิ่น ที่ทำหน้าที่รับคำขอ จัดลำดับความสำคัญ และอนุมัติภารกิจ
+* **ผู้ใช้รอง 1 (Secondary User 1):** ร้านค้า SME ที่ลงทะเบียนรายการสินค้า สต็อกคงเหลือ เวลาทำการ และสถานะความพร้อม
+* **ผู้ใช้รอง 2 (Secondary User 2):** ผู้ขนส่งหรืออาสาสมัครที่ได้รับมอบหมาย ซึ่งต้องเห็นจุดรับส่งและข้อจำกัดถนนที่มีหลักฐานอ้างอิง
+* **ผู้ได้รับประโยชน์ (Beneficiaries):** ประชาชนในชุมชนที่ต้องการสินค้าจำเป็นและสามารถเข้าถึงสถานะคำขอของตนเองได้
 
 ### Current workflow vs proposed workflow
 
-| ขั้นตอน | กระบวนการที่อาจเกิดขึ้นในปัจจุบัน (ต้องยืนยัน) | LocalShield AI ที่เสนอ |
-|---|---|---|
-| รับข้อมูลเหตุ | ตรวจข้อมูลจากหลายแหล่ง | รวมเหตุการณ์พร้อม source, timestamp และสถานะข้อมูล |
-| รับคำขอ | รวมข้อมูลจากโทรศัพท์/แชต/แบบฟอร์ม | จัดคำขอเป็นรายการที่ตรวจสอบและติดตามได้ |
-| หาสินค้า | ติดต่อร้านค้าเพื่อถามสต็อก | ค้นหาสต็อกที่ลงทะเบียน พร้อมเวลาปรับปรุงล่าสุด |
-| วางแผนขนส่ง | ประสานผู้ขนส่งและเส้นทางแยกกัน | คำนวณทางเลือกจากกราฟถนนจำลองและข้อจำกัดที่ระบุ |
-| อนุมัติและติดตาม | สถานะอาจกระจายหลายช่องทาง | ผู้ประสานงานตรวจ/อนุมัติ และบันทึกสถานะภารกิจ |
+| ขั้นตอนการดำเนินงาน | กระบวนการที่มักเกิดขึ้นในปัจจุบัน (ต้องยืนยัน) | กระบวนการของ LocalShield AI ที่นำเสนอ |
+| :--- | :--- | :--- |
+| **1. รับข้อมูลเหตุการณ์** | ติดตามข่าวสารและข้อมูลกระจัดกระจายหลายแหล่ง | รวมศูนย์เหตุการณ์พร้อมระบุ Source, Timestamp และสถานะความสด |
+| **2. รับคำขอความช่วยเหลือ** | รวมข้อมูลจากโทรศัพท์, ข้อความแชต, สมุดจด | บันทึกคำขอเป็น Structured Data ที่ติดตามสถานะและตรวจสอบได้ |
+| **3. ค้นหาสินค้าจำเป็น** | โทรศัพท์สอบถามร้านค้าทีละแห่งแบบสุ่ม | ค้นหาสต็อกที่ลงทะเบียนในระบบ พร้อมเวลาปรับปรุงล่าสุด |
+| **4. วางแผนเส้นทางขนส่ง** | ผู้ขนส่งและผู้ประสานงานต่างคนต่างหาทางเลี่ยง | คำนวณทางเลือกจากกราฟถนนจำลอง พร้อมตัดเส้นทางที่ปิดออกทันที |
+| **5. อนุมัติและติดตามงาน** | สถานะกระจายตามแชต ไม่มีการกระทบยอด | ผู้ประสานงานตรวจอนุมัติเป็นลายลักษณ์อักษร และบันทึก Audit Log |
+
+---
 
 ## 2. Proposed Solution
 
-LocalShield AI เป็น **AI-assisted coordination workspace** สำหรับการจัดสรรสินค้าจำเป็นในสถานการณ์ที่การเดินทางถูกรบกวน โดยแบ่งเป็นสามเสาหลักของผลิตภัณฑ์ (เป็นการจัดกรอบแนวคิดของทีม ไม่ใช่การยืนยันว่าเป็นชื่อ Track อย่างเป็นทางการของทุกการแข่งขัน)
+LocalShield AI เป็น **AI-assisted coordination workspace** สำหรับการจัดสรรสินค้าจำเป็นในสถานการณ์ที่การเดินทางถูกรบกวน โดยแบ่งเป็นสามเสาหลักของผลิตภัณฑ์ *(เป็นการจัดกรอบแนวคิดของทีม ไม่ใช่การยืนยันว่าเป็นชื่อ Track อย่างเป็นทางการของการแข่งขัน)*:
+
+```mermaid
+flowchart TD
+    subgraph PILLARS["🎯 3 เสาหลักของ LocalShield AI"]
+        direction LR
+        P1["🛡️ <b>A. Community Resilience</b><br/>• รวมศูนย์เหตุการณ์และความต้องการ<br/>• ระบุสถานะข้อมูลชัดเจน<br/>• แปลงความเสี่ยงเป็น Action Items"]
+        P2["🚗 <b>B. Adaptive Mobility</b><br/>• แสดงสถานะถนนพร้อมแหล่งอ้างอิง<br/>• คำนวณตัด Edge ที่ปิดออกจากกราฟ<br/>• แจ้งเตือนเมื่อไม่มีทางเลือกที่ปลอดภัย"]
+        P3["🏪 <b>C. Local SME Continuity</b><br/>• ลงทะเบียนสต็อกพร้อมจัดสรร<br/>• จับคู่คำขอกับร้านค้าใกล้เคียง<br/>• ติดตามมูลค่าจัดซื้อหมุนเวียนในพื้นที่"]
+    end
+    classDef pillar fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
+    class P1,P2,P3 pillar;
+```
 
 ### A. Community Resilience
-- รับข้อมูลเหตุการณ์และความต้องการของชุมชน
-- แสดงแหล่งที่มา เวลาที่อัปเดต และสถานะข้อมูล เช่น `OBSERVED`, `FORECAST`, `ESTIMATED`, `SIMULATED`
-- ช่วยแปลงข้อมูลเป็นรายการสิ่งที่ต้องตรวจสอบหรือเตรียมพร้อม
+* รับข้อมูลเหตุการณ์และความต้องการของชุมชน
+* แสดงแหล่งที่มา เวลาที่อัปเดต และสถานะข้อมูลอย่างโปร่งใส เช่น `OBSERVED`, `FORECAST`, `ESTIMATED`, `SIMULATED`
+* ช่วยแปลงข้อมูลความเสี่ยงเป็นรายการสิ่งที่ต้องตรวจสอบหรือเตรียมพร้อมหน้างาน
 
 ### B. Adaptive Mobility & Relief Logistics
-- แสดงสถานะถนนจากข้อมูลที่มีแหล่งที่มาและระดับการยืนยัน
-- คำนวณเส้นทางใหม่เมื่อมีการยืนยันว่าถนนปิด โดยตัด edge ที่ปิดออกจากกราฟ
-- แสดงเหตุผลของแผนและแจ้งเมื่อไม่มีเส้นทางที่เป็นไปได้ แทนการสร้างคำตอบที่ดูมั่นใจโดยไม่มีหลักฐาน
+* แสดงสถานะถนนจากข้อมูลที่มีแหล่งที่มาและระดับการยืนยัน
+* คำนวณเส้นทางใหม่ทันทีเมื่อมีการยืนยันว่าถนนปิด โดยตัด Edge ที่ปิดออกจากกราฟการเดินทาง
+* แสดงเหตุผลของแผนและแจ้งเตือนเมื่อไม่มีเส้นทางที่เป็นไปได้ แทนการสร้างคำตอบขึ้นมาเองโดยไม่มีหลักฐาน
 
 ### C. Local SME Continuity
-- ให้ร้านค้าที่เข้าร่วมลงทะเบียนประเภทสินค้า จำนวนคงเหลือ และเวลาปรับปรุงสต็อก
-- จับคู่คำขอกับร้านค้าที่มีสินค้าและเข้าถึงได้ตามข้อจำกัดที่ทราบ
-- แสดงมูลค่าการจัดซื้อจำลองและสถานะร้านค้าเพื่อใช้วางแผนฟื้นตัว โดยไม่เรียกมูลค่าจัดซื้อว่าเป็นกำไรหรือรายได้เพิ่มสุทธิ
+* ให้ร้านค้าที่เข้าร่วมลงทะเบียนประเภทสินค้า จำนวนคงเหลือที่พร้อมจัดสรร (`allocatable stock`) และเวลาอัปเดต
+* จับคู่คำขอกับร้านค้าที่มีสินค้าและเข้าถึงได้ตามข้อจำกัดของเส้นทาง
+* แสดงมูลค่าการจัดซื้อจำลองและสถานะร้านค้าเพื่อใช้วางแผนฟื้นตัว *(โดยไม่เรียกมูลค่าจัดซื้อว่าเป็นกำไรหรือรายได้สุทธิ)*
 
-### Workflow
+### Workflow การทำงาน 7 ขั้นตอน
 
-1. ผู้ประสานงานเลือกเหตุการณ์หรือสร้างสถานการณ์จำลอง
-2. ระบบแสดงคำขอสินค้าและระดับความสำคัญตามกฎที่เปิดเผยได้
-3. ระบบค้นหาร้านค้าที่มีสต็อกเพียงพอ โดยพิจารณาความสดของข้อมูล
-4. Routing engine คำนวณเส้นทางบนกราฟถนนและตัดถนนที่ถูกปิดออก
-5. AI ช่วยสรุปเหตุผล ข้อจำกัด และข้อมูลที่ยังขาด; การคำนวณเชิงปริมาณทำด้วย logic ที่ตรวจสอบได้
-6. ผู้มีอำนาจตรวจและอนุมัติแผนก่อนเริ่มภารกิจ
-7. ผู้ประสานงานติดตามสถานะและตรวจ KPI หลังการดำเนินงาน
+1. **เลือกสถานการณ์:** ผู้ประสานงานเลือกเหตุการณ์หรือสร้างสถานการณ์จำลอง
+2. **ประเมินความต้องการ:** ระบบแสดงคำขอสินค้าและระดับความสำคัญตามกฎที่เปิดเผยได้
+3. **จับคู่สต็อก:** ระบบค้นหาร้านค้าที่มีสต็อกเพียงพอ โดยพิจารณาความสดของข้อมูลประกอบ
+4. **คำนวณเส้นทาง:** Routing Engine คำนวณเส้นทางบนกราฟถนนและตัดถนนที่ถูกปิดออก
+5. **วิเคราะห์และอธิบาย:** AI ช่วยสรุปเหตุผล ข้อจำกัด และข้อมูลที่ยังขาด ส่วนการคำนวณเชิงปริมาณใช้ Deterministic Logic
+6. **การอนุมัติโดยมนุษย์:** ผู้มีอำนาจตรวจทานรายละเอียดและกดยืนยันอนุมัติแผนก่อนเริ่มภารกิจ
+7. **ติดตามและประเมิน:** ผู้ประสานงานติดตามสถานะงาน และตรวจสอบ KPI หลังจบเหตุการณ์
+
+---
 
 ## 3. Fit to AI Product / Hackathon Directions
 
-การจับคู่ด้านล่างเป็น **การตีความเพื่ออธิบายแนวคิด** ไม่ใช่การอ้างว่า LocalShield ผ่านการรับรองจากผู้จัด
+> [!NOTE]
+> การจับคู่ด้านล่างเป็น **การตีความเพื่ออธิบายแนวคิดเชิงกลยุทธ์** ไม่ใช่การอ้างว่า LocalShield ผ่านการรับรองอย่างเป็นทางการจากผู้จัด
 
-- **AI-Native Products & Operations:** AI อยู่ใน workflow การตีความคำขอ สรุปบริบท อธิบายทางเลือก และประสานเครื่องมือ ไม่ใช่เพียงกล่องแชตแยกจากการทำงาน
-- **Deep Domain AI:** โฟกัสโดเมนเฉพาะ คือการจัดสรรสิ่งของจำเป็นและการประสานโลจิสติกส์ชุมชนภายใต้ข้อจำกัดสต็อก ถนน และความน่าเชื่อถือของข้อมูล
-- **Autonomous & Adaptive AI (ขอบเขตจำกัด):** ระบบปรับแผนเมื่อเงื่อนไขเปลี่ยน เช่น มีการปิดถนนใหม่ แต่ใน MVP จะเสนอแผนให้คนอนุมัติ ไม่สั่งจ่ายของหรือส่งผู้ขนส่งโดยอัตโนมัติ
+* **AI-Native Products & Operations:** AI ฝังตัวอยู่ใน Core Workflow ทำหน้าที่ตีความคำขอ สรุปบริบท อธิบายทางเลือก และประสานเครื่องมือ ไม่ใช่เป็นเพียงกล่อง Chatbot แยกเดี่ยว
+* **Deep Domain AI:** โฟกัสโดเมนเฉพาะ คือการจัดสรรสิ่งของจำเป็นและการประสานโลจิสติกส์ชุมชนภายใต้ข้อจำกัดสต็อก ถนน และความน่าเชื่อถือของข้อมูล
+* **Autonomous & Adaptive AI (ขอบเขตจำกัด):** ระบบปรับแผนเมื่อเงื่อนไขเปลี่ยน เช่น มีการปิดถนนใหม่ แต่ในขอบเขต MVP จะเสนอแผนให้มนุษย์อนุมัติเสมอ ไม่สั่งจ่ายของหรือส่งผู้ขนส่งโดยอัตโนมัติ
 
-หากใช้กับการแข่งขันที่มีหมวดธีมหมายเลข 6 (ชุมชนมีภูมิคุ้มกัน), 5 (การเดินทาง/เมืองอัจฉริยะ), 2 (SME/เศรษฐกิจท้องถิ่น) แนวคิดนี้สามารถนำเสนอเป็น **6 เป็นเป้าหมายหลัก → 5 เป็นกลไกสนับสนุน → 2 เป็นผลลัพธ์ทางเศรษฐกิจ** แต่ต้องตรวจชื่อหมวดและข้อกำหนดจากเอกสารของการแข่งขันนั้นโดยตรงก่อนส่ง
+> **การเชื่อมโยงเชิงระบบ:** หากนำเสนอในเวทีการแข่งขัน แนวคิดนี้สามารถเรียงร้อยเป็น **Track 6 (ชุมชนมีภูมิคุ้มกัน) เป็นเป้าหมายหลัก ➔ Track 5 (การเดินทางอัจฉริยะ) เป็นกลไกสนับสนุน ➔ Track 2 (SME/เศรษฐกิจท้องถิ่น) เป็นผลลัพธ์การฟื้นตัวทางเศรษฐกิจ**
+
+---
 
 ## 4. Novelty & Competitive Differentiation
 
-LocalShield AI ไม่อ้างว่าไม่มีระบบอื่นจัดการภัยพิบัติ แผนที่ หรือการประสานทรัพยากรมาก่อน จุดที่ต้องการทดสอบคือการรวม **คำขอ + สต็อก SME + ข้อจำกัดถนน + การอนุมัติของมนุษย์ + การติดตามมูลค่าจัดซื้อในพื้นที่** ไว้ใน workflow เดียวที่ผู้ประสานงานใช้ตัดสินใจได้
+LocalShield AI ไม่อ้างว่าไม่มีระบบอื่นจัดการภัยพิบัติ แผนที่ หรือการประสานทรัพยากรมาก่อน จุดที่ต้องการทดสอบคือการรวม **คำขอ + สต็อก SME + ข้อจำกัดถนน + การอนุมัติของมนุษย์ + การติดตามมูลค่าจัดซื้อในพื้นที่** ไว้ใน Workflow เดียวที่ผู้ประสานงานใช้ตัดสินใจได้จริง
 
-| ระบบ/แนวทางอ้างอิง | สิ่งที่มีอยู่ | ช่องว่างที่ LocalShield จะทดลองตอบ (ยังไม่ใช่ข้อได้เปรียบที่พิสูจน์แล้ว) |
-|---|---|---|
-| GISTDA Disaster Open API | มีเอกสารบริการข้อมูลเชิงพื้นที่เกี่ยวกับน้ำท่วมและข้อมูลที่เกี่ยวข้อง | นำบริบทเหตุการณ์ไปเชื่อมกับคำขอ สต็อก และการวางแผนภารกิจ โดยไม่ตีความชั้นข้อมูลน้ำท่วมว่าเป็นการยืนยันว่าถนนปลอดภัย |
-| Sahana Eden | ระบบโอเพนซอร์สด้านการจัดการภัยพิบัติและการประสานงาน | ทดลอง workflow ที่ให้ SME ท้องถิ่นเป็นแหล่งสินค้าพร้อมข้อมูลสต็อก และติดตาม local procurement |
-| แอปแผนที่/จัดส่งทั่วไป | ช่วยนำทางหรือจัดส่งตามความสามารถของผู้ให้บริการ | LocalShield มุ่งจัดสรรสิ่งของและควบคุมขั้นอนุมัติภายใต้บริบทวิกฤต ไม่ใช่แทนแอปนำทางทั่วไป |
+| ระบบ / เครื่องมือที่มีอยู่ | สิ่งที่ระบบเดิมทำได้ดี | ช่องว่างที่ LocalShield มุ่งทดลองแก้ *(ยังไม่ใช่ข้อได้เปรียบที่พิสูจน์แล้ว)* |
+| :--- | :--- | :--- |
+| **GISTDA Disaster Open API** | มีเอกสารบริการข้อมูลเชิงพื้นที่เกี่ยวกับน้ำท่วมและข้อมูลภาพถ่ายดาวเทียม | นำบริบทเหตุการณ์ไปเชื่อมกับคำขอ สต็อก และการวางแผนภารกิจ โดยไม่ตีความชั้นข้อมูลน้ำท่วมว่าเป็นการยืนยันว่าถนนปลอดภัย |
+| **Sahana Eden** | ระบบ Open Source ชั้นนำด้านการบริหารจัดการภัยพิบัติและการประสานงานคลัง | ทดลอง Workflow ที่เปิดให้ร้านค้า SME ชุมชนเป็นแหล่งสินค้า พร้อมข้อมูลสต็อกที่ยืนยันได้ และติดตาม Local Procurement |
+| **แอปพลิเคชันแผนที่ / เดลิเวอรีทั่วไป** | นำทางและจัดส่งพัสดุ/อาหารตามความสามารถของผู้ให้บริการเชิงพาณิชย์ | มุ่งจัดสรรสิ่งของจำเป็นและมีระบบควบคุมการอนุมัติในภาวะวิกฤติ ไม่ใช่การแข่งขันกับแอปนำทางทั่วไป |
 
-**ข้อจำกัด:** การเปรียบเทียบนี้เป็น desk research เบื้องต้น ไม่ใช่ benchmark ด้านประสิทธิภาพหรือฟีเจอร์แบบครบถ้วน ต้องทดสอบ workflow กับผู้ใช้งานจริงก่อนกล่าวอ้างความแตกต่างเชิงผลลัพธ์
+> [!WARNING]
+> **ข้อจำกัดเชิงวิชาการ:** การเปรียบเทียบนี้เป็น Desk Research เบื้องต้น ไม่ใช่ Benchmark ด้านประสิทธิภาพ ต้องทดสอบ Workflow กับผู้ใช้งานจริงก่อนกล่าวอ้างความแตกต่างเชิงผลลัพธ์
+
+---
 
 ## 5. Technical Architecture
 
-```text
-External / Community Inputs
-  Weather & flood references · verified road reports · SME inventory · requests
-                              ↓
-                 Ingestion & Data Validation
-      source · timestamp · freshness · verification · access policy
-                              ↓
-                    PostgreSQL + PostGIS
-                              ↓
-                     AI Orchestrator
-       intent/context interpretation · tool selection · explanation
-                              ↓
-          Deterministic Planning & Optimization Layer
-       inventory constraints · request matching · graph routing
-                              ↓
-                 Evidence / Safety Validation
-                              ↓
-                  Human Approval & Audit Log
-                              ↓
-             Dashboard · Mission Tracking · Analytics
+```mermaid
+flowchart TD
+    subgraph IN["🌐 EXTERNAL & COMMUNITY INPUTS"]
+        direction LR
+        I1["🌦️ Weather & Flood References"]
+        I2["🚦 Verified Road Reports"]
+        I3["🏪 SME Inventory Snapshots"]
+        I4["📢 Community Requests"]
+    end
+
+    subgraph VAL["🛡️ INGESTION & DATA VALIDATION"]
+        V1["Source • Timestamp • Freshness • Verification Status • Access Policy"]
+    end
+
+    subgraph DB["💾 PERSISTENCE LAYER"]
+        D1[("PostgreSQL + PostGIS<br/>Spatial Entities • Requests • Audits")]
+    end
+
+    subgraph AI["🧠 AI ORCHESTRATOR"]
+        A1["Intent & Context Interpretation<br/>Tool Selection • Explainable Reasoning (LLM)"]
+    end
+
+    subgraph DET["⚙️ DETERMINISTIC PLANNING & OPTIMIZATION"]
+        P1["Inventory Constraints • Request Matching<br/>Graph Routing Engine (pgRouting / OR-Tools)"]
+    end
+
+    subgraph GATE["🔍 EVIDENCE & SAFETY VALIDATION GATE"]
+        G1["Freshness Check • Uncertainty Flags • Exception Queue"]
+    end
+
+    subgraph HUMAN["👤 HUMAN APPROVAL & AUDIT LOG"]
+        H1["Coordinator Sign-off<br/>Append-Only Immutable Audit Log"]
+    end
+
+    subgraph OUT["📱 INTERFACES & TRACKING"]
+        O1["Coordinator Dashboard • Mission Tracking • Post-Event Analytics"]
+    end
+
+    IN ==> VAL
+    VAL ==> DB
+    DB <==> AI
+    AI <==> DET
+    DET ==> GATE
+    GATE ==> HUMAN
+    HUMAN ==> OUT
+
+    classDef inLayer fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
+    classDef coreLayer fill:#1e293b,stroke:#818cf8,stroke-width:1.5px,color:#f8fafc;
+    classDef gateLayer fill:#0f172a,stroke:#f59e0b,stroke-width:1.5px,color:#f8fafc;
+    classDef humanLayer fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    class IN inLayer;
+    class VAL,DB,AI,DET coreLayer;
+    class GATE gateLayer;
+    class HUMAN,OUT humanLayer;
 ```
 
 ### Proposed stack (not yet integrated in the prototype)
 
-| Layer | Proposed technology | Responsibility |
-|---|---|---|
-| Web UI | Next.js / React | Coordinator dashboard and role-based screens |
-| API | FastAPI | Data validation, planning endpoints and AI orchestration |
-| Database | PostgreSQL + PostGIS | Requests, businesses, inventory, spatial entities and audit records |
-| AI | OpenAI API or Amazon Bedrock (choose based on event constraints) | Interpret intent, summarize evidence, explain options |
-| Optimization | Graph algorithm / OR-Tools / pgRouting | Constraint-aware matching and routing |
-| Storage & Analytics | S3 / Amazon QuickSight (optional future integration) | Documents and aggregate reporting |
-| Security | RBAC, least privilege, audit logs | Access control and accountability |
+| สถาปัตยกรรมชั้น | เทคโนโลยีที่เสนอใช้งาน | หน้าที่และความรับผิดชอบหลัก |
+| :--- | :--- | :--- |
+| **Web UI** | Next.js / React | หน้าจอแดชบอร์ดสำหรับผู้ประสานงาน และหน้าจอตามบทบาท (Role-based UI) |
+| **API Layer** | FastAPI (Python) | การตรวจสอบความถูกต้องของข้อมูล, Planning Endpoints และ AI Orchestration |
+| **Database** | PostgreSQL + PostGIS | จัดเก็บข้อมูลคำขอ, ร้านค้า, ประวัติสต็อก, ข้อมูลเชิงพื้นที่ และ Audit Records |
+| **AI Layer** | OpenAI API หรือ Amazon Bedrock | ตีความความต้องการ สรุปหลักฐาน และสร้างคำอธิบายภาษาธรรมชาติ |
+| **Optimization** | Graph Algorithm / OR-Tools / pgRouting | การคำนวณจับคู่สต็อกและหาเส้นทางเลี่ยงข้อจำกัดบนกราฟถนน |
+| **Storage & Analytics**| Amazon S3 / Amazon QuickSight | จัดเก็บเอกสารแนบและการจัดทำรายงานสรุปผลภาพรวม |
+| **Security & Auth** | RBAC, Least Privilege, Audit Logging | การควบคุมสิทธิ์การเข้าถึงและความโปร่งใสในการตรวจสอบย้อนกลับ |
 
 ### Clear separation of responsibilities
 
-- **LLM:** ตีความคำถาม สรุปหลักฐาน สร้างคำอธิบายและแผนร่าง; ต้องไม่แต่งข้อมูลที่ไม่มีในแหล่งอ้างอิง
-- **Deterministic logic:** ตรวจจำนวนสินค้า จัดสรรตามข้อจำกัด และคำนวณเส้นทางจากกราฟ
-- **Evidence gate:** ตรวจความสดของข้อมูลและสถานะการยืนยัน; หากข้อมูลไม่พอให้แสดงว่าไม่สามารถยืนยันได้
-- **Human approval:** ผู้ประสานงานรับผิดชอบอนุมัติภารกิจจริง โดยเฉพาะกรณีที่มีความเสี่ยงสูง
+* **LLM (Language Model):** มีหน้าที่ตีความคำถาม สรุปหลักฐาน สร้างคำอธิบาย และร่างแผน; **ต้องไม่แต่งข้อมูลหรือตัวเลขที่ไม่มีอยู่ในแหล่งอ้างอิง (No Hallucination)**
+* **Deterministic Logic:** รับผิดชอบการคำนวณเชิงปริมาณทั้งหมด ตรวจนับสต็อก จัดสรรสินค้าตามข้อจำกัด และคำนวณเส้นทางบนกราฟ
+* **Evidence Gate:** ตรวจสอบความสดของข้อมูลและระดับการยืนยัน; หากข้อมูลไม่เพียงพอ ต้องแสดงสถานะว่าไม่สามารถยืนยันได้
+* **Human Approval:** ผู้ประสานงานรับผิดชอบอนุมัติภารกิจจริง โดยเฉพาะในกรณีที่มีความเสี่ยงสูง
+
+---
 
 ## 6. Current MVP and Scope Boundaries
 
 ### What the current HTML prototype demonstrates
-- Dashboard และข้อมูลร้านค้า/ผู้ขนส่ง/จุดชุมชนแบบจำลอง
-- คำขอสินค้าจำเป็นและการจับคู่สต็อกอย่างง่าย
-- กราฟถนนสังเคราะห์และการคำนวณแผนใหม่เมื่อปิดถนนที่กำหนด
-- ปุ่มอนุมัติ/รีเซ็ตและ KPI จากข้อมูลจำลอง
-- การแสดงผลในไฟล์ HTML แบบ standalone
+
+* ✅ แดชบอร์ดและข้อมูลจำลองของร้านค้า ผู้ขนส่ง และจุดรับความช่วยเหลือในชุมชน
+* ✅ การบันทึกคำขอสิ่งของจำเป็น และการจับคู่สต็อกแบบจำลอง
+* ✅ กราฟถนนสังเคราะห์ และการคำนวณแผนเส้นทางใหม่ทันทีเมื่อมีการปิดถนนที่กำหนด
+* ✅ กลไกปุ่มตรวจรับ อนุมัติแผน และการรีเซ็ตสถานการณ์
+* ✅ การคำนวณ KPI จากชุดข้อมูลสังเคราะห์ และการแสดงผลในไฟล์ HTML แบบ Standalone 100%
 
 ### What it does not do
-- ไม่เชื่อม API พยากรณ์อากาศ น้ำท่วม หรือจราจรจริง
-- ไม่เรียก LLM จริงจาก HTML prototype
-- ไม่ยืนยันความปลอดภัยของเส้นทางหรือความลึกน้ำ
-- ไม่ได้ส่งคำสั่งให้ร้านค้าหรือผู้ขนส่งจริง
-- ไม่ได้วัดเวลาประหยัด ต้นทุนที่ลดลง รายได้เพิ่ม หรือผลลัพธ์กับชุมชนจริง
-- ยังไม่มี production authentication, database, cloud deployment หรือ Amazon QuickSight integration
+
+* ❌ **ไม่เชื่อมต่อ Real-time API:** ไม่ได้ต่อท่อข้อมูลสภาพอากาศ น้ำท่วม หรือจราจรจริง
+* ❌ **ไม่เรียก LLM จริงจากไฟล์ Prototype:** ตัวต้นแบบใช้ Deterministic JavaScript จำลองการตอบ
+* ❌ **ไม่รับรองความปลอดภัยของเส้นทาง:** ไม่ยืนยันระดับความลึกน้ำหรือรับประกันว่ารถผ่านได้จริง
+* ❌ **ไม่ได้ส่งคำสั่งจริง:** ไม่ได้ส่งงานไปยังร้านค้าหรือผู้ขนส่งจริงหน้างาน
+* ❌ **ไม่ได้อ้างผลลัพธ์จริง:** ไม่ได้วัดเวลาที่ประหยัดได้ ต้นทุนที่ลดลง หรือรายได้เพิ่มของร้านค้าจริง
+* ❌ **ยังไม่มีระบบ Production Backend:** ยังไม่มี Authentication เต็มรูปแบบ, Production Database, หรือ QuickSight
 
 ### Synthetic demo setup
 
-ตัวเลขใน Demo เช่น **15 ร้านค้า, 5 ผู้ขนส่ง และ 3 จุดชุมชน** เป็นข้อมูลสมมติสำหรับทดสอบ workflow เท่านั้น ไม่ใช่ขนาดพื้นที่นำร่องจริงหรือหลักฐานความพร้อมใช้งาน
+> [!NOTE]
+> ตัวเลขในตัวอย่างสาธิต เช่น **15 ร้านค้า, 5 ผู้ขนส่ง และ 3 จุดชุมชน** เป็นข้อมูลสมมติ (`SIMULATED`) สำหรับทดสอบความลื่นไหลของ Workflow เท่านั้น ไม่ใช่ขนาดพื้นที่จริงหรือหลักฐานความพร้อมใช้งานระดับเมือง
+
+---
 
 ## 7. Impact, KPIs & Validation Plan
 
-| KPI | นิยาม/สูตร | วิธีตรวจสอบ | สถานะปัจจุบัน |
-|---|---|---|---|
-| Request fulfillment rate | คำขอที่จัดสรรได้ ÷ คำขอที่เข้าเกณฑ์ × 100 | ทดสอบหลาย scenario และตรวจผลด้วยมือ | ยังไม่มีผลทดสอบภาคสนาม |
-| Planning time | เวลาตั้งแต่โหลดสถานการณ์จนแสดงแผน | เทียบ manual baseline กับ prototype ใน scenario เดียวกัน | ยังไม่ได้วัด |
-| Replanning correctness | จำนวนเส้นทางที่ยังใช้ edge ที่ปิดอยู่ (เป้าหมาย 0) | Unit tests บน synthetic graph | มี test เบื้องต้น; ต้องรันทดสอบ browser/QA เพิ่ม |
-| Local procurement value | จำนวนสินค้าที่จัดสรร × ราคาต่อหน่วยที่กำหนด | ตรวจรายการจัดสรรและหน่วยราคา | เป็นมูลค่าจำลอง ไม่ใช่รายได้เพิ่มสุทธิ |
-| Inventory freshness | สัดส่วนรายการสต็อกที่อัปเดตภายในช่วงเวลาที่กำหนด | ตรวจ timestamp ตาม policy | ยังไม่มีข้อมูลร้านค้าจริง |
-| User task success | สัดส่วนผู้ใช้ที่ทำ task สำเร็จโดยไม่ต้องช่วย | ทดสอบกับผู้ประสานงาน/ร้านค้า 3–5 ราย | ยังไม่ได้สัมภาษณ์/ทดสอบ |
+| ดัชนีชี้วัด (KPI) | นิยาม / สูตรการคำนวณ | วิธีการตรวจสอบเชิงประจักษ์ | สถานะปัจจุบัน |
+| :--- | :--- | :--- | :---: |
+| **Request Fulfillment Rate** | (คำขอที่จัดสรรได้ ÷ คำขอที่เข้าเกณฑ์ทั้งหมด) × 100 | ทดสอบหลาย Scenario และตรวจสอบรายการด้วยมือ | `ยังไม่มีผลภาคสนาม` |
+| **Planning Time** | เวลาตั้งแต่โหลดสถานการณ์จนกระทั่งระบบแสดงแผน | เปรียบเทียบ Baseline ทำมือ เทียบกับ Prototype | `ยังไม่ได้ทำการวัด` |
+| **Replanning Correctness** | จำนวนเส้นทางที่ยังใช้ Edge ที่ปิดอยู่ *(เป้าหมาย = 0)* | รัน Automated Unit Tests บน Synthetic Graph | `ผ่าน Test เบื้องต้น` |
+| **Local Procurement Value** | จำนวนสินค้าที่จัดสรร × ราคาอ้างอิงต่อหน่วย | ตรวจสอบรายการจัดสรรเทียบกับหน่วยราคาจำลอง | `เป็นมูลค่าจำลอง` |
+| **Inventory Freshness** | สัดส่วนรายการสต็อกที่อัปเดตตามรอบเวลาที่กำหนด | ตรวจสอบ Timestamp เทียบกับนโยบาย Freshness | `ยังไม่มีข้อมูลร้านจริง` |
+| **User Task Success** | สัดส่วนผู้ใช้ที่ทำภารกิจสำเร็จโดยไม่ต้องมีคนช่วย | ทดสอบ Usability กับกลุ่มตัวอย่าง 3–5 ราย | `ยังไม่ได้ทดสอบจริง` |
 
-### Pilot plan
+### Pilot plan (5 ขั้นตอน)
 
-1. สัมภาษณ์ผู้ประสานงานชุมชนและร้านค้า 3–5 รายเพื่อยืนยัน workflow และคำศัพท์
-2. กำหนดพื้นที่จำลองหนึ่งแห่งและสร้าง test cases ที่ระบุ input/expected output
-3. ทดสอบการจับคู่สินค้า เส้นทางปิด และกรณีที่ไม่มีแผนที่เป็นไปได้
-4. เปรียบเทียบเวลาและความถูกต้องกับ baseline ที่ผู้ประสานงานทำด้วยมือ
-5. หากจะทดลองภาคสนาม ต้องทำข้อตกลงเรื่องข้อมูล ความรับผิดชอบ และขั้นอนุมัติกับหน่วยงานที่เกี่ยวข้องก่อน
+1. **สัมภาษณ์กลุ่มตัวอย่าง:** สัมภาษณ์ผู้ประสานงานและร้านค้า 3–5 รายเพื่อยืนยัน Workflow และคำศัพท์ที่ใช้หน้างาน
+2. **สร้างพื้นที่จำลอง:** กำหนดพื้นที่นำร่องจำลอง 1 แห่ง พร้อมสร้าง Test Cases ระบุ Input และ Expected Output
+3. **ทดสอบขอบเขตข้อจำกัด:** ทดสอบกรณีสินค้าไม่พอ, ถนนถูกตัดขาดทุกเส้นทาง, และกรณีที่ระบบไม่สามารถสร้างแผนได้
+4. **วัดเปรียบเทียบผล:** เปรียบเทียบระยะเวลาและความถูกต้องกับ Baseline ที่ผู้ประสานงานทำด้วยมือ
+5. **ทำข้อตกลงก่อนลงพื้นที่:** หากจะทดสอบภาคสนาม ต้องทำข้อตกลงเรื่องข้อมูล ความรับผิดชอบทางกฎหมาย และขั้นตอนการอนุมัติร่วมกับหน่วยงานเจ้าภาพล่วงหน้า
+
+---
 
 ## 8. Sustainability & Viability
 
 ### Year-round value hypothesis
 
-- **Normal:** ร้านค้าอัปเดตสต็อก ค้นหาสินค้า และใช้เครือข่ายขนส่งในพื้นที่
-- **Crisis:** ผู้ประสานงานจัดสรรสิ่งของและติดตามภารกิจภายใต้ข้อจำกัด
-- **Recovery:** ติดตามการกลับมาเปิดร้าน ความต้องการสินค้า และบทเรียนหลังเหตุการณ์
+```mermaid
+flowchart LR
+    M1["☀️ <b>1. Normal Phase</b><br/>ร้านค้าอัปเดตสต็อก<br/>ใช้เครือข่ายขนส่งท้องถิ่น"] --> M2["🌧️ <b>2. Crisis Phase</b><br/>ผู้ประสานงานจัดสรรของ<br/>ติดตามภารกิจกู้ภัย"]
+    M2 --> M3["🌱 <b>3. Recovery Phase</b><br/>ติดตามการเปิดร้านค้า<br/>ประเมินบทเรียนหลังวิกฤติ"]
+    M3 --> M1
+```
+
+* **ช่วงสถานการณ์ปกติ (Normal):** ร้านค้าใช้ระบบบันทึกสต็อกและจับคู่การขนส่งสินค้าในชีวิตประจำวัน
+* **ช่วงวิกฤติ (Crisis):** ปรับโหมดเป็นระบบจัดสรรของบรรเทาทุกข์และประสานโลจิสติกส์ภายใต้ข้อจำกัด
+* **ช่วงฟื้นฟู (Recovery):** ติดตามการกลับมาเปิดทำการของร้านค้า และสรุปบทเรียนหมุนเวียนเศรษฐกิจ
 
 ### Possible funding models to validate
 
-- ค่าบริการซอฟต์แวร์สำหรับองค์กร/เครือข่ายผู้ประสานงาน
-- บริการจัดการสต็อกและคำสั่งซื้อสำหรับร้านค้าที่เลือกใช้ฟีเจอร์เสริม
-- งบสนับสนุนจากองค์กรท้องถิ่น ผู้สนับสนุน หรือโครงการเพื่อสังคม
+* **B2B / B2G Software Subscription:** ค่าบริการซอฟต์แวร์สำหรับองค์กรชุมชน มูลนิธิ หรือเครือข่ายบรรเทาสาธารณภัย
+* **Value-Added Inventory Tools:** บริการเครื่องมือจัดการสต็อกและการตลาดสำหรับร้านค้า SME ที่ต้องการฟีเจอร์พรีเมียม
+* **Grant & CSR Funding:** งบประมาณสนับสนุนจากโครงการพัฒนาเมืองอัจฉริยะ กองทุนนวัตกรรมสังคม หรือภาคเอกชน
 
-สิ่งเหล่านี้เป็น **สมมติฐานทางธุรกิจ** ยังไม่มีการยืนยัน willingness-to-pay, unit economics หรือพันธมิตรที่ลงนามแล้ว ห้ามให้ความสำคัญกับคำขอช่วยเหลือตามความสามารถในการจ่าย และห้ามสื่อว่าระบบช่วยหลีกเลี่ยงกฎการจัดซื้อจัดจ้างภาครัฐ
+> [!WARNING]
+> **หลักการสำคัญด้านจริยธรรม:**  
+> 1. สมมติฐานเหล่านี้ยังไม่มีการยืนยัน Willingness-to-pay หรือ Unit Economics  
+> 2. **ห้ามจัดลำดับความช่วยเหลือตามความสามารถในการจ่ายเงินของผู้ประสบภัยโดยเด็ดขาด**  
+> 3. ห้ามสื่อสารว่าระบบนี้มีขึ้นเพื่อหลีกเลี่ยงระเบียบการจัดซื้อจัดจ้างของภาครัฐ
+
+---
 
 ## 9. Safety, Privacy & Reliability
 
-- แยก `OBSERVED`, `FORECAST`, `ESTIMATED` และ `SIMULATED` อย่างเห็นได้ชัด พร้อมแหล่งที่มาและเวลาที่ข้อมูลอัปเดต
-- ห้ามสร้างระดับน้ำที่รถแต่ละชนิดสามารถผ่านได้อย่างปลอดภัยจากตัวเลขทั่วไป และห้ามรับรองว่าเส้นทางปลอดภัย
-- หากข้อมูลถนนเก่าหรือยังไม่ยืนยัน ให้แสดงข้อจำกัดและขอการตรวจสอบ ไม่ควรแนะนำให้ผู้ใช้เดินทางผ่านพื้นที่เสี่ยง
-- ห้ามแสดงพิกัดบ้าน ชื่อ เบอร์โทร หรือข้อมูลสุขภาพของผู้เปราะบางใน Dashboard สาธารณะ
-- ใช้สิทธิ์ตามบทบาท เก็บ audit log และจำกัดการเข้าถึงข้อมูลส่วนบุคคล
-- การจัดลำดับคำขอควรมีเกณฑ์ที่โปร่งใส ตรวจสอบย้อนหลังได้ และมีช่องทางแก้ไขข้อมูล
-- Prototype เป็นการจำลองการวางแผน ไม่ใช่ระบบ dispatch หรือคำแนะนำฉุกเฉินที่ผ่านการรับรอง
+* **การจำแนกสถานะข้อมูล:** ต้องแยกป้ายกำกับ `OBSERVED`, `FORECAST`, `ESTIMATED`, และ `SIMULATED` อย่างเด่นชัด พร้อมระบุแหล่งที่มาและเวลาอัปเดตเสมอ
+* **ไม่รับรองความปลอดภัยเส้นทาง:** ห้ามคำนวณระดับน้ำที่รถแต่ละชนิดผ่านได้เองจากสมมติฐานลอยๆ และห้ามออกใบรับรองว่าเส้นทางใดปลอดภัย 100%
+* **การจัดการข้อมูลเก่า (Stale Data):** หากข้อมูลถนนล้าสมัยหรือไม่ได้รับการยืนยัน ให้ขึ้นป้ายเตือนและส่งคำขอตรวจสอบภาคสนาม
+* **การปกป้องข้อมูลส่วนบุคคล (PDPA):** ห้ามแสดงพิกัดบ้านพัก ชื่อ เบอร์โทร หรือข้อมูลสุขภาพของผู้เปราะบางบนหน้าจอสาธารณะ
+* **การควบคุมสิทธิ์และ Audit Trail:** กำหนดสิทธิ์ตามบทบาท (RBAC) และบันทึกประวัติการกระทำที่ไม่สามารถแก้ไขได้ (Append-Only)
+* **เกณฑ์การจัดลำดับที่โปร่งใส:** การจัดลำดับความสำคัญต้องอธิบายเหตุผลได้ และเปิดให้มีการทักท้วงหรือตรวจสอบย้อนหลัง
+* **สถานะต้นแบบ:** Prototype นี้เป็นการจำลอง Workflow ไม่ใช่ระบบ Dispatch กู้ชีพฉุกเฉินทางการแพทย์
+
+---
 
 ## 10. Three-minute Demo Script
 
-| เวลา | สิ่งที่นำเสนอ | ข้อความหลัก |
-|---|---|---|
-| 0:00–0:25 | เปิดด้วยปัญหาถนนถูกปิดและข้อมูลไม่เชื่อมกัน | สินค้าอาจยังอยู่ในชุมชน แต่การประสานงานทำได้ยาก |
-| 0:25–0:50 | เปิด Dashboard และระบุว่าเป็นข้อมูล SIMULATED | นี่คือ workspace สำหรับประสานคำขอ สต็อก และเส้นทาง |
-| 0:50–1:20 | กดคำนวณแผนจัดสรร | ระบบจับคู่คำขอกับร้านค้าที่มีสินค้าตามข้อจำกัดจำลอง |
-| 1:20–1:55 | ปิดถนน B–D แล้วคำนวณใหม่ | เมื่อข้อจำกัดเปลี่ยน ระบบคำนวณทางเลือกใหม่จากกราฟ ไม่ใช่ให้ LLM เดาเส้นทาง |
-| 1:55–2:25 | แสดงเหตุผลและอนุมัติแผน | ผู้ประสานงานยังเป็นผู้ตัดสินใจก่อนดำเนินการ |
-| 2:25–2:45 | เปิด KPI | ตัวเลขเป็นผลลัพธ์จำลอง ไม่ใช่ผลกระทบจริง |
-| 2:45–3:00 | ปิดด้วยแผนทดสอบต่อไป | ขั้นต่อไปคือ validate กับผู้ใช้และทดสอบในพื้นที่นำร่องที่ได้รับอนุญาต |
+| ช่วงเวลา | สิ่งที่ต้องแสดงบนหน้าจอ | สาระสำคัญในการสื่อสาร |
+| :---: | :--- | :--- |
+| **0:00–0:25** | เปิดหน้าจอแสดงบริบทถนนถูกตัดขาดและข้อมูลกระจัดกระจาย | ชี้ให้เห็นว่าสินค้าอาจยังมีอยู่ในชุมชน แต่ปัญหาคือข้อมูลไม่เชื่อมต่อกัน |
+| **0:25–0:50** | เปิด Dashboard รวม และชี้แจงว่าเป็นข้อมูล `SIMULATED` | แนะนำว่าระบบคือ Workspace สำหรับประสานคำขอ สต็อก และเส้นทาง |
+| **0:50–1:20** | กดปุ่มคำนวณแผนจัดสรรสิ่งของบรรเทาทุกข์ | ระบบจับคู่คำขอกับร้านค้าที่มีสินค้าตามข้อจำกัดจำลองอย่างเป็นระบบ |
+| **1:20–1:55** | ปิดถนนเส้น B–D แล้วกดให้ระบบคำนวณแผนใหม่ | ระบบ Replan เส้นทางเลี่ยงจากกราฟถนนจริง ไม่ใช่การให้ LLM คาดเดาทาง |
+| **1:55–2:25** | เปิดแถบแสดงเหตุผลเบื้องหลัง และกดอนุมัติแผน | ตอกย้ำว่า AI ช่วยวิเคราะห์ แต่การตัดสินใจขั้นสุดท้ายเป็นของมนุษย์เสมอ |
+| **2:25–2:45** | เปิดดูหน้าสรุป KPI และผลลัพธ์การจัดซื้อในพื้นที่ | ชี้แจงอย่างตรงไปตรงมาว่าตัวเลขเป็นผลจำลอง ยังไม่ใช่ผลกระทบจริง |
+| **2:45–3:00** | ปิดการนำเสนอด้วยแผนการทดสอบขั้นถัดไป | สรุปก้าวต่อไปคือการ Validate กับผู้ใช้จริงและทดสอบในพื้นที่ Pilot ที่ได้รับอนุญาต |
+
+---
 
 ## 11. Team & Responsibilities
 
-| สมาชิก | บทบาทตามข้อมูลทีม | ความรับผิดชอบที่เสนอในโครงการ |
-|---|---|---|
-| นรงศ์ศักดิ์ | Full-Stack Developer · DevOps · AI Engineer | Technical integration, system architecture, deployment planning, AI/tool orchestration |
-| เกตุศรัณย์ | Full-Stack Developer · AI Engineer | AI workflow, prompt/tool design, evaluation scenarios and output validation |
-| วัชรากร | Full-Stack Developer · System Analyst | Requirements, user flows, data model, acceptance criteria and test cases |
-| สมหมาย | Full-Stack Developer · Advanced Frontend | UI/UX implementation, responsive dashboard, interaction states and demo experience |
-| รติมา | Business English | English proofreading, pitch wording, presentation language and communication support |
+| สมาชิกในทีม | บทบาทความเชี่ยวชาญ | ความรับผิดชอบหลักที่ได้รับมอบหมายในโครงการ |
+| :--- | :--- | :--- |
+| **นรงศ์ศักดิ์** | Full-Stack Developer · DevOps · AI Engineer | System Architecture, Cloud Deployment, AI/Tool Orchestration |
+| **เกตุศรัณย์** | Full-Stack Developer · AI Engineer | AI Workflow Design, Prompt & Tool Engineering, Evaluation Scenarios |
+| **วัชรากร** | Full-Stack Developer · System Analyst | Requirements Analysis, User Flows, Data Modeling, Acceptance Criteria |
+| **สมหมาย** | Full-Stack Developer · Advanced Frontend | UI/UX Development, Responsive Dashboard, Interactive Demo States |
+| **รติมา** | Business English Specialist | English Proofreading, Pitch Deck Wording, Communication Strategy |
 
-บทบาทความรับผิดชอบด้านโครงการเป็นข้อเสนอเพื่อแบ่งงาน ไม่ได้เพิ่มคุณวุฒิหรือประสบการณ์ที่ทีมไม่ได้ระบุไว้ และ **Business English ไม่ได้หมายถึง Business Engineer**
+> [!NOTE]
+> การระบุบทบาทข้างต้นมีวัตถุประสงค์เพื่อการแบ่งหน้าที่ภายในโครงการ ไม่ได้เป็นการอ้างคุณวุฒิเกินจริง และตำแหน่ง **Business English Specialist ไม่ได้หมายถึง Business Engineer**
+
+---
 
 ## 12. Evidence Ledger
 
-| Claim | Status | Notes |
-|---|---|---|
-| LocalShield combines requests, SME stock, route constraints and approval in one workflow | Design proposal | Must validate with users |
-| Demo uses 15 stores, 5 transporters and 3 community points | SIMULATED | Synthetic data only |
-| Replanning changes after closing a synthetic road edge | Prototype behavior | Run manual browser test before presenting |
-| AI model is connected to the HTML prototype | NOT IMPLEMENTED | Prototype uses deterministic JavaScript; no LLM API call |
-| Live flood/road data is integrated | NOT IMPLEMENTED | External sources are references only |
-| QuickSight dashboard is connected | NOT IMPLEMENTED | Future integration idea |
-| Real-world impact or revenue increase has been measured | NOT VERIFIED | Requires pilot and baseline comparison |
-| GISTDA provides public disaster data documentation | DOCUMENTATION REFERENCE | API access and actual integration have not been tested |
+ตารางบันทึกสถานะการกล่าวอ้างเชิงประจักษ์ (Claims Transparency):
+
+| ข้อความที่กล่าวอ้าง (Claim) | สถานะความพร้อม (Status) | บันทึกข้อเท็จจริง (Notes) |
+| :--- | :---: | :--- |
+| รวมคำขอ สต็อก SME ข้อจำกัดถนน และการอนุมัติใน Workflow เดียว | `Design Proposal` | ข้อเสนอเชิงแนวคิด ต้องทดสอบกับผู้ใช้จริง |
+| ตัวต้นแบบใช้ 15 ร้านค้า, 5 ผู้ขนส่ง, 3 จุดชุมชน | `SIMULATED` | เป็นชุดข้อมูลสังเคราะห์เพื่อการสาธิตเท่านั้น |
+| ระบบคำนวณเส้นทางใหม่เมื่อมีการปิดขอบถนนจำลอง | `Prototype Behavior` | ทำงานได้จริงใน Prototype ผ่าน Deterministic Script |
+| เชื่อมต่อโมเดล AI ภายนอกเข้ากับไฟล์ HTML Prototype | `NOT IMPLEMENTED` | ตัวต้นแบบทำงานแบบ Standalone ไม่ได้เรียก LLM API |
+| เชื่อมโยงข้อมูลระดับน้ำท่วมและสภาพถนนแบบ Real-time | `NOT IMPLEMENTED` | แหล่งข้อมูลภายนอกถูกอ้างอิงเพื่อการศึกษาเท่านั้น |
+| เชื่อมต่อ QuickSight Dashboard สมบูรณ์แล้ว | `NOT IMPLEMENTED` | เป็นแผนการพัฒนาสำหรับสถาปัตยกรรมระยะถัดไป |
+| มีการวัดผลกระทบจริงหรือรายได้สุทธิที่เพิ่มขึ้นของร้านค้าแล้ว | `NOT VERIFIED` | ต้องผ่านกระบวนการ Pilot และวัดเทียบกับ Baseline |
+| GISTDA มีเอกสารเผยแพร่ Disaster Open API สาธารณะ | `DOCUMENTATION REFERENCE` | มีเอกสารจริง แต่ยังไม่ได้ทำการทดสอบเชื่อมต่อ API |
+
+---
 
 ## 13. References
 
-- GISTDA Disaster Open API documentation: https://disaster.gistda.or.th/v2/services/open-api
-- Sahana Eden disaster management project: https://eden-legacy.sahanafoundation.org/
-- Sea x OpenAI Regional Codex Hackathon Thailand event page (official event information and current rules): https://luma.com/39zve8ph
+* **GISTDA Disaster Open API Documentation:** [https://disaster.gistda.or.th/v2/services/open-api](https://disaster.gistda.or.th/v2/services/open-api)
+* **Sahana Eden Disaster Management Project:** [https://eden-legacy.sahanafoundation.org/](https://eden-legacy.sahanafoundation.org/)
+* **Sea x OpenAI Regional Codex Hackathon Thailand Event Page:** [https://luma.com/39zve8ph](https://luma.com/39zve8ph)
 
-External references provide background only; they do not establish that LocalShield has access to those APIs or has been tested against the referenced systems.
+> [!NOTE]
+> การอ้างอิงเอกสารภายนอกมีขึ้นเพื่อเป็นข้อมูลบริบทเบื้องต้นเท่านั้น ไม่ได้หมายความว่าระบบได้รับสิทธิ์เข้าถึงหรือผ่านการทดสอบร่วมกับระบบภายนอกเหล่านั้นแล้ว
 
-## Appendix A. Detailed User Journeys and Operational States
+---
 
-### A.1 Coordinator journey: from incoming request to approved mission
+## ภาคผนวก (Appendices)
 
-1. **Create or select incident.** ผู้ประสานงานสร้างเหตุการณ์ กำหนดพื้นที่ เวลาเริ่มต้น และเลือกว่าข้อมูลใดเป็น `SIMULATED` หรือมาจากแหล่งภายนอก ระบบต้องบันทึกผู้สร้างและเวลาเสมอ
-2. **Triage requests.** ผู้ประสานงานบันทึกหรือ import คำขอ โดยเห็นข้อมูลขั้นต่ำที่จำเป็นต่อการวางแผน เช่น จุดส่ง ประเภทสินค้า ปริมาณ กรอบเวลา และข้อสังเกตด้านการเข้าถึง ข้อมูลส่วนบุคคลละเอียดอ่อนต้องถูกซ่อนไว้ตามสิทธิ์
-3. **Review data quality.** ก่อนสร้างแผน ระบบสรุปจำนวนคำขอที่ยังไม่ครบ รายการสต็อกที่เก่า และข้อจำกัดถนนที่หมดอายุ ผู้ใช้สามารถเลือกหยุดแผนหรือดำเนินการต่อโดยมีเหตุผลที่บันทึกไว้
-4. **Generate draft plan.** ระบบประมวลผลตามกฎการจัดสรรและแสดงแต่ละ assignment พร้อมเหตุผล ต้นทาง ปลายทาง สินค้า จำนวน สถานะความสด และข้อจำกัดเส้นทางที่นำมาคิด
-5. **Review exceptions.** คำขอที่ไม่มีสินค้าเพียงพอ ไม่มีผู้ขนส่ง หรือไม่มีเส้นทางที่ระบบคำนวณได้ จะอยู่ใน exception queue แยกชัดเจน ไม่ถูกทำให้ดูเหมือน “สำเร็จ”
-6. **Approve or revise.** ผู้มีสิทธิ์สามารถอนุมัติทั้งแผน แก้ไขรายการ หรือส่งกลับเพื่อขอข้อมูลเพิ่ม การ override ต้องระบุเหตุผล และระบบเก็บค่าเดิม/ค่าใหม่ใน audit log
-7. **Dispatch outside or inside an approved integration.** ใน prototype ขั้นนี้เป็นเพียงการเปลี่ยนสถานะเท่านั้น หากในอนาคตเชื่อมช่องทางส่งงาน ต้องมีการยืนยันปลายทางและไม่ส่งข้อมูลเกินความจำเป็น
-8. **Track and close.** ผู้รับผิดชอบอัปเดตสถานะรับงาน รับสินค้า ระหว่างทาง ส่งสำเร็จ หรือยกเลิก เมื่อปิดภารกิจ ระบบคืนสต็อกที่ไม่ได้ใช้และสรุปเหตุผลของงานที่ไม่สำเร็จ
+---
 
-### A.2 SME journey
+### Appendix A: Detailed User Journeys and Operational States
 
-| ช่วง | การกระทำของร้านค้า | การควบคุมที่ต้องมี |
-|---|---|---|
-| Onboarding | ยืนยันชื่อร้าน จุดรับสินค้า เวลาทำการ และผู้ติดต่อ | ผู้ประสานงานตรวจสอบก่อนเปิดใช้; จำกัดสิทธิ์ให้เห็นเฉพาะข้อมูลที่เกี่ยวข้อง |
-| Stock update | ระบุ SKU/หมวดสินค้า หน่วย จำนวนที่พร้อมจัดสรร ราคาอ้างอิง และเวลาใช้ได้ | บังคับหน่วยมาตรฐาน, ตรวจจำนวนติดลบ, แสดงเวลาอัปเดตล่าสุด |
-| Reservation | เห็นจำนวนที่ถูกจองในแผนร่าง/แผนอนุมัติ | ห้ามจองเกิน allocatable stock; การยกเลิกต้องคืนยอดอย่างตรวจสอบได้ |
-| Fulfilment | ยืนยันการเตรียมสินค้า/ส่งมอบ หรือแจ้งสินค้าไม่พร้อม | ทุกการเปลี่ยนสถานะต้องมี timestamp และผู้ดำเนินการ |
+#### A.1 Coordinator journey: from incoming request to approved mission
+1. **Create or select incident:** ผู้ประสานงานสร้างเหตุการณ์ กำหนดพื้นที่ เวลาเริ่มต้น และระบุสถานะข้อมูลว่าเป็น `SIMULATED` หรือข้อมูลจริง
+2. **Triage requests:** ผู้ประสานงานนำเข้าคำขอ โดยระบบจะแสดงเฉพาะข้อมูลที่จำเป็นต่อการวางแผน ข้อมูลส่วนบุคคลจะถูกซ่อนไว้ตามสิทธิ์
+3. **Review data quality:** ระบบสรุปจำนวนคำขอที่ข้อมูลไม่ครบ สต็อกที่เริ่มเก่า และข้อจำกัดถนนที่หมดอายุ ก่อนเริ่มสร้างแผน
+4. **Generate draft plan:** ระบบประมวลผลตามกฎและแสดงข้อเสนอแต่ละรายการ พร้อมเหตุผล ที่มาของสต็อก และข้อจำกัดเส้นทาง
+5. **Review exceptions:** คำขอที่ไม่มีสต็อกหรือไม่มีเส้นทางจะถูกส่งเข้า Exception Queue แยกออกมาอย่างชัดเจน
+6. **Approve or revise:** ผู้มีอำนาจตรวจสอบและอนุมัติ หากมีการแก้ไข (Override) ต้องบันทึกเหตุผลและเก็บประวัติใน Audit Log
+7. **Dispatch mission:** ในตัวต้นแบบขั้นนี้เป็นการเปลี่ยนสถานะ หากมีการเชื่อมต่อจริงต้องไม่ส่งข้อมูลเกินความจำเป็น
+8. **Track and close:** ติดตามสถานะงานจนกระทั่งส่งมอบสำเร็จ ระบบจะทำการกระทบยอดสต็อกและสรุปรายงาน
 
-### A.3 Mission state machine
+#### A.2 SME journey
 
-```text
-DRAFT → PENDING_REVIEW → APPROVED → ASSIGNED → IN_PROGRESS → DELIVERED → CLOSED
-                  │             │              │                 │
-                  └→ NEEDS_INFO └→ CANCELLED   └→ FAILED         └→ DISPUTED
+| ช่วงขั้นตอน | การกระทำของร้านค้า (SME Actions) | มาตรการควบคุมที่ระบบต้องมี |
+| :--- | :--- | :--- |
+| **Onboarding** | ลงทะเบียนร้านค้า พิกัดจุดรับสินค้า เวลาทำการ และข้อมูลติดต่อ | ผู้ประสานงานตรวจสอบก่อนอนุมัติใช้งาน; จำกัดสิทธิ์การมองเห็นข้อมูล |
+| **Stock Update** | ระบุ SKU, หน่วยนับ, จำนวนพร้อมจัดสรร (`allocatable_qty`) และเวลา | บังคับหน่วยนับมาตรฐาน, ป้องกันยอดติดลบ, แสดง Timestamp ชัดเจน |
+| **Reservation** | แสดงจำนวนสินค้าที่ถูกจองตามแผนงาน | ห้ามจองเกินยอดพร้อมจัดสรร; หากยกเลิกต้องคืนยอดสต็อกทันที |
+| **Fulfilment** | ยืนยันการเตรียมของ/ส่งมอบ หรือแจ้งสินค้าไม่พร้อม | ทุกการเปลี่ยนสถานะต้องบันทึกผู้ดำเนินการและ Timestamp |
+
+#### A.3 Mission state machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT: สร้างภารกิจร่าง
+    DRAFT --> PENDING_REVIEW: ข้อมูลครบถ้วน
+    PENDING_REVIEW --> APPROVED: ผู้อนุมัติเห็นชอบ
+    PENDING_REVIEW --> NEEDS_INFO: ข้อมูลไม่ชัดเจน
+    NEEDS_INFO --> PENDING_REVIEW: ปรับปรุงข้อมูลแล้ว
+    
+    APPROVED --> ASSIGNED: มอบหมายผู้ขนส่ง
+    APPROVED --> CANCELLED: ยกเลิกภารกิจ
+    
+    ASSIGNED --> IN_PROGRESS: เริ่มเดินทาง/รับของ
+    ASSIGNED --> CANCELLED: ผู้ขนส่งไม่พร้อม
+    
+    IN_PROGRESS --> DELIVERED: ส่งมอบสำเร็จ
+    IN_PROGRESS --> FAILED: อุปสรรคหน้างาน
+    
+    DELIVERED --> CLOSED: ตรวจรับ & กระทบยอดสต็อก
+    DELIVERED --> DISPUTED: ข้อโต้แย้งสินค้า
+    DISPUTED --> CLOSED: ข้อยุติเสร็จสิ้น
+    
+    FAILED --> CLOSED: สรุปเหตุผล & คืนสต็อก
+    CANCELLED --> CLOSED: คืนสต็อกอัตโนมัติ
+    CLOSED --> [*]
 ```
 
-- `DRAFT`: สร้างโดยระบบหรือผู้ใช้ ยังไม่ใช่คำสั่งปฏิบัติการ
-- `PENDING_REVIEW`: มีข้อมูลขั้นต่ำครบเพื่อให้ผู้อนุมัติตรวจ
-- `APPROVED`: ได้รับอนุมัติ; จึงจองสต็อกตามรายการที่อนุมัติ
-- `FAILED` / `CANCELLED`: ต้องระบุ reason code เช่น `NO_STOCK`, `ROAD_UNCONFIRMED`, `TRANSPORT_UNAVAILABLE`, `RECIPIENT_UNREACHABLE`
-- `CLOSED`: ตรวจสอบการส่งมอบและการกระทบยอดสต็อกแล้ว
+* **คำอธิบายสถานะสำคัญ:**
+  * `DRAFT`: แผนร่างที่สร้างขึ้น ยังไม่ใช่คำสั่งปฏิบัติการ
+  * `APPROVED`: ผ่านการอนุมัติโดยมนุษย์แล้ว จึงจะมีการตัดยอดจองสต็อกจริง
+  * `FAILED` / `CANCELLED`: ต้องระบุ Reason Code เสมอ เช่น `NO_STOCK`, `ROAD_UNCONFIRMED`, `TRANSPORT_UNAVAILABLE`
+  * `CLOSED`: สิ้นสุดภารกิจ มีการกระทบยอดสต็อกและการตรวจรับเรียบร้อย
 
-## Appendix B. Data Model and Data Quality Policy
+---
 
-### B.1 Core entities
+### Appendix B: Data Model and Data Quality Policy
 
-| Entity | ฟิลด์สำคัญ | หมายเหตุการออกแบบ |
-|---|---|---|
-| Incident | `id`, `name`, `area`, `starts_at`, `status`, `data_mode` | `data_mode` แยกการจำลองออกจากข้อมูลปฏิบัติการ |
-| Request | `id`, `incident_id`, `dropoff_zone`, `items`, `priority_inputs`, `time_window`, `status` | เก็บข้อมูลระบุตัวบุคคลแยกจากข้อมูล planning |
-| Business | `id`, `service_zone`, `operating_hours`, `verification_status` | ไม่เผยแพร่ข้อมูลติดต่อสาธารณะโดยค่าเริ่มต้น |
-| InventorySnapshot | `business_id`, `sku`, `unit`, `allocatable_qty`, `price_reference`, `observed_at`, `expires_at` | เป็น snapshot ที่มีเวลา ไม่เขียนทับประวัติ |
-| RoadConstraint | `edge_id`, `condition`, `source`, `observed_at`, `verified_at`, `valid_until` | `CLOSED` ตัด edge ออกจาก routing; `UNKNOWN` ไม่เท่ากับเปิดใช้ได้ |
-| Plan / Assignment | `id`, `version`, `request_id`, `inventory_id`, `qty`, `route_version`, `explanation` | เก็บรุ่นแผนเพื่อเปรียบเทียบก่อน/หลัง replan |
-| Mission | `assignment_id`, `transporter_id`, `state`, `proof_reference` | ไม่เก็บรูปหรือเอกสารยืนยันเกินความจำเป็น |
-| AuditEvent | `actor`, `action`, `entity`, `before`, `after`, `reason`, `at` | เขียนเพิ่มอย่างเดียว; ใช้ตรวจสอบย้อนหลัง |
+#### B.1 Core entities
 
-### B.2 Minimum data contract
+| Entity | ฟิลด์ข้อมูลสำคัญ | เจตนาการออกแบบเชิงระบบ |
+| :--- | :--- | :--- |
+| **Incident** | `id`, `name`, `area`, `starts_at`, `status`, `data_mode` | แยกโหมดจำลอง (`data_mode`) ออกจากข้อมูลปฏิบัติการจริง |
+| **Request** | `id`, `incident_id`, `dropoff_zone`, `items`, `priority_inputs`, `status` | เก็บข้อมูลส่วนบุคคลแยกต่างหากจากข้อมูลวางแผน |
+| **Business** | `id`, `service_zone`, `operating_hours`, `verification_status` | ไม่เปิดเผยข้อมูลติดต่อส่วนตัวในพื้นที่สาธารณะ |
+| **InventorySnapshot** | `business_id`, `sku`, `unit`, `allocatable_qty`, `observed_at`, `expires_at` | เก็บเป็น Snapshot ตามเวลา ไม่เขียนทับประวัติเก่า |
+| **RoadConstraint** | `edge_id`, `condition`, `source`, `observed_at`, `valid_until` | ตัด Edge ที่ `CLOSED` ออก; สถานะ `UNKNOWN` ห้ามถือว่าผ่านได้ |
+| **Plan / Assignment** | `id`, `version`, `request_id`, `inventory_id`, `qty`, `route_version` | เก็บ Version ของแผนเพื่อเปรียบเทียบก่อนและหลังการ Replan |
+| **Mission** | `assignment_id`, `transporter_id`, `state`, `proof_reference` | เก็บหลักฐานเท่าที่จำเป็น ไม่เก็บรูปภาพเกินความต้องการ |
+| **AuditEvent** | `actor`, `action`, `entity`, `before`, `after`, `reason`, `at` | โครงสร้างแบบ Append-Only สำหรับการสืบค้นย้อนหลัง |
 
-ระบบต้องปฏิเสธหรือส่งเข้าคิวตรวจสอบ หากข้อมูลขาดฟิลด์ดังต่อไปนี้:
+#### B.2 Minimum data contract
 
-| ประเภทข้อมูล | ขั้นต่ำที่รับได้ | Validation ตัวอย่าง |
-|---|---|---|
-| คำขอ | พื้นที่ส่ง, รายการ, จำนวน, หน่วย, เวลาบันทึก | จำนวนต้องมากกว่า 0; หน่วยต้องอยู่ใน catalogue |
-| สต็อก | ร้านค้า, สินค้า, จำนวนที่จัดสรรได้, หน่วย, เวลาอัปเดต | ห้ามจองมากกว่าคงเหลือ; snapshot หมดอายุตาม policy |
-| ข้อจำกัดถนน | road edge, สถานะ, แหล่งที่มา, เวลารายงาน | ไม่มี source หรือ timestamp = ใช้คำนวณไม่ได้ |
-| ผู้ขนส่ง | เขตบริการ, ความพร้อม, ความจุ (ถ้าจะใช้) | ไม่มีความพร้อม = ไม่ถูกเลือกอัตโนมัติ |
+ระบบจะปฏิเสธข้อมูลหรือไม่นำเข้าสู่กระบวนการคำนวณ หากขาดฟิลด์สำคัญดังต่อไปนี้:
 
-### B.3 Freshness policy (ค่าตั้งต้นเพื่อ pilot)
+| หมวดหมู่ข้อมูล | ฟิลด์ข้อมูลขั้นต่ำที่ต้องมี | ตัวอย่างเงื่อนไขการตรวจสอบ (Validation) |
+| :--- | :--- | :--- |
+| **คำขอ (Requests)** | พื้นที่ปลายทาง, รายการสินค้า, จำนวน, หน่วยนับ, เวลาบันทึก | จำนวนต้อง > 0; หน่วยนับต้องตรงตาม Catalogue |
+| **สต็อก (Inventory)** | รหัสร้านค้า, SKU, จำนวนที่จัดสรรได้, หน่วยนับ, เวลาอัปเดต | ห้ามจองเกินยอดคงเหลือ; ต้องไม่หมดอายุตามเกณฑ์ Freshness |
+| **ข้อจำกัดถนน (Roads)** | Road Edge, สถานะถนน, แหล่งที่มา, เวลาที่สังเกตการณ์ | หากไม่มี Source หรือ Timestamp จะไม่ถูกนำไปคำนวณ |
+| **ผู้ขนส่ง (Transport)** | เขตพื้นที่บริการ, สถานะความพร้อม, ความจุพาหนะ | หากไม่มีสถานะยืนยันความพร้อม จะไม่ถูกเลือกอัตโนมัติ |
 
-| ข้อมูล | Fresh | Stale | Expired / action required |
-|---|---|---|---|
-| สต็อกสินค้า | ไม่เกิน 4 ชั่วโมง | มากกว่า 4 ถึง 12 ชั่วโมง | มากกว่า 12 ชั่วโมง: ไม่จัดสรรอัตโนมัติ |
-| สถานะถนนในเหตุการณ์ | ไม่เกิน 30 นาที | มากกว่า 30 ถึง 60 นาที | มากกว่า 60 นาที: ขอการยืนยันก่อนอนุมัติ |
-| ความพร้อมผู้ขนส่ง | ไม่เกิน 60 นาที | มากกว่า 60 ถึง 120 นาที | มากกว่า 120 นาที: ไม่มอบหมายอัตโนมัติ |
+#### B.3 Freshness policy (เกณฑ์ตั้งต้นสำหรับการทดสอบนำร่อง)
 
-ตัวเลขข้างต้นเป็นค่าเริ่มต้นเพื่อทดสอบ ไม่ใช่มาตรฐานความปลอดภัย ต้องปรับตามพื้นที่ ผู้ให้ข้อมูล และ SOP ของหน่วยงานเจ้าภาพ
+| ประเภทข้อมูล | สดใหม่ (Fresh) | เริ่มเก่า (Stale) | หมดอายุ / ต้องยืนยันใหม่ (Expired) |
+| :--- | :---: | :---: | :---: |
+| **สต็อกสินค้าของร้านค้า** | ไม่เกิน 4 ชั่วโมง | 4 ถึง 12 ชั่วโมง | **> 12 ชั่วโมง:** ระงับการจัดสรรอัตโนมัติ |
+| **สถานะถนนในภาวะวิกฤติ** | ไม่เกิน 30 นาที | 30 ถึง 60 นาที | **> 60 นาที:** ต้องให้เจ้าหน้าที่ยืนยันก่อนอนุมัติ |
+| **ความพร้อมของผู้ขนส่ง** | ไม่เกิน 60 นาที | 60 ถึง 120 นาที | **> 120 นาที:** ไม่มอบหมายงานอัตโนมัติ |
 
-## Appendix C. Planning Logic, Explainability and Fairness
+---
 
-### C.1 Deterministic allocation sequence
+### Appendix C: Planning Logic, Explainability and Fairness
 
-1. กรองข้อมูลที่ไม่ผ่าน validation หรือหมดอายุ และแยกรายการออกเป็น queue สำหรับตรวจสอบ
-2. แปลงคำขอเป็น demand line ตาม `SKU/หมวดสินค้า + หน่วย + จำนวน + time window`
-3. หา candidate inventory ที่ชนิด/หน่วยเข้ากัน มีปริมาณจัดสรรได้ และอยู่ใน policy freshness
-4. ตรวจเส้นทางบน road graph โดยตัด edge ที่มีสถานะ `CLOSED` ออก และติดธงข้อมูล `UNKNOWN` หรือ stale ที่เกี่ยวข้อง
-5. จัดอันดับ candidate ด้วย policy ที่ประกาศได้ เช่น ความเร่งด่วนที่ผ่านการตรวจ, ความครบของสินค้า, ความสดของข้อมูล, ระยะทาง/เวลาคำนวณ และการกระจายภาระระหว่างร้านค้า
-6. สร้าง assignment โดยไม่เกินสต็อกและไม่เกินความจุ/ความพร้อมที่ระบุไว้; เก็บ reason เมื่อไม่สามารถจัดสรรได้
-7. สรุปผลเป็นแผนร่าง พร้อม exception, uncertainty และผลของข้อจำกัด เพื่อให้คนอนุมัติ
+#### C.1 Deterministic allocation sequence
+1. **คัดกรองข้อมูล:** กรองข้อมูลที่ไม่ผ่านเกณฑ์หรือหมดอายุเข้าสู่คิวรอตรวจสอบ
+2. **แปลง Demand:** แปลงคำขอเป็นรายการสินค้าตาม SKU + หน่วย + จำนวน + กรอบเวลา
+3. **ค้นหาสต็อกที่ตรงกัน:** หา Candidate Inventory ที่มีสินค้าพร้อมจัดสรรและข้อมูลยังอยู่ในเกณฑ์ Freshness
+4. **ตรวจสอบเส้นทาง:** ตัดถนนที่ปิด (`CLOSED`) ออกจากกราฟ และติดธงเตือนจุดที่เป็น `UNKNOWN` หรือ Stale
+5. **จัดลำดับตามนโยบาย:** เรียงลำดับตัวเลือกตามความเร่งด่วน, ความสมบูรณ์ของสินค้า, และการกระจายภาระร้านค้า
+6. **สร้างข้อเสนอการจัดสรร:** ร่างการจับคู่โดยไม่ให้เกินสต็อก พร้อมบันทึกเหตุผลในกรณีที่ไม่สามารถจัดสรรได้
+7. **ส่งมอบให้มนุษย์ตรวจ:** แสดงแผนร่างพร้อมระบุความไม่แน่นอนและข้อจำกัด เพื่อให้ผู้อนุมัติตรวจทาน
 
-### C.2 Priority policy: explainable, reviewable, non-financial
+#### C.2 Priority policy: explainable, reviewable, non-financial
 
-คะแนนความสำคัญเป็น **เครื่องมือจัดลำดับเพื่อให้มนุษย์ตรวจ** ไม่ใช่การตัดสินอัตโนมัติว่าใคร “สมควร” ได้รับความช่วยเหลือกว่า ตัวอย่าง input ที่อาจใช้หลังได้รับอนุมัติจากเจ้าภาพ: ประเภทสิ่งของจำเป็น, ความเร่งด่วนตามเวลาที่ร้องขอ, สถานะความครบถ้วนของข้อมูล, และสภาพการเข้าถึงที่ยืนยันแล้ว ระบบต้องแสดง input และน้ำหนักที่ใช้ในแต่ละแผน ห้ามใช้ความสามารถในการจ่าย รายได้ หรือสถานะร้านค้ามาเป็นปัจจัยลดลำดับความช่วยเหลือ
+> [!IMPORTANT]
+> คะแนนความสำคัญเป็น **เครื่องมือช่วยจัดลำดับเพื่อให้มนุษย์ตรวจทานได้เร็วขึ้น** ไม่ใช่การตัดสินเชิงคุณค่าว่าใครควรได้รับความช่วยเหลือก่อน  
+> * **เกณฑ์ที่ใช้ได้:** ความเร่งด่วนของสิ่งของจำเป็น, กรอบเวลาที่ร้องขอ, สภาพการเข้าถึงที่ยืนยันแล้ว  
+> * **ข้อห้ามเด็ดขาด:** **ห้ามใช้ความสามารถในการจ่ายเงิน รายได้ หรือสถานะทางธุรกิจของร้านค้ามาเป็นปัจจัยลดทอนลำดับความช่วยเหลือ**
 
-### C.3 Minimum explanation shown per assignment
+#### C.3 Minimum explanation shown per assignment
+* **What:** จัดสรรสินค้าอะไร จำนวนเท่าใด จากร้านใด ไปยังจุดหมายใด
+* **Why this option:** ผ่านเงื่อนไขความพร้อมของสต็อก ความสดของข้อมูล และเส้นทางใด
+* **Evidence:** ระบุ Source และ Timestamp ของสต็อกและข้อจำกัดถนนที่นำมาคำนวณ
+* **Uncertainty:** ข้อมูลใดที่เริ่มเก่า หรือยังไม่ได้รับการยืนยันภาคสนาม
+* **Alternatives:** ตัวเลือกที่ไม่ได้รับเลือกพร้อมเหตุผล (เช่น สต็อกไม่พอ ถนนปิด)
+* **Human action:** สิ่งที่ผู้อนุมัติต้องตรวจทานเป็นพิเศษก่อนยืนยัน
 
-- **What:** จัดสรรสินค้าอะไร กี่หน่วย จากร้านใด ไปยังจุดใด
-- **Why this option:** ผ่านเงื่อนไขสินค้าพร้อม/ความสด/ข้อจำกัดเส้นทางใด
-- **Evidence:** source และ timestamp ของสต็อกและข้อจำกัดถนนที่นำมาใช้
-- **Uncertainty:** ข้อมูลใด stale, unverified หรือไม่อยู่ในขอบเขตของระบบ
-- **Alternatives:** ตัวเลือกที่ไม่ถูกเลือกและเหตุผล เช่น สต็อกไม่พอ ถนนปิด หรือข้อมูลหมดอายุ
-- **Human action:** สิ่งที่ผู้อนุมัติต้องตรวจ หรือเหตุผลที่ต้องยืนยันภาคสนาม
+#### C.4 LLM guardrails
+* ให้ LLM ตอบกลับใน Structured Schema ที่กำหนดเท่านั้น (เช่น `summary`, `evidence_ids`, `uncertainties`)
+* ห้ามให้ LLM คำนวณจำนวนสต็อกหรือสร้างสถานะถนนขึ้นมาเอง การคำนวณตัวเลขต้องเรียกใช้ Deterministic Service เท่านั้น
+* หากไม่มีข้อมูลสนับสนุนในฐานข้อมูล ระบบต้องส่งคืนค่า `INSUFFICIENT_EVIDENCE` ทันที
 
-### C.4 LLM guardrails
+---
 
-LLM เข้าถึงผ่าน tool/function ที่คืนเฉพาะข้อมูลตามสิทธิ์ และตอบใน schema ที่กำหนด เช่น `summary`, `evidence_ids`, `uncertainties`, `questions_for_operator` เท่านั้น การตัดสินใจเชิงจำนวนต้องเรียก planning service ไม่ให้ LLM สร้างจำนวนสต็อก เส้นทาง หรือสถานะถนนขึ้นเอง หากโมเดลไม่มีหลักฐานอ้างอิง ระบบต้องตอบว่า `INSUFFICIENT_EVIDENCE` และส่งกลับให้ผู้ใช้ตรวจสอบ
+### Appendix D: API and Integration Blueprint
 
-## Appendix D. API and Integration Blueprint
+#### D.1 Example service boundaries
 
-### D.1 Example service boundaries
+| บริการย่อย (Service) | ตัวอย่าง Endpoint | ข้อมูลนำเข้า (Input) | การควบคุมและผลลัพธ์ (Output) |
+| :--- | :--- | :--- | :--- |
+| **Request Service** | `POST /incidents/{id}/requests` | Payload คำขอ + Actor ID | ผลการตรวจ, Request ID, บันทึก Audit |
+| **Inventory Service** | `POST /businesses/{id}/inventory-snapshots` | SKU, หน่วย, จำนวน, Timestamp | Normalized Snapshot หรือ Error แจ้งเตือน |
+| **Road Evidence Service**| `POST /road-constraints` | Road Edge, สภาพถนน, Source | Evidence Record พร้อมสถานะ Freshness |
+| **Planning Service** | `POST /plans:generate` | Incident ID, Policy, คำขอที่เลือก | Versioned Draft Plan และ Exception List |
+| **Approval Service** | `POST /plans/{id}:approve` | ผู้อนุมัติ, รายการแก้ไข, เหตุผล | Approved Version หรือ Conflict กรณีแผนเปลี่ยน |
+| **Tracking Service** | `POST /missions/{id}:transition` | สถานะใหม่, เหตุผล, หลักฐาน | State Transition ที่อนุญาต + บันทึก Audit |
 
-| Service | Example endpoint | Input | Output / control |
-|---|---|---|---|
-| Request service | `POST /incidents/{id}/requests` | request payload + actor | validation result, request ID, audit event |
-| Inventory service | `POST /businesses/{id}/inventory-snapshots` | SKU, unit, allocatable qty, observed time | normalized snapshot or validation error |
-| Road evidence service | `POST /road-constraints` | edge, condition, source, timestamp | evidence record with freshness status |
-| Planning service | `POST /plans:generate` | incident, policy version, selected requests | versioned draft plan and exception list |
-| Approval service | `POST /plans/{id}:approve` | approver, revision, reason | approved version or conflict response |
-| Tracking service | `POST /missions/{id}:transition` | state, reason, proof reference | allowed state transition + audit event |
+*ทุก Endpoint ที่มีการเปลี่ยนสถานะต้องระบุ Authenticated Actor, ตรวจสอบสิทธิ์ (Role Check), มี Idempotency Key และใช้ Optimistic Concurrency Control (`plan_version`)*
 
-ทุก endpoint ที่เปลี่ยนสถานะต้องใช้ authenticated actor, role check, idempotency key และ server-side timestamp. การอนุมัติควรใช้ optimistic concurrency (`plan_version`) เพื่อป้องกันการอนุมัติข้อมูลเก่าหลังมีการ replan.
+#### D.2 External-data adapter pattern
+การเชื่อมต่อแหล่งข้อมูลภายนอกต้องผ่าน Data Adapter เพื่อแปลงเข้าสู่ Schema กลางมาตรฐาน:
+`source`, `source_record_id`, `observed_at`, `retrieved_at`, `geometry/edge`, `condition`, `confidence`, `license`, `raw_reference` โดยไม่อนุญาตให้ระบบภายนอกเขียนข้อมูลลงตาราง Planning โดยตรง
 
-### D.2 External-data adapter pattern
+#### D.3 Integration readiness gates
+ก่อนเปิดใช้งาน Integration จริง ต้องผ่านเกณฑ์ตรวจรับ:
+1. การตรวจสอบสิทธิ์การใช้ API และเงื่อนไขลิขสิทธิ์ข้อมูล
+2. การทดสอบ Rate Limiting และ Fallback Backoff
+3. การทดสอบ Data Mapping กับข้อมูลตัวอย่างจริง
+4. การทดสอบ Failure Mode เมื่อระบบภายนอกล่ม
+5. การอนุมัติด้าน Privacy และ Security จากเจ้าของข้อมูล
 
-การเชื่อมต่อข้อมูลภายนอกต้องทำผ่าน adapter แยกตาม provider และแปลงผลลัพธ์เป็น schema ภายในเดียวกัน: `source`, `source_record_id`, `observed_at`, `retrieved_at`, `geometry/edge`, `condition`, `confidence_or_verification`, `license`, `raw_reference` ไม่ควรให้ provider ใด provider หนึ่งเขียนข้อมูลเข้าสู่ planning tables โดยตรง และต้องเก็บ raw reference เท่าที่สิทธิ์อนุญาตเพื่อสืบค้นที่มาได้
+---
 
-### D.3 Integration readiness gates
+### Appendix E: Security, Privacy and Operational Controls
 
-ก่อนเปิด integration จริง ต้องผ่าน: การตรวจสิทธิ์ API และเงื่อนไขใช้ข้อมูล, rate-limit/backoff, mapping test กับข้อมูลตัวอย่างจริง, failure-mode test เมื่อ provider ล่ม, และการอนุมัติ privacy/security จากเจ้าของข้อมูล ไม่มี gate ใดผ่านแล้วใน prototype ปัจจุบัน
+#### E.1 Access model
 
-## Appendix E. Security, Privacy and Operational Controls
+| บทบาทผู้ใช้ (Role) | สิทธิ์การเข้าถึงหลัก | ข้อจำกัดสำคัญตามหลัก Least Privilege |
+| :--- | :--- | :--- |
+| **System Administrator** | จัดการ Tenant, กำหนดบทบาท, เชื่อมต่อ Integration | ไม่สามารถเข้าถึงเนื้อหาคำขอส่วนบุคคลโดยปริยาย |
+| **Coordinator** | สร้าง/แก้ไขคำขอ, สั่งประมวลผลแผนร่าง, ติดตามงาน | อนุมัติแผนไม่ได้ เว้นแต่จะได้รับสิทธิ์ Approver เพิ่มเติม |
+| **Approver** | ตรวจสอบหลักฐาน อนุมัติ หรือปฏิเสธแผนการจัดสรร | ต้องเห็น Evidence และส่วนต่างการเปลี่ยนแปลงของแผนชัดเจน |
+| **SME Operator** | ดูและอัปเดตข้อมูลสต็อกเฉพาะของร้านค้าตนเอง | ไม่เห็นข้อมูลคำขอหรือที่อยู่ของผู้รับที่ไม่เกี่ยวข้อง |
+| **Transporter / Volunteer**| ดูเฉพาะภารกิจที่ได้รับมอบหมาย | เห็นที่อยู่จัดส่งเฉพาะงานของตน และข้อมูลจะหมดอายุตามเวลา |
+| **Auditor** | ตรวจสอบบันทึก Audit Log และรายงานภาพรวม | ไม่มีสิทธิ์แก้ไขข้อมูลการปฏิบัติงานใดๆ ทั้งสิ้น |
 
-### E.1 Access model
+#### E.2 Privacy-by-design controls
+* **Geographic Generalization:** จัดเก็บตำแหน่งที่อยู่ระดับโซนหรือจุดนัดพบในขั้นตอนการวางแผน เปิดเผยพิกัดเฉพาะผู้ขนส่งที่ได้รับมอบหมายเท่านั้น
+* **Data Segregation & Encryption:** แยกฐานข้อมูล PII ออกจากข้อมูล Planning เข้ารหัสข้อมูลทั้งในระหว่างส่ง (TLS 1.3) และระหว่างจัดเก็บ (AES-256)
+* **Retention Schedule:** มีกำหนดระยะเวลาทำลายข้อมูลที่ชัดเจน และแปลงข้อมูลภารกิจที่ปิดแล้วให้เป็นข้อมูลนิรนาม (Anonymized Data)
+* **Prompt Protection:** ห้ามนำข้อมูลสุขภาพหรือข้อมูลระบุตัวตนของผู้เปราะบางใส่ลงใน Prompt ที่ส่งไปยังบริการ AI ภายนอก
 
-| Role | สิทธิ์หลัก | ข้อจำกัดสำคัญ |
-|---|---|---|
-| System administrator | จัดการ tenant, role, integration | ไม่ควรเข้าถึงเนื้อหาคำขอโดยปริยาย |
-| Coordinator | สร้าง/แก้คำขอ สร้างแผน ติดตามงาน | อนุมัติได้เฉพาะเมื่อได้รับ role เพิ่ม |
-| Approver | ตรวจ อนุมัติ หรือปฏิเสธแผน | ต้องเห็น evidence และความต่างจากแผนก่อนหน้า |
-| SME operator | อัปเดตเฉพาะข้อมูลร้าน/สต็อกของตน | ไม่เห็นคำขอหรือข้อมูลผู้รับที่ไม่เกี่ยวข้อง |
-| Transporter / volunteer | เห็นงานที่ได้รับมอบหมาย | เห็นเฉพาะข้อมูลการส่งที่จำเป็นและมีอายุจำกัด |
-| Auditor | อ่าน audit และรายงานที่ลดข้อมูลระบุตัวบุคคล | ไม่มีสิทธิ์แก้ข้อมูลปฏิบัติการ |
+#### E.3 Incident response minimum
+เมื่อตรวจพบความผิดปกติ: (1) ระงับ Token หรือการเชื่อมต่อทันที (2) ปรับสถานะแผนที่ได้รับผลกระทบเป็น `NEEDS_REVIEW` (3) แจ้งเตือนผู้ดูแลระบบและผู้อนุมัติ (4) ล็อกหลักฐาน Audit Trail (5) ประเมินการแจ้งเตือนตามกฎหมาย PDPA โดยห้ามลบประวัติการทำงานเดิม
 
-### E.2 Privacy-by-design controls
+---
 
-- เก็บตำแหน่งเป็นระดับ zone หรือจุดนัดหมายเมื่อเพียงพอต่อการวางแผน; เปิดที่อยู่ละเอียดให้ผู้รับงานที่ได้รับมอบหมายเท่านั้น
-- แยก PII/contact data ออกจาก planning data, เข้ารหัสขณะส่งและขณะเก็บ, และใช้ token/reference ใน dashboard ทั่วไป
-- กำหนด retention schedule ร่วมกับเจ้าของข้อมูลก่อน pilot; งานที่เสร็จแล้วควรถูกทำให้ลดการระบุตัวตนสำหรับ analytics เมื่อทำได้
-- ทุกการ export ต้องบันทึกผู้ขอ วัตถุประสงค์ ขอบเขต และเวลา; ปิดการ export แบบกว้างเป็นค่าเริ่มต้น
-- ห้ามใส่ข้อมูลสุขภาพหรือกลุ่มเปราะบางใน prompt ที่ส่งออกนอกขอบเขตการอนุมัติข้อมูล
+### Appendix F: Delivery Plan and Acceptance Criteria
 
-### E.3 Incident response minimum
+#### F.1 Phased roadmap
 
-เมื่อพบข้อมูลผิด สำคัญ หรือการเข้าถึงผิดปกติ: (1) ระงับ token/session หรือ integration ที่เกี่ยวข้อง (2) ทำเครื่องหมายแผนที่ได้รับผลกระทบเป็น `NEEDS_REVIEW` (3) แจ้งเจ้าของระบบและผู้อนุมัติ (4) เก็บหลักฐาน audit (5) ประเมินการแจ้งผู้ได้รับผลกระทบตามข้อตกลงและกฎหมายที่ใช้บังคับ การแก้เหตุการณ์ต้องไม่ลบ audit trail เดิม
+| ระยะการดำเนินงาน | กรอบเวลา | ผลงานส่งมอบหลัก (Deliverables) | เกณฑ์การผ่านระยะ (Exit Criteria) |
+| :---: | :---: | :--- | :--- |
+| **ระยะ 0: Discovery** | 2 สัปดาห์ | Interview Guide, Journey Maps, Data Dictionary, Risk Register | สัมภาษณ์ผู้ใช้ 3–5 รายเพื่อยืนยันปัญหา |
+| **ระยะ 1: Foundation** | 3–4 สัปดาห์ | ระบบ Auth/RBAC, Core Data Model, Manual Inputs, Audit Log | ผ่านการทดสอบ Role Test และ CRUD Validation |
+| **ระยะ 2: Planning Engine** | 2–3 สัปดาห์ | Inventory Matching, Synthetic Road Graph, Versioning | ครอบคลุม Test Scenarios: สำเร็จ, ถนนปิด, สต็อกไม่พอ |
+| **ระยะ 3: Explainability** | 2 สัปดาห์ | Evidence Panel, Approval Flow, Accessibility Review | ผู้ใช้กลุ่มตัวอย่างทำภารกิจหลักสำเร็จตามเกณฑ์ |
+| **ระยะ 4: Controlled Pilot**| 2–4 สัปดาห์ | SOP ภาคสนาม, Onboarding Guide, Measurement Dashboard | หน่วยงานเจ้าภาพอนุมัติ ไร้ปัญหาความปลอดภัยตกค้าง |
 
-## Appendix F. Delivery Plan and Acceptance Criteria
+#### F.2 MVP acceptance criteria
 
-### F.1 Phased roadmap
+| ขีดความสามารถของระบบ | เกณฑ์การตรวจรับเชิงคุณภาพ (Acceptance Criteria) |
+| :--- | :--- |
+| **Data Provenance** | สต็อกและข้อจำกัดถนนทุกรายการที่ใช้ในแผน ต้องแสดง Source และ Timestamp ได้ |
+| **Inventory Safety** | ระบบต้องไม่สร้างแผนที่ทำให้ยอดจองเกิน `allocatable_qty` ใน Transaction เดียวกัน |
+| **Route Constraint** | เมื่อกำหนดว่า Edge เป็น `CLOSED` แผนที่สร้างหลังจากนั้นต้องไม่นำทางผ่านเส้นทางดังกล่าว |
+| **Human Approval** | แผนร่างที่ไม่ผ่านการอนุมัติ จะต้องไม่สามารถเปลี่ยนสถานะเป็นภารกิจที่เริ่มส่งงานได้ |
+| **Auditability** | สามารถเปรียบเทียบความแตกต่างระหว่างแผน 2 เวอร์ชัน และดูประวัติย้อนหลังได้ |
+| **Privacy Compliance** | ผู้ใช้แต่ละบทบาทไม่สามารถเข้าถึงข้อมูล PII นอกเหนือขอบเขตงานของตนเอง |
+| **Failure Transparency** | เมื่อข้อมูลหมดอายุหรือ Service ขัดข้อง หน้าจอต้องแสดงคำเตือนอย่างชัดเจน |
 
-| ระยะ | ระยะเวลาโดยประมาณ | Deliverables | Exit criteria |
-|---|---:|---|---|
-| 0 — Discovery | 2 สัปดาห์ | interview guide, journey map, data dictionary, risk register | ผู้ใช้เป้าหมาย 3–5 รายยืนยัน/แก้สมมติฐานหลัก |
-| 1 — MVP foundation | 3–4 สัปดาห์ | auth/RBAC, core data model, manual input, audit log | role tests และ CRUD validation ผ่าน |
-| 2 — Planning engine | 2–3 สัปดาห์ | inventory matching, synthetic road graph, plan versioning, exceptions | test scenarios ครอบคลุมกรณีสำเร็จ/ถนนปิด/ไม่มีสต็อก |
-| 3 — Explainability & UX | 2 สัปดาห์ | evidence panel, approval flow, status tracking, accessibility review | ผู้ใช้ทำ core task สำเร็จตามเกณฑ์ usability |
-| 4 — Controlled pilot | 2–4 สัปดาห์ | SOP, onboarding, measurement dashboard, retrospective | เจ้าภาพอนุมัติ, ไม่มี critical safety/privacy issue ที่ค้างอยู่ |
+#### F.3 Test scenarios for demo and pilot
+1. **Happy Path:** คำขอปกติ สต็อกพร้อม ถนนเปิด ➔ สร้างแผนร่าง อนุมัติ และปิดภารกิจได้ราบรื่น
+2. **Road Closure Replan:** ปิดเส้นทางบนถนนหลัก ➔ ระบบคำนวณทางเลี่ยงใหม่ทันที หรือแจ้งเตือนเมื่อไม่มีเส้นทาง
+3. **Stock Contention:** คำขอแย่งสต็อกเดียวกัน ➔ ยอดจองรวมไม่เกินสต็อกจริง และคำขอที่เหลือเข้า Exception Queue
+4. **Stale Evidence Warning:** สต็อกหรือสถานะถนนหมดอายุ ➔ แสดงสัญลักษณ์แจ้งเตือน และไม่อนุมัติแผนอัตโนมัติ
+5. **Concurrent Edit Conflict:** ผู้ใช้สองคนแก้ไขแผนพร้อมกัน ➔ ปฏิเสธการบันทึกแผนรุ่นเก่าด้วย Version Conflict
+6. **Role Boundary Enforcement:** อาสาสมัครพยายามเปิดดูข้อมูลคำขอนอกงานตนเอง ➔ ระบบตอบกลับ `HTTP 403` และบันทึก Log
 
-ระยะเวลาเป็นประมาณการสำหรับทีมที่สามารถทำงานต่อเนื่องและยังไม่รวมการอนุมัติจากหน่วยงานภายนอก การเชื่อม API จริงอาจเพิ่มเวลาและความเสี่ยงอย่างมีนัยสำคัญ
+---
 
-### F.2 MVP acceptance criteria
+### Appendix G: Risks, Dependencies and Open Questions
 
-| Capability | Acceptance criterion |
-|---|---|
-| Data provenance | รายการสต็อกและข้อจำกัดถนนทุกรายการที่ใช้ในแผนแสดง source และ timestamp ได้ |
-| Inventory safety | ระบบไม่สร้าง assignment ที่ทำให้ยอดจองเกิน allocatable quantity ใน transaction เดียวกัน |
-| Route constraint | เมื่อ edge เป็น `CLOSED` แผนที่สร้างหลังจากนั้นต้องไม่ใช้ edge นั้น; หากไม่มีทางเลือกต้องแสดง exception |
-| Approval | แผนที่ยังไม่อนุมัติเปลี่ยนเป็น mission ที่ dispatchable ไม่ได้; override ต้องมี actor และ reason |
-| Auditability | เปรียบเทียบแผนสองรุ่นและดูเหตุการณ์เปลี่ยนสถานะย้อนหลังได้ |
-| Privacy | ผู้ใช้แต่ละ role ไม่เข้าถึง PII นอกภารกิจ/tenant ของตนใน authorization tests |
-| Failure transparency | เมื่อข้อมูลหมดอายุหรือ planning service ล้มเหลว UI แสดงสถานะและไม่แสดงผลเก่าว่าเป็นแผนใหม่ |
+| ปัจจัยความเสี่ยง / ประเด็นสำคัญ | ผลกระทบที่อาจเกิดขึ้น | แนวทางการลดความเสี่ยง / การตัดสินใจ | ผู้รับผิดชอบหลัก |
+| :--- | :--- | :--- | :---: |
+| **ข้อมูลสต็อกร้านค้าไม่เป็นปัจจุบัน** | แผนจัดสรรใช้การไม่ได้หน้างาน | กำหนด Freshness Policy, ยืนยันสต็อกซ้ำก่อนเข้ารับของ | SME Operator + Coordinator |
+| **รายงานสถานะถนนไม่ทันเหตุการณ์** | เสี่ยงนำทางเข้าสู่จุดอันตราย | ไม่รับรองความปลอดภัยเส้นทาง, กำหนดอายุข้อมูลสั้น | Incident Owner |
+| **เกณฑ์ Priority ไม่เป็นที่ยอมรับ** | ขาดความเชื่อมั่นในความโปร่งใส | ร่วมออกแบบเกณฑ์กับชุมชน, แสดงน้ำหนักเปิดเผย, มีช่องทางอุทธรณ์ | Host Organization |
+| **ภาระการบันทึกข้อมูลของร้านค้าสูง** | อัตราการใช้งานระบบต่ำ | ลดจำนวนช่องกรอกข้อมูล, รองรับ Template การนำเข้า | Product Team |
+| **การเปลี่ยนแปลงเงื่อนไข API ภายนอก** | กำหนดการพัฒนาล่าช้า | ออกแบบ Data Adapter แยกชั้น, เตรียม Mock Provider | Technical Lead |
+| **การรั่วไหลของข้อมูล PII** | ความเสียหายต่อผู้ประสบภัย | จำกัดสิทธิ์ RBAC, เข้ารหัสข้อมูล, ทำ Redaction ข้อมูลก่อนส่ง AI | Security Owner |
+| **ขาดผู้มีอำนาจอนุมัติที่ชัดเจน** | ระบบกลายเป็นเพียงแดชบอร์ดลอย | จัดทำ RACI Matrix และคู่มือ SOP ร่วมกับพื้นที่ก่อนเริ่ม Pilot | Pilot Sponsor |
 
-### F.3 Test scenarios for demo and pilot
+#### Open questions to resolve before real-world deployment
+1. ใครคือ Data Controller และใครมีสิทธิ์อนุมัติการจัดเก็บ/แบ่งปันข้อมูลในแต่ละพื้นที่?
+2. หน่วยงานใดมีอำนาจประกาศยืนยันสถานะถนน และมี SLA การรายงานความถี่เท่าใด?
+3. หน่วยนับสินค้ามาตรฐานและหลักเกณฑ์การปันส่วนสต็อกจะกำหนดร่วมกับชุมชนอย่างไร?
+4. รูปแบบการยืนยันการรับมอบสินค้า (Proof of Delivery) ที่ไม่ละเมิดความเป็นส่วนตัวควรเป็นอย่างไร?
+5. เมื่อไม่มีเส้นทางที่ปลอดภัย ระบบต้องส่งต่อเรื่อง (Escalate) ไปยังหน่วยงานใด และใช้ SLA เท่าใด?
+6. ขั้นตอนการจัดซื้อสินค้าจากร้านค้าชุมชนต้องสอดคล้องกับระเบียบการเงินภาครัฐ/ผู้สนับสนุนอย่างไร?
 
-1. **Happy path:** คำขอหนึ่งรายการ สต็อกเพียงพอ ถนนเปิด → สร้างแผนร่าง อนุมัติ และปิดงานได้
-2. **Road closure replan:** ปิด edge ที่อยู่บนเส้นทาง → ระบบเลือกเส้นทางอื่น หรือแสดงว่าไม่มีเส้นทาง พร้อมเหตุผล
-3. **Stock contention:** สองคำขอใช้สินค้าเดียวกันเกินยอดคงเหลือ → ยอดรวมที่จองไม่เกิน snapshot และคำขอที่เหลือเข้าสู่ exception queue
-4. **Stale evidence:** สถานะถนนหรือสต็อกเกิน policy → ต้องมี warning และไม่อนุมัติอัตโนมัติ
-5. **Concurrent edit:** ผู้ใช้สองรายแก้แผนคนละหน้าจอ → การอนุมัติรุ่นเก่าถูกปฏิเสธด้วย version conflict
-6. **Role boundary:** ผู้ขนส่งพยายามเปิดคำขอที่ไม่ได้รับมอบหมาย → ระบบตอบ `403` และบันทึกเหตุการณ์ความปลอดภัย
+---
 
-## Appendix G. Risks, Dependencies and Open Questions
+### Appendix H: Glossary (คำศัพท์สำคัญ)
 
-| ความเสี่ยง/คำถาม | ผลกระทบ | Mitigation / decision needed | Owner ที่เสนอ |
-|---|---|---|---|
-| ข้อมูลสต็อกไม่สดหรือไม่ตรงจริง | แผนจัดสรรใช้การไม่ได้ | freshness policy, reservation, manual confirmation ก่อนรับสินค้า | SME operator + coordinator |
-| รายงานถนนไม่ทันสถานการณ์ | เสี่ยงต่อการตัดสินใจผิด | ไม่รับรองเส้นทาง, evidence expiry, field verification SOP | Incident owner |
-| นิยาม “priority” ไม่เป็นธรรม/ไม่เป็นที่ยอมรับ | ความเชื่อมั่นและความเป็นธรรมลดลง | co-design policy, expose weights, override + appeals path | Host organization |
-| ผู้ใช้มีภาระอัปเดตข้อมูลสูง | adoption ต่ำ | ลดจำนวนฟิลด์, ใช้ template/import, วัดเวลาต่อ task | Product team |
-| การเชื่อม API หรือกฎข้อมูลเปลี่ยน | roadmap ล่าช้า | adapter, mock provider, integration gate | Technical lead |
-| PII รั่วไหลใน dashboard/prompt | ความเสียหายต่อผู้รับบริการ | RBAC, minimization, logging, prompt redaction | Security owner |
-| ไม่มีผู้มีอำนาจอนุมัติชัดเจน | ระบบเป็นเพียง dashboard ที่ใช้การไม่ได้ | ระบุ RACI และ SOP ก่อน field pilot | Pilot sponsor |
+| คำศัพท์เทคนิค | นิยามและความหมายในเอกสารนี้ |
+| :--- | :--- |
+| **Allocation** | การจัดสรรหรือกันจำนวนสินค้าจากร้านค้าหนึ่งเพื่อเตรียมส่งมอบให้คำขอหนึ่งรายการ *(ยังไม่เท่ากับการส่งมอบสำเร็จ)* |
+| **Assignment** | รายการจับคู่ระหว่างคำขอ สินค้าในสต็อก และตัวเลือกการขนส่งภายใต้แผนงานเวอร์ชันหนึ่ง |
+| **Evidence** | ข้อมูลที่มีการระบุ Source, Timestamp และสถานะการตรวจสอบได้ เพื่อใช้เป็นหลักฐานสนับสนุนข้อเสนอของระบบ |
+| **Freshness** | อายุของข้อมูลเปรียบเทียบกับนโยบายที่กำหนด *(เป็นดัชนีวัดความสดใหม่ ไม่ใช่การรับประกันความถูกต้อง)* |
+| **Road Edge** | ช่วงถนนเส้นหนึ่งบนกราฟเครือข่ายการเดินทาง ซึ่งมีสถานะกำกับ เช่น `OPEN`, `CLOSED`, หรือ `UNKNOWN` |
+| **Replan** | การประมวลผลสร้างแผนงานเวอร์ชันใหม่เมื่อข้อมูลหรือข้อจำกัดเปลี่ยน โดยเก็บประวัติเปรียบเทียบกับแผนเดิม |
+| **SIMULATED** | ข้อมูลสังเคราะห์ที่สร้างขึ้นเพื่อการสาธิตและทดสอบการทำงาน ต้องไม่ถูกสื่อสารว่าเป็นข้อมูลจากสถานการณ์จริง |
 
-### Open questions to resolve before real-world deployment
-
-1. ใครเป็น data controller และใครอนุมัติการเก็บ/แชร์ข้อมูลในแต่ละพื้นที่?
-2. ผู้ใดมีอำนาจประกาศหรือยืนยันสถานะถนน และใช้ SLA ความถี่เท่าใด?
-3. หน่วยสินค้ากลาง, รายการของจำเป็น, และกติกาแบ่งสต็อกจะกำหนดร่วมกับชุมชนอย่างไร?
-4. การรับมอบและ proof of delivery ที่ไม่เปิดเผยข้อมูลเกินจำเป็นควรเป็นรูปแบบใด?
-5. เมื่อไม่มีเส้นทางที่ยืนยันได้ ระบบต้อง escalate ไปยังหน่วยใด และ SLA เท่าใด?
-6. หากมีการจัดซื้อจากร้านค้าในพื้นที่ กระบวนการใดต้องปฏิบัติตามกฎการเงิน/จัดซื้อของเจ้าภาพ?
-
-## Appendix H. Glossary
-
-| คำ | ความหมายในเอกสารนี้ |
-|---|---|
-| Allocation | การกัน/กำหนดจำนวนสินค้าจากแหล่งหนึ่งให้คำขอหนึ่งรายการ; ไม่เท่ากับส่งสำเร็จ |
-| Assignment | รายการเชื่อมคำขอ สต็อก และตัวเลือกการส่งในแผนรุ่นหนึ่ง |
-| Evidence | ข้อมูลที่ระบุ source, timestamp และสถานะตรวจสอบได้ ซึ่งใช้สนับสนุนข้อเสนอของระบบ |
-| Freshness | อายุข้อมูลเทียบกับ policy; ไม่ใช่ความถูกต้องของข้อมูลโดยตัวมันเอง |
-| Road edge | ช่วงถนนในกราฟ routing ที่สามารถมีสถานะเปิด/ปิด/ไม่ทราบ |
-| Replan | สร้างแผนรุ่นใหม่เมื่อข้อมูลหรือข้อจำกัดเปลี่ยน โดยเก็บความต่างจากรุ่นเดิม |
-| SIMULATED | ข้อมูลที่สร้างเพื่อสาธิต/ทดสอบ ต้องไม่สื่อว่าเป็นข้อมูลสถานการณ์จริง |
+---
+*เอกสารข้อเสนอโครงการ — LocalShield AI (Final Proposal v2.1)*
