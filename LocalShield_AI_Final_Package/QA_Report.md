@@ -21,6 +21,12 @@
 5. Added the five team roles, with Ratima correctly listed as Business English.
 6. Added a submission checklist that flags the possible five-person vs three-to-four-person conflict, registration status, and pre-built-code rule for Sea x OpenAI.
 7. Added KPI formulas and evidence statuses; removed unsupported claims about measured impact or business viability.
+8. Added 5 interactive demo features in `LocalShield_AI_Prototype.html` and expanded corresponding technical architecture, user journeys, data models, and API blueprints in `LocalShield_AI_Final_Proposal.md`:
+   - Visual Plan Diff Viewer (Side-by-side plan comparison with delta KPIs & AI rationale)
+   - Vehicle Clearance-Aware Routing Filter (Motorcycle <15cm, 4WD Truck <45cm, Rescue Flat-bottom Boat >30cm navigating flooded segments directly)
+   - AI Multimodal SOS Intake Simulator (LINE text, Voice Memo audio waveform, Photo alert with automated PDPA masking and vulnerability triage scoring)
+   - Role-Based Operational Workspaces (Coordinator, Local SME Merchant with Digital Escrow Payout, Volunteer Driver with mobile turn-by-turn and proof-of-delivery, Resident Tracker)
+   - Automated Situation Report (SitRep) Generator (Instant export to Markdown for command LINE groups and Print/PDF layout)
 
 ## Static validation performed
 

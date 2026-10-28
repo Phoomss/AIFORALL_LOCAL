@@ -178,6 +178,78 @@ flowchart TD
 6. **การอนุมัติโดยมนุษย์:** ผู้มีอำนาจตรวจทานรายละเอียดและกดยืนยันอนุมัติแผนก่อนเริ่มภารกิจ
 7. **ติดตามและประเมิน:** ผู้ประสานงานติดตามสถานะงาน และตรวจสอบ KPI หลังจบเหตุการณ์
 
+### 2.2 ขีดความสามารถขั้นสูงที่ได้รับการพัฒนาเพิ่ม (5 Enhanced Core Capabilities)
+
+เพื่อยกระดับจากระบบประสานงานเชิงทฤษฎีสู่ระบบที่ตอบสนองสถานการณ์ฉุกเฉินในภาคสนามได้อย่างสมบูรณ์ LocalShield AI ได้รับการออกแบบและพัฒนาเพิ่ม 5 ขีดความสามารถสำคัญ:
+
+```mermaid
+flowchart TD
+    subgraph ENHANCEMENTS["⚡ 5 ขีดความสามารถขั้นสูงของ LocalShield AI"]
+        direction TB
+        E1["📱 <b>1. Multimodal LINE/Voice SOS Ingestion</b><br/>ถอดเสียง/ภาพ/แชตเป็นข้อมูลโครงสร้าง + Mask ข้อมูลส่วนบุคคล + คำนวณ Triage"]
+        E2["🚗 <b>2. Vehicle Clearance-Aware Routing</b><br/>ประเมินระดับน้ำตามประเภทพาหนะ (มอเตอร์ไซค์ vs กระบะ 4WD vs เรือท้องแบน)"]
+        E3["📊 <b>3. Visual Plan Diff Viewer</b><br/>เปรียบเทียบการเปลี่ยนแปลงของแผนแบบ Side-by-side (v1 vs v2) พร้อมเหตุผล AI"]
+        E4["👥 <b>4. Role-Based Workspaces (4 Personas)</b><br/>สลับหน้าจอตามบทบาท: ผู้ประสานงาน • ร้านค้า SME • อาสาสมัครคนขับ • ประชาชน"]
+        E5["📄 <b>5. Automated Situation Report (SitRep)</b><br/>ออกรายงานสถานการณ์ฉุกเฉินมาตรฐาน (Markdown & Print/PDF) ใน 1 คลิก"]
+    end
+
+    E1 --> E2
+    E2 --> E3
+    E3 --> E4
+    E4 --> E5
+
+    classDef enh fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc;
+    class E1,E2,E3,E4,E5 enh;
+```
+
+#### 1. 🔴 Visual Plan Diff Viewer (การตรวจทานความเปลี่ยนแปลงของแผนเชิงเปรียบเทียบ)
+* **ปัญหาหน้างาน:** เมื่อเกิดเหตุน้ำท่วมตัดถนนใหม่ การคำนวณแผนใหม่ทั้งระบบมักสร้างความสับสนให้ผู้ประสานงาน (Cognitive Overload) เนื่องจากไม่ทราบว่าคำร้องใดบ้างที่ถูกเปลี่ยนเส้นทาง หรือร้านค้าใดถูกสลับ
+* **กลไกการทำงาน:**
+  * ระบบบันทึก Snapshot ของแผนเวอร์ชันก่อนหน้า (`v_prev`) เทียบกับแผนเวอร์ชันปัจจุบัน (`v_curr`)
+  * แสดงตารางเปรียบเทียบเชิงลึก: รายการคำร้อง, ร้านค้าเดิม ➔ ร้านค้าใหม่, เส้นทางเดิม ➔ เส้นทางเลี่ยงใหม่
+  * คำนวณตัวชี้วัดผลกระทบสุทธิ (Net Delta): ระยะทางรวมที่เพิ่มขึ้น (+Δ km), เวลาที่คาดว่าจะล่าช้า, และคำร้องที่หลุดเข้าสู่ Exception Queue
+  * **Explainable AI Rationale:** แสดงคำอธิบายที่ตรวจสอบได้ เช่น *"ถนนช่วง B–D ปิดใช้งาน จึงเปลี่ยนจุดเบิกสต็อกน้ำดื่มไปยังร้าน A และใช้เส้นทางเลี่ยง A ➔ C ➔ D (+2.4 กม.) เพื่อหลีกเลี่ยงจุดวิกฤต"*
+
+#### 2. 🔴 Vehicle Clearance-Aware Routing (การนำทางตามขีดความสามารถยานพาหนะและระดับน้ำท่วม)
+* **ปัญหาหน้างาน:** น้ำท่วมในเขตเมืองไม่ได้ปิดกั้นทุกยานพาหนะเท่าเทียมกัน น้ำท่วม 40 ซม. ขวางมอเตอร์ไซค์และรถเก๋ง แต่รถกระบะยกสูง 4WD หรือเรือท้องแบนกู้ภัยสามารถปฏิบัติการได้
+* **การจัดระดับขีดความสามารถ (Clearance Thresholds):**
+  1. `🏍️ มอเตอร์ไซค์ / เดินเท้า (Clearance < 15 ซม.):` ห้ามผ่านถนนที่มีน้ำท่วมขังเด็ดขาด บังคับใช้ทางเลี่ยงที่ปลอดภัยเท่านั้น
+  2. `🛻 รถกระบะยกสูง / 4WD (Clearance < 45 ซม.):` สามารถลุยน้ำระดับปานกลางได้ แต่หากระดับน้ำวิกฤต (>40 ซม.) ระบบจะคำนวณทางเลี่ยงเพื่อความปลอดภัยของสินค้าและยานพาหนะ
+  3. `🚤 เรือท้องแบน / เจ็ทสกีกู้ภัย (Wading Depth > 30 ซม.):` **สามารถสัญจรทางน้ำตัดตรงผ่านช่วงถนนที่ถูกน้ำท่วม (เช่น ช่วง B–D) ได้โดยตรง** กลายเป็นทางลัดพิเศษที่ช่วยลดระยะเวลาขนส่งได้มากกว่าการอ้อมทางบก
+
+#### 3. 🟡 Multimodal LINE/Voice SOS Ingestion with Automated PDPA Redaction
+* **ปัญหาหน้างาน:** ผู้ประสบภัยหรือผู้นำชุมชนในภาวะวิกฤตไม่สะดวกกรอกแบบฟอร์ม มักส่งข้อความแชตสั้นๆ, อัดเสียง (Voice Note) หรือส่งรูปถ่ายน้ำท่วม
+* **กระบวนการประมวลผลของ AI:**
+  * **Speech-to-Text & Vision OCR:** ถอดเสียงและแปลงข้อความดิบ เช่น *"บ้านยายแมว ซอย 4 น้ำท่วมอก มีคุณยายติดเตียง ต้องการน้ำดื่มด่วน 3 แพ็ค ข้าวสาร 2 ถุง โทร 089-123-4567"*
+  * **Automated PDPA Masking:** ตรวจจับข้อมูลส่วนบุคคล (PII) อัตโนมัติและเข้ารหัส เช่น `089-123-4567` ➔ `[REDACTED: 089-XXX-4567]` ก่อนส่งเข้าสู่โมเดลและบันทึกในฐานข้อมูล
+  * **Entity & Geocoding Extraction:** สกัดพิกัดพื้นที่ (ชุมชนบ้านเหนือ / Node D) และสิ่งของจำเป็น (น้ำดื่ม 3, อาหารแห้ง 2)
+  * **Vulnerability Triage Scoring (0.0 - 10.0):** หากตรวจพบกลุ่มเปราะบาง (ผู้ป่วยติดเตียง, เด็กอ่อน, ผู้ป่วยฟอกไต) ระบบจะปรับคะแนนความเร่งด่วนสู่ระดับวิกฤต (Critical Triage Score 9.8/10) และยกระดับคิวคำร้องเป็น High Priority ทันที
+
+#### 4. 🟡 Role-Based Operational Workspaces (ระบบสวมบทบาทตามผู้มีส่วนได้ส่วนเสีย 4 ฝ่าย)
+ระบบรองรับการสลับมุมมองตามบทบาทการทำงานจริงในระบบนิเวศบรรเทาทุกข์:
+1. **🛡️ ผู้ประสานงาน (Coordinator Dashboard):** ศูนย์บัญชาการ แผนที่ยุทธวิธี ตรวจรับรองสถานะถนน คิวคำร้อง และการอนุมัติแผนภารกิจ
+2. **🏪 ร้านค้าชุมชน (Local SME Merchant Portal):**
+   * แสดงเฉพาะรายการสินค้าที่ระบบจับคู่เบิกจ่ายจากร้านตนเอง
+   * สรุป **ยอดเงินชดเชยที่การันตีโดยกองทุนบรรเทาทุกข์ (Guaranteed Escrow Payout)** พร้อมรหัส Digital Voucher
+   * แผงปรับสต็อกคงเหลือแบบเรียลไทม์ (Quick Stock Sync) และปุ่มยืนยันสินค้าพร้อมส่งมอบ
+3. **🚚 อาสาสมัครขนส่ง (Field Volunteer / Driver Mobile Dispatch):**
+   * หน้าจอมือถือคอนทราสต์สูงสำหรับปฏิบัติการภาคสนาม
+   * ข้อมูลต้นทาง-ปลายทาง คำเตือนระดับน้ำท่วม และเส้นทางนำทางเลี่ยงอันตราย
+   * ปุ่มกดยืนยันส่งมอบสำเร็จพร้อมระบบบันทึกภาพถ่ายหลักฐาน (Proof of Delivery)
+4. **👥 ชุมชนและประชาชน (Resident Community SOS Tracker):**
+   * หน้าจอตรวจสอบความโปร่งใส ค้นหาด้วยรหัสคำร้อง (เช่น REQ-001)
+   * แสดงความคืบหน้า 5 ขั้นตอน (รับเรื่อง ➔ จับคู่ร้านค้า ➔ อนุมัติ ➔ กำลังจัดส่ง ➔ ส่งมอบสำเร็จ)
+
+#### 5. 🟢 Automated Situation Report (SitRep) Generator
+* **ปัญหาหน้างาน:** ผู้ประสานงานต้องเสียเวลา 30–60 นาทีในการรวบรวมข้อมูลสรุปเพื่อรายงานศูนย์บัญชาการ ปภ. หรือผู้ว่าราชการฯ
+* **รูปแบบรายงานมาตรฐาน (Incident Command SitRep Standard):**
+  * สรุปตัวชี้วัดหลัก: คำร้องทั้งหมด, อัตรา Fulfillment (%), ยอดจัดส่งสำเร็จ, และระยะทางรวม
+  * สรุปมูลค่าการจัดซื้อหมุนเวียนสู่ SME ชุมชน (Local Procurement Impact)
+  * สถานะความเสี่ยงโครงข่ายถนน และรายการคำร้องข้อยกเว้น (Exception Queue) ที่ต้องส่งต่อหน่วยกู้ภัยระดับสูง
+  * **Export 2 ช่องทาง:**
+    * 📋 **Markdown Export:** สำหรับคัดลอกส่งเข้ากลุ่มแชต LINE/Telegram ของคณะทำงานฉุกเฉินได้ทันที
+    * 🖨️ **Print / PDF Layout:** จัดหน้าตามแบบฟอร์มเอกสารทางการ พร้อมสั่งพิมพ์หรือบันทึกเป็น PDF
+
 ---
 
 ## 3. Fit to AI Product / Hackathon Directions
@@ -277,6 +349,9 @@ flowchart TD
 | **Optimization** | Graph Algorithm / OR-Tools / pgRouting | การคำนวณจับคู่สต็อกและหาเส้นทางเลี่ยงข้อจำกัดบนกราฟถนน |
 | **Storage & Analytics**| Amazon S3 / Amazon QuickSight | จัดเก็บเอกสารแนบและการจัดทำรายงานสรุปผลภาพรวม |
 | **Security & Auth** | RBAC, Least Privilege, Audit Logging | การควบคุมสิทธิ์การเข้าถึงและความโปร่งใสในการตรวจสอบย้อนกลับ |
+| **Multimodal Ingestion** | Whisper API / Vision OCR / Presidio | ถอดเสียง สกัดข้อความภาพ และทำ PII Redaction อัตโนมัติ |
+| **Plan Diff & Versioning** | State Hash / Deep Diff Engine | เปรียบเทียบแผนข้ามเวอร์ชันและคำนวณ Delta Metrics |
+| **Reporting Engine** | Automated Markdown & Print Template | สร้างเอกสาร Situation Report (SitRep) ตามมาตรฐาน ICS |
 
 ### Clear separation of responsibilities
 
@@ -291,11 +366,14 @@ flowchart TD
 
 ### What the current HTML prototype demonstrates
 
-* ✅ แดชบอร์ดและข้อมูลจำลองของร้านค้า ผู้ขนส่ง และจุดรับความช่วยเหลือในชุมชน
-* ✅ การบันทึกคำขอสิ่งของจำเป็น และการจับคู่สต็อกแบบจำลอง
-* ✅ กราฟถนนสังเคราะห์ และการคำนวณแผนเส้นทางใหม่ทันทีเมื่อมีการปิดถนนที่กำหนด
-* ✅ กลไกปุ่มตรวจรับ อนุมัติแผน และการรีเซ็ตสถานการณ์
-* ✅ การคำนวณ KPI จากชุดข้อมูลสังเคราะห์ และการแสดงผลในไฟล์ HTML แบบ Standalone 100%
+* ✅ **แดชบอร์ดศูนย์บัญชาการแบบตอบสนอง:** แสดงข้อมูลจำลองของร้านค้า ผู้ขนส่ง และจุดรับความช่วยเหลือบนแผนที่ Tactical GIS
+* ✅ **Visual Plan Diff Viewer (🔴 Must Have):** เปรียบเทียบแผนรุ่นเก่า vs รุ่นใหม่แบบ Side-by-side เมื่อถนนปิดหรือเงื่อนไขเปลี่ยน แสดงระยะทางที่เพิ่มขึ้น (+Δ km), การสลับร้านค้า และเหตุผลเชิงอธิบายของ AI
+* ✅ **Vehicle Clearance Filter (🔴 Must Have):** ตัวกรองขีดความสามารถยานพาหนะ (มอเตอร์ไซค์ <15 ซม., กระบะ 4WD <45 ซม., เรือท้องแบนกู้ภัยที่สามารถใช้ร่องน้ำท่วม B–D เป็นทางลัดได้)
+* ✅ **AI Multimodal SOS Intake (🟡 Should Have):** จำลองการรับเรื่องผ่านแชต LINE, ไฟล์เสียง Voice Memo, และภาพถ่ายแจ้งเหตุ พร้อมกลไก PDPA Masking และ Vulnerability Triage Scoring
+* ✅ **Role-Based Workspaces Switcher (🟡 Should Have):** สลับมุมมองบทบาท 4 ฝ่าย ได้แก่ ผู้ประสานงาน (Coordinator), ร้านค้าชุมชน (SME Merchant พร้อม Digital Escrow Payout), อาสาสมัครคนขับ (Field Volunteer พร้อมระบบ Proof of Delivery), และประชาชน (Resident Tracker)
+* ✅ **Automated SitRep Generator (🟢 Could Have):** ปุ่มสร้างรายงานสถานการณ์ฉุกเฉินมาตรฐาน (Situation Report) คัดลอก Markdown สำหรับส่งต่อกลุ่ม LINE หรือพิมพ์/บันทึกเป็น PDF
+* ✅ **การบันทึกคำขอและจับคู่สต็อกจำลอง:** ค้นหาร้านค้าที่มีสต็อกสดใหม่ และตัด Edge ถนนที่ปิดออกจากกราฟทันที
+* ✅ **กลไกการอนุมัติโดยมนุษย์ (Human-in-the-Loop):** แผนร่างต้องผ่านการตรวจทานและอนุมัติก่อนส่งมอบงาน
 
 ### What it does not do
 
@@ -443,7 +521,20 @@ flowchart LR
 | **Reservation** | แสดงจำนวนสินค้าที่ถูกจองตามแผนงาน | ห้ามจองเกินยอดพร้อมจัดสรร; หากยกเลิกต้องคืนยอดสต็อกทันที |
 | **Fulfilment** | ยืนยันการเตรียมของ/ส่งมอบ หรือแจ้งสินค้าไม่พร้อม | ทุกการเปลี่ยนสถานะต้องบันทึกผู้ดำเนินการและ Timestamp |
 
-#### A.3 Mission state machine
+#### A.3 Volunteer Driver & Field Dispatch Journey
+1. **Receive notification:** อาสาสมัครได้รับแจ้งภารกิจผ่านแอปพลิเคชันหรือเว็บบนมือถือ
+2. **Review safety route:** ตรวจสอบคำเตือนจุดน้ำท่วมและเส้นทางปลอดภัยที่ระบบคำนวณให้ตามขีดความสามารถยานพาหนะตนเอง
+3. **Pickup from SME:** เดินทางไปยังร้านค้าชุมชนที่ระบุ ตรวจสอบจำนวนสิ่งของ และกดปุ่มรับของ
+4. **Wading & navigation:** ปฏิบัติการขนส่งตามเส้นทางเลี่ยงอันตราย
+5. **Proof of delivery:** ส่งมอบสิ่งของ ณ จุดพักพิง/บ้านผู้ประสบภัย พร้อมถ่ายภาพหลักฐาน (Photo Evidence) เพื่อยืนยันภารกิจ
+
+#### A.4 Resident Community Transparency Journey
+1. **Submit SOS:** ประชาชนส่งข้อความ/เสียงผ่าน LINE OA ชุมชน
+2. **Track request status:** นำรหัสคำขอ (Request ID) ตรวจสอบความคืบหน้าผ่านพอร์ทัลชุมชน
+3. **5-stage transparency:** ติดตาม 5 ขั้นตอน (รับคำร้อง ➔ จับคู่ร้านค้า ➔ อนุมัติ ➔ กำลังจัดส่ง ➔ ส่งมอบแล้ว)
+4. **Local procurement visibility:** เห็นความโปร่งใสว่าสิ่งของที่ได้รับได้รับการสนับสนุนจากร้านค้าในชุมชนของตนเอง
+
+#### A.5 Mission state machine
 
 ```mermaid
 stateDiagram-v2
@@ -480,6 +571,67 @@ stateDiagram-v2
 ---
 
 ### Appendix B: Data Model and Data Quality Policy
+
+#### B.0 Schemas for 5 Enhanced Capabilities
+```json
+// 1. Vehicle Clearance Specification
+{
+  "vehicle_id": "V-04",
+  "type": "HIGH_CLEARANCE_4WD", // "MOTORCYCLE", "HIGH_CLEARANCE_4WD", "FLAT_BOTTOM_BOAT"
+  "max_wading_depth_cm": 45,
+  "payload_capacity_kg": 800,
+  "status": "AVAILABLE"
+}
+
+// 2. Multimodal SOS Ingestion Payload
+{
+  "sos_id": "SOS-2026-009",
+  "source_channel": "LINE_OA", // "VOICE_MEMO", "PHOTO_ALERT"
+  "raw_content": "ช่วยด้วยครับ ซอย 4 น้ำท่วมเอว มีคุณยายติดเตียง 1 ท่าน โทร 089-123-4567",
+  "redacted_content": "ช่วยด้วยครับ ซอย 4 น้ำท่วมเอว มีคุณยายติดเตียง 1 ท่าน โทร [REDACTED: 089-XXX-4567]",
+  "extracted_entities": {
+    "target_area": "ชุมชนบ้านเหนือ",
+    "node_id": "D",
+    "items": [{"item": "น้ำดื่ม", "qty": 30}, {"item": "อาหารแห้ง", "qty": 20}],
+    "vulnerability_flag": "BEDRIDDEN_PATIENT",
+    "triage_score": 9.8,
+    "priority_level": "CRITICAL"
+  }
+}
+
+// 3. Plan Diff Record
+{
+  "diff_id": "DIFF-v1-to-v2",
+  "from_version": 1,
+  "to_version": 2,
+  "trigger": "ROAD_CLOSED_BD",
+  "metrics_delta": {
+    "total_distance_km_delta": 2.6,
+    "estimated_time_min_delta": 13,
+    "rerouted_requests_count": 2,
+    "reassigned_shops_count": 1
+  },
+  "ai_rationale": "Edge B-D closed due to 40cm flooding. Re-routed via nodes A-C-D for ground vehicles."
+}
+
+// 4. Situation Report (SitRep) Document Schema
+{
+  "sitrep_id": "SITREP-BKK-2026-FLOOD-01",
+  "timestamp": "2026-10-28T22:30:00+07:00",
+  "incident_level": "SEVERE_FLOOD_LEVEL_2",
+  "command_summary": {
+    "total_requests": 5,
+    "fulfillment_rate_pct": 80,
+    "delivered_count": 2,
+    "total_procurement_value_thb": 4650,
+    "active_road_closures": ["B-D"]
+  },
+  "escalations": [
+    {"request_id": "REQ-005", "reason": "NO_ROAD_OR_BOAT_ACCESS", "target_agency": "DISASTER_RESCUE_BOAT_UNIT"}
+  ]
+}
+```
+
 
 #### B.1 Core entities
 
@@ -549,6 +701,21 @@ stateDiagram-v2
 ---
 
 ### Appendix D: API and Integration Blueprint
+
+#### D.0 Enhanced Endpoints for 5 Capabilities
+* `POST /api/v1/sos/ingest`
+  * **Description:** รับข้อมูล Unstructured SOS (Text/Voice/Image), ถอดความ, ทำ PDPA Masking, สกัด Entity, และคำนวณ Triage Score
+  * **Payload:** `{ "channel": "LINE", "raw_payload": "...", "media_url": null }`
+  * **Response:** `{ "status": "EXTRACTED", "redacted_text": "...", "triage_score": 9.8, "request_draft": {...} }`
+* `GET /api/v1/plans/{plan_id}/diff?compare_to={prev_version}`
+  * **Description:** คำนวณความต่างเชิงโครงสร้างและตัวชี้วัดระหว่าง 2 เวอร์ชันของแผน
+  * **Response:** `{ "delta_km": 2.6, "changes": [...], "ai_rationale": "..." }`
+* `GET /api/v1/reports/sitrep`
+  * **Description:** สร้างรายงาน Situation Report ประจำรอบเวลาในรูปแบบ JSON, Markdown หรือ Renderable HTML
+  * **Response:** `{ "sitrep_id": "...", "markdown": "# SITREP...", "kpis": {...} }`
+* `POST /api/v1/sme/vouchers/{voucher_id}/claim`
+  * **Description:** ร้านค้า SME ยืนยันการส่งมอบเพื่อเคลมเงินทดรองจ่ายจากกองทุนบรรเทาทุกข์
+
 
 #### D.1 Example service boundaries
 

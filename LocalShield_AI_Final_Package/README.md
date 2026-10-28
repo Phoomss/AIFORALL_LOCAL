@@ -15,7 +15,12 @@ This folder contains a revised concept proposal, a 10-slide HTML pitch, and an i
 1. Open `LocalShield_AI_Final_Presentation.html` in Chrome or Edge.
 2. Navigate with Previous/Next or the left/right arrow keys. Press `F` for fullscreen.
 3. On the interactive demo slide, calculate the plan, close road B–D, recalculate, approve, then reset.
-4. Open `LocalShield_AI_Prototype.html` for a larger standalone prototype.
+4. Open `LocalShield_AI_Prototype.html` for the enhanced standalone prototype featuring:
+   - **Visual Plan Diff Viewer:** Side-by-side v1 vs v2 comparison with delta metrics and AI explanations
+   - **Vehicle Clearance Filter:** Dynamic routing for Motorcycle (<15cm), 4WD Truck (<45cm), and Rescue Boat (>30cm water transit)
+   - **AI Multimodal SOS Intake:** LINE chat, Voice Memo with audio waveform, and photo alerts with automated PDPA masking and vulnerability triage
+   - **4-Role Persona Switcher:** Coordinator, Local SME Merchant with Digital Escrow Payout, Volunteer Driver with mobile dispatch & proof-of-delivery, and Resident SOS Tracker
+   - **Automated SitRep Export:** Instant Situation Report generation in Markdown and Print/PDF layout
 5. Use the Markdown proposal as a content source; edit event-specific sections only after confirming the target competition's official brief.
 
 ## Important scope and evidence notes
